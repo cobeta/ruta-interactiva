@@ -220,17 +220,17 @@
       width: 46px; height: 46px;
       border-radius: 12px;
       background: var(--f950);
-      border: 1px solid var(--f700);
-      color: var(--cream);
+      border: 1px solid var(--copper);
+      color: var(--copper-light);
       cursor: pointer;
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(200,135,74,0.15);
       display: flex; align-items: center; justify-content: center;
       z-index: 400;
-      transition: opacity 0.3s, background 0.15s;
+      transition: opacity 0.3s, background 0.15s, color 0.15s;
       -webkit-tap-highlight-color: transparent;
     }
     #fab-recenter.hidden { opacity: 0; pointer-events: none; }
-    #fab-recenter:active { background: var(--f700); }
+    #fab-recenter:active { background: var(--f700); color: var(--cream); }
 
     #fab-fullscreen {
       position: absolute;
@@ -543,8 +543,8 @@
 
 <!-- Map -->
 <div id="map">
-  <button id="fab-recenter" title="Recenter">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+  <button id="fab-recenter" class="hidden" title="My location" aria-label="My location">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
   </button>
   <button id="fab-fullscreen" title="Fullscreen">
     <svg id="fs-expand-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -688,7 +688,7 @@ const UI_STRINGS = {
     walked:          'km walked',
     remaining:       'km remaining',
     audio:           'Audio',
-    recenter:        'Recenter',
+    recenter:        'My location',
     noImage:         'No photo',
     cacheUnavailable:'Cache not available',
   },
@@ -703,7 +703,7 @@ const UI_STRINGS = {
     walked:          'km recorridos',
     remaining:       'km restantes',
     audio:           'Audio',
-    recenter:        'Recentrar mapa',
+    recenter:        'Mi ubicación',
     noImage:         'Sin foto',
     cacheUnavailable:'Caché no disponible',
   },
@@ -723,6 +723,7 @@ function applyUILang() {
     el.textContent = ui(el.dataset.i18n);
   });
   document.getElementById('fab-recenter').title = ui('recenter');
+  document.getElementById('fab-recenter').setAttribute('aria-label', ui('recenter'));
   document.getElementById('fab-offline-label').textContent = ui('downloadOffline');
   if (state.currentPoi) openPoiModal(state.currentPoi);
 }
@@ -1020,6 +1021,8 @@ function onPosition({ coords: { latitude: lat, longitude: lon, accuracy: acc } }
       radius: acc, color: '#4285f4', fillColor: '#4285f4',
       fillOpacity: 0.08, weight: 1, opacity: 0.4,
     }).addTo(map);
+    // Reveal the locate button once we have a GPS fix
+    document.getElementById('fab-recenter').classList.remove('hidden');
   } else {
     state.gpsMarker.setLatLng([lat, lon]);
     state.gpsAccCircle.setLatLng([lat, lon]).setRadius(acc);
