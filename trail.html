@@ -531,7 +531,7 @@
   </div>
   <div id="status-bar">
     <div id="status-dot"></div>
-    <span id="status-text" data-i18n="loading">Loading…</span>
+    <span id="status-text">Loading…</span>
   </div>
   <div id="topbar-controls">
     <div id="lang-toggle" title="Language / Idioma">
@@ -635,6 +635,8 @@ const cfg = ROUTE_CONFIG[ROUTE_ID] || ROUTE_CONFIG.hanover;
 const state = {
   lang: 'en',
   uiLang: 'en',
+  statusKey: 'loading',
+  statusType: '',
   pois: [],
   gpxPoints: [],
   routeDistances: [],
@@ -665,8 +667,10 @@ L.tileLayer(cfg.tile, {
 }).addTo(map);
 
 // ── Status helpers ─────────────────────────────────────────────────────────
-function setStatus(text, type = '') {
-  document.getElementById('status-text').textContent = text;
+function setStatus(key, type = '') {
+  state.statusKey  = key;
+  state.statusType = type;
+  document.getElementById('status-text').textContent = ui(key);
   document.getElementById('status-dot').className = type;
 }
 
@@ -724,6 +728,7 @@ function applyUILang() {
   });
   document.getElementById('fab-recenter').title = ui('recenter');
   document.getElementById('fab-offline-label').textContent = ui('downloadOffline');
+  document.getElementById('status-text').textContent = ui(state.statusKey);
   if (state.currentPoi) openPoiModal(state.currentPoi);
 }
 
@@ -910,10 +915,10 @@ function loadGPX() {
     state.gpxLayer = e.target;
     map.fitBounds(e.target.getBounds(), { padding: [20, 20] });
     parseGPXPoints().then(buildElevationProfile);
-    setStatus(ui('routeLoaded'), 'ready');
+    setStatus('routeLoaded', 'ready');
   })
   .on('error', () => {
-    setStatus(ui('routeError'), 'error');
+    setStatus('routeError', 'error');
     parseGPXPoints().then(buildElevationProfile);
   })
   .addTo(map);
@@ -1089,7 +1094,7 @@ async function cacheAssets() {
   const progLabel = document.getElementById('download-progress-label');
   const progBar   = document.getElementById('download-progress-bar');
   progWrap.classList.add('visible');
-  setStatus(ui('downloading'), 'downloading');
+  setStatus('downloading', 'downloading');
 
   const bounds = state.gpxLayer ? state.gpxLayer.getBounds() : map.getBounds();
   const tileURLs = [];
@@ -1136,7 +1141,7 @@ async function cacheAssets() {
 
   progWrap.classList.remove('visible');
   state.offlineReady = true;
-  setStatus(ui('offlineReady'), 'ready');
+  setStatus('offlineReady', 'ready');
   btn.querySelector('#fab-offline-label').textContent = ui('downloaded');
   btn.classList.remove('hidden');
   btn.disabled = true;
@@ -1152,7 +1157,7 @@ async function checkOfflineStatus() {
     const gpxCached = await cache.match(`/routes/${ROUTE_ID}/route.gpx`);
     if (gpxCached) {
       state.offlineReady = true;
-      setStatus(ui('offlineReady'), 'ready');
+      setStatus('offlineReady', 'ready');
       const btn = document.getElementById('fab-offline');
       btn.querySelector('#fab-offline-label').textContent = ui('downloaded');
       btn.disabled = true;
@@ -1162,9 +1167,9 @@ async function checkOfflineStatus() {
 
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
-  setStatus(ui('loading'));
+  setStatus('loading');
   await parseGPXPoints();
-  setStatus(state.gpxPoints.length > 0 ? ui('routeLoaded') : ui('routeError'),
+  setStatus(state.gpxPoints.length > 0 ? 'routeLoaded' : 'routeError',
             state.gpxPoints.length > 0 ? 'ready' : 'error');
   loadGPX();
   loadPOIs();
