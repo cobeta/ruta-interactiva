@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f1a0f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Ruta Interactiva</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/leaflet.css">
+
+  <style>
+    :root {
+      --f950: #080f08;
+      --f900: #0f1a0f;
+      --f800: #182618;
+      --f700: #243b24;
+      --f600: #3a5e38;
+      --f400: #5a8856;
+      --f200: #96c092;
+
+      --copper:       #c8874a;
+      --copper-light: #e0a86a;
+      --copper-pale:  #f2ddc0;
+
+      --cream:        #f0e8d5;
+      --cream-muted:  #b0a890;
+
+      --modal-bg:     rgba(12, 20, 12, 0.97);
+      --shadow:       0 4px 20px rgba(0,0,0,0.55);
+      --shadow-lg:    0 8px 40px rgba(0,0,0,0.7);
+
+      /* Topographic contour pattern */
+      --topo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='120'%3E%3Cellipse cx='80' cy='60' rx='76' ry='56' fill='none' stroke='rgba(255,255,255,0.032)' stroke-width='1'/%3E%3Cellipse cx='80' cy='60' rx='54' ry='38' fill='none' stroke='rgba(255,255,255,0.028)' stroke-width='1'/%3E%3Cellipse cx='80' cy='60' rx='32' ry='22' fill='none' stroke='rgba(255,255,255,0.022)' stroke-width='1'/%3E%3Cellipse cx='80' cy='60' rx='14' ry='9' fill='none' stroke='rgba(255,255,255,0.018)' stroke-width='1'/%3E%3C/svg%3E");
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: var(--f900);
+      color: var(--cream);
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Top Bar ─────────────────────────────────────────────── */
+    #topbar {
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      height: 54px;
+      background: var(--f950);
+      background-image: var(--topo);
+      border-bottom: 1px solid var(--f800);
+      flex-shrink: 0;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    #app-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--copper-light);
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #app-title svg { opacity: 0.85; flex-shrink: 0; }
+
+    #status-bar {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--cream-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex: 1;
+      min-width: 0;
+      letter-spacing: 0.02em;
+    }
+
+    #status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--f400);
+      flex-shrink: 0;
+      transition: background 0.4s;
+    }
+    #status-dot.ready      { background: #6dc85a; }
+    #status-dot.downloading{ background: var(--copper); animation: blink 1s infinite; }
+    #status-dot.error      { background: #e05050; }
+
+    #status-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    @keyframes blink { 50% { opacity: 0.25; } }
+
+    /* ── Top Controls ───────────────────────────────────────── */
+    #topbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      border: 1px solid var(--f700);
+      background: var(--f900);
+      color: var(--cream-muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      line-height: 1;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .icon-btn:active { background: var(--f700); }
+
+    /* Segmented language pill */
+    #lang-toggle {
+      display: flex;
+      border: 1px solid var(--f700);
+      border-radius: 8px;
+      overflow: hidden;
+      height: 34px;
+    }
+    .lang-opt {
+      padding: 0 11px;
+      background: transparent;
+      border: none;
+      color: var(--cream-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .lang-opt:not(:last-child) { border-right: 1px solid var(--f700); }
+    .lang-opt.active {
+      background: var(--f700);
+      color: var(--cream);
+    }
+
+    /* ── Map ────────────────────────────────────────────────── */
+    #map {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* GPS dot */
+    .gps-dot-outer {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: rgba(66, 133, 244, 0.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gps-dot-inner {
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      background: #4285f4;
+      border: 2.5px solid white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      animation: gps-pulse 2s ease-out infinite;
+    }
+    @keyframes gps-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(66,133,244,0.55); }
+      70%  { box-shadow: 0 0 0 10px rgba(66,133,244,0); }
+      100% { box-shadow: 0 0 0 0 rgba(66,133,244,0); }
+    }
+
+    /* POI icon pulse when nearby */
+    .poi-icon-nearby { animation: poi-bounce 1.6s ease-in-out infinite; }
+    @keyframes poi-bounce {
+      0%,100% { transform: translateY(0) scale(1); }
+      45%     { transform: translateY(-4px) scale(1.12); }
+    }
+
+    /* ── Floating Buttons ───────────────────────────────────── */
+    #fab-recenter {
+      position: absolute;
+      bottom: 16px; right: 14px;
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      background: var(--f950);
+      border: 1px solid var(--f700);
+      color: var(--cream);
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 400;
+      transition: opacity 0.3s, background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #fab-recenter.hidden { opacity: 0; pointer-events: none; }
+    #fab-recenter:active { background: var(--f700); }
+
+    #fab-offline {
+      position: absolute;
+      bottom: 16px; left: 14px;
+      padding: 0 16px;
+      height: 46px;
+      border-radius: 12px;
+      background: var(--f950);
+      border: 1px solid var(--f700);
+      color: var(--copper-light);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; gap: 7px;
+      z-index: 400;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #fab-offline:active    { background: var(--f700); }
+    #fab-offline.hidden    { display: none; }
+    #fab-offline:disabled  { opacity: 0.6; cursor: default; }
+
+    /* ── Elevation Strip ────────────────────────────────────── */
+    #elevation {
+      height: 72px;
+      background: var(--f950);
+      border-top: 1px solid var(--f800);
+      position: relative;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    #elevation-svg { width: 100%; height: 100%; display: block; }
+    #elevation-cursor {
+      position: absolute; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--copper);
+      opacity: 0;
+      pointer-events: none;
+      transition: left 0.5s linear;
+    }
+    #elevation-stats {
+      position: absolute;
+      bottom: 8px; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 14px;
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--cream-muted);
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+    #elevation-stats span { color: var(--copper-light); font-weight: 600; }
+
+    /* ── Modal ──────────────────────────────────────────────── */
+    #modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+      display: flex; align-items: flex-end;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+    #modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    #modal {
+      background: var(--modal-bg);
+      background-image: var(--topo);
+      border-radius: 22px 22px 0 0;
+      border-top: 1px solid var(--f700);
+      width: 100%;
+      max-height: 88dvh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    #modal-overlay.open #modal { transform: translateY(0); }
+
+    #modal-handle {
+      width: 36px; height: 4px;
+      background: var(--f600);
+      border-radius: 2px;
+      margin: 14px auto 0;
+    }
+
+    #modal-close {
+      position: sticky; top: 0;
+      display: flex; justify-content: flex-end;
+      padding: 8px 16px;
+      z-index: 1;
+    }
+    #modal-close-btn {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--f700);
+      border: none;
+      color: var(--cream-muted);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #modal-close-btn:active { background: var(--f600); color: var(--cream); }
+
+    #modal-body { padding: 0 20px 28px; }
+
+    #modal-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 24px; font-weight: 600;
+      color: var(--copper-light);
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    /* Image carousel */
+    #modal-images {
+      margin: 0 -20px 18px;
+      overflow-x: auto;
+      display: flex; gap: 8px;
+      padding: 0 20px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    #modal-images::-webkit-scrollbar { display: none; }
+
+    .modal-img {
+      flex-shrink: 0;
+      width: calc(100vw - 40px); max-width: 520px;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 14px;
+      scroll-snap-align: start;
+      background: var(--f700);
+    }
+    .modal-img-placeholder {
+      flex-shrink: 0;
+      width: calc(100vw - 40px); max-width: 520px;
+      height: 200px;
+      border-radius: 14px;
+      background: var(--f800);
+      background-image: var(--topo);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px;
+      color: var(--f400);
+    }
+    .modal-img-placeholder span {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--cream-muted);
+      opacity: 0.6;
+    }
+
+    #modal-description {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--cream);
+      opacity: 0.88;
+      margin-bottom: 22px;
+    }
+
+    /* ── Audio Player ───────────────────────────────────────── */
+    #modal-audio-section {
+      background: var(--f900);
+      border: 1px solid var(--f700);
+      border-radius: 16px;
+      padding: 16px 18px;
+    }
+    #audio-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--cream-muted);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      display: flex; align-items: center; gap: 6px;
+    }
+    #audio-controls {
+      display: flex; align-items: center; gap: 14px;
+    }
+    #audio-play-btn {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: var(--f600);
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #audio-play-btn:active   { transform: scale(0.91); }
+    #audio-play-btn.playing  { background: var(--copper); }
+
+    #audio-progress-wrap {
+      flex: 1;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    #audio-progress {
+      width: 100%; height: 3px;
+      -webkit-appearance: none; appearance: none;
+      background: var(--f700);
+      border-radius: 2px;
+      cursor: pointer; outline: none;
+    }
+    #audio-progress::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--copper-light);
+      cursor: pointer;
+      box-shadow: 0 0 0 3px rgba(200,135,74,0.22);
+    }
+    #audio-progress::-moz-range-thumb {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--copper-light);
+      cursor: pointer; border: none;
+    }
+    #audio-time {
+      font-size: 11px; font-weight: 500;
+      color: var(--cream-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    #modal-audio-section.no-audio { display: none; }
+
+    /* ── Download Progress ──────────────────────────────────── */
+    #download-progress-wrap {
+      position: fixed;
+      bottom: calc(76px + env(safe-area-inset-bottom));
+      left: 14px; right: 14px;
+      background: var(--f950);
+      border: 1px solid var(--f700);
+      border-radius: 14px;
+      padding: 14px 18px;
+      z-index: 500;
+      box-shadow: var(--shadow-lg);
+      display: none;
+    }
+    #download-progress-wrap.visible { display: block; }
+    #download-progress-label {
+      font-size: 12px; font-weight: 500;
+      color: var(--cream-muted);
+      margin-bottom: 10px;
+    }
+    #download-progress-bar-wrap {
+      background: var(--f700);
+      border-radius: 3px; height: 4px;
+      overflow: hidden;
+    }
+    #download-progress-bar {
+      height: 100%;
+      background: var(--copper);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    /* ── Leaflet overrides ──────────────────────────────────── */
+    .leaflet-control-zoom { display: none; }
+    .leaflet-control-attribution {
+      font-size: 9px !important;
+      background: rgba(8,15,8,0.75) !important;
+      color: rgba(255,255,255,0.35) !important;
+      border-radius: 4px 0 0 0 !important;
+    }
+    .leaflet-control-attribution a { color: rgba(255,255,255,0.45) !important; }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div id="topbar">
+  <div id="app-title">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+    </svg>
+    Ruta Interactiva
+  </div>
+  <div id="status-bar">
+    <div id="status-dot"></div>
+    <span id="status-text" data-i18n="loading">Loading…</span>
+  </div>
+  <div id="topbar-controls">
+    <div id="lang-toggle" title="Language / Idioma">
+      <button class="lang-opt active" data-lang="en">EN</button>
+      <button class="lang-opt" data-lang="es">ES</button>
+    </div>
+  </div>
+</div>
+
+<!-- Map -->
+<div id="map">
+  <button id="fab-recenter" class="hidden" title="Recenter">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+  </button>
+  <button id="fab-offline">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 12l-4-4m4 4l4-4"/><path d="M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"/></svg>
+    <span id="fab-offline-label">Download offline</span>
+  </button>
+</div>
+
+<!-- Download progress -->
+<div id="download-progress-wrap">
+  <div id="download-progress-label">Downloading… 0%</div>
+  <div id="download-progress-bar-wrap">
+    <div id="download-progress-bar"></div>
+  </div>
+</div>
+
+<!-- Elevation strip -->
+<div id="elevation">
+  <svg id="elevation-svg" preserveAspectRatio="none"></svg>
+  <div id="elevation-cursor"></div>
+  <div id="elevation-stats">
+    <span id="stat-dist">—</span> <span data-i18n="walked">km walked</span> &nbsp;|&nbsp;
+    <span id="stat-remain">—</span> <span data-i18n="remaining">km remaining</span> &nbsp;|&nbsp;
+    ETA <span id="stat-eta">—</span>
+  </div>
+</div>
+
+<!-- POI Modal -->
+<div id="modal-overlay">
+  <div id="modal">
+    <div id="modal-handle"></div>
+    <div id="modal-close">
+      <button id="modal-close-btn">✕</button>
+    </div>
+    <div id="modal-body">
+      <div id="modal-images"></div>
+      <h2 id="modal-title">—</h2>
+      <p id="modal-description">—</p>
+      <div id="modal-audio-section">
+        <div id="audio-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/></svg>
+          <span data-i18n="audio">Audio</span>
+        </div>
+        <div id="audio-controls">
+          <button id="audio-play-btn" aria-label="Play">
+            <svg id="play-icon" width="13" height="15" viewBox="0 0 13 15" fill="white"><path d="M0 0l13 7.5L0 15z"/></svg>
+            <svg id="pause-icon" width="13" height="15" viewBox="0 0 13 15" fill="white" style="display:none"><rect x="0" y="0" width="4.5" height="15" rx="1.5"/><rect x="8.5" y="0" width="4.5" height="15" rx="1.5"/></svg>
+          </button>
+          <div id="audio-progress-wrap">
+            <input type="range" id="audio-progress" min="0" max="100" value="0" step="0.1">
+            <div id="audio-time">0:00 / 0:00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/leaflet.js"></script>
+<script src="assets/gpx.js"></script>
+
+<script>
+'use strict';
+
+// ── State ──────────────────────────────────────────────────────────────────
+const state = {
+  lang: 'en',
+  uiLang: 'en',
+  pois: [],
+  gpxPoints: [],
+  routeDistances: [],
+  totalDistance: 0,
+  userLat: null,
+  userLon: null,
+  userAcc: null,
+  gpxLayer: null,
+  gpsMarker: null,
+  gpsAccCircle: null,
+  poiMarkers: [],
+  mapCenteredOnUser: false,
+  offlineReady: false,
+  nearbyPois: new Set(),
+  currentPoi: null,
+};
+
+const LANG_LABELS = { en: 'EN', es: 'ES', ca: 'CA', fr: 'FR' };
+
+// ── Map Init ───────────────────────────────────────────────────────────────
+const map = L.map('map', {
+  zoomControl: false,
+  attributionControl: true,
+}).setView([43.758, -72.162], 14);
+
+L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}', {
+  attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>',
+  maxZoom: 16,
+}).addTo(map);
+
+// ── Status helpers ─────────────────────────────────────────────────────────
+function setStatus(text, type = '') {
+  document.getElementById('status-text').textContent = text;
+  document.getElementById('status-dot').className = type;
+}
+
+// ── Service Worker ─────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+// ── i18n ───────────────────────────────────────────────────────────────────
+const UI_STRINGS = {
+  en: {
+    loading:         'Loading…',
+    routeLoaded:     'Route loaded ✓',
+    routeError:      'Error loading route',
+    offlineReady:    'Offline ready ✓',
+    downloading:     'Downloading…',
+    downloaded:      'Downloaded ✓',
+    downloadOffline: 'Download offline',
+    walked:          'km walked',
+    remaining:       'km remaining',
+    audio:           'Audio',
+    recenter:        'Recenter',
+    noImage:         'No photo',
+    cacheUnavailable:'Cache not available',
+  },
+  es: {
+    loading:         'Cargando…',
+    routeLoaded:     'Ruta cargada ✓',
+    routeError:      'Error al cargar la ruta',
+    offlineReady:    'Listo para usar sin conexión ✓',
+    downloading:     'Descargando…',
+    downloaded:      'Descargado ✓',
+    downloadOffline: 'Descargar sin conexión',
+    walked:          'km recorridos',
+    remaining:       'km restantes',
+    audio:           'Audio',
+    recenter:        'Recentrar mapa',
+    noImage:         'Sin foto',
+    cacheUnavailable:'Caché no disponible',
+  },
+};
+
+const LANGS = ['en', 'es'];
+
+function ui(key) {
+  return (UI_STRINGS[state.uiLang] || UI_STRINGS.en)[key] || key;
+}
+
+function applyUILang() {
+  // Update pill active states
+  document.querySelectorAll('.lang-opt').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === state.uiLang);
+  });
+  // Update data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = ui(el.dataset.i18n);
+  });
+  // Update titles
+  document.getElementById('fab-recenter').title = ui('recenter');
+  document.getElementById('fab-offline-label').textContent = ui('downloadOffline');
+  // Re-render open modal
+  if (state.currentPoi) openPoiModal(state.currentPoi);
+}
+
+function setUILang(lang) {
+  state.uiLang = lang;
+  state.lang = lang;
+  applyUILang();
+}
+
+document.getElementById('lang-toggle').addEventListener('click', e => {
+  const opt = e.target.closest('.lang-opt');
+  if (opt) setUILang(opt.dataset.lang);
+});
+
+// ── Audio icon helpers ─────────────────────────────────────────────────────
+function setAudioState(playing) {
+  document.getElementById('play-icon').style.display  = playing ? 'none' : '';
+  document.getElementById('pause-icon').style.display = playing ? '' : 'none';
+  document.getElementById('audio-play-btn').classList.toggle('playing', playing);
+}
+
+// ── POI Markers ────────────────────────────────────────────────────────────
+function makePOIIcon(nearby = false) {
+  const fill   = nearby ? '#6dc85a' : '#c8874a';
+  const inner  = nearby ? '#d0f5cc' : '#f5dfc0';
+  const svg = `<svg width="26" height="34" viewBox="0 0 26 34" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 5px rgba(0,0,0,0.55))"><path d="M13 0C5.82 0 0 5.82 0 13c0 9.5 13 21 13 21S26 22.5 26 13C26 5.82 20.18 0 13 0z" fill="${fill}"/><circle cx="13" cy="12.5" r="5" fill="${inner}" opacity="0.92"/></svg>`;
+  return L.divIcon({
+    html: svg,
+    className: nearby ? 'poi-icon-nearby' : '',
+    iconSize: [26, 34],
+    iconAnchor: [13, 34],
+  });
+}
+
+function loadPOIs() {
+  fetch('pois.json')
+    .then(r => r.json())
+    .then(pois => {
+      state.pois = pois;
+      pois.forEach(poi => {
+        const marker = L.marker([poi.lat, poi.lon], { icon: makePOIIcon() }).addTo(map);
+        marker.on('click', () => openPoiModal(poi));
+        state.poiMarkers.push({ poi, marker });
+      });
+    })
+    .catch(() => console.warn('Could not load POIs'));
+}
+
+// ── Modal ──────────────────────────────────────────────────────────────────
+const overlay  = document.getElementById('modal-overlay');
+const audioEl  = new Audio();
+let audioDragging = false;
+
+function t(poi, field) {
+  const langs = poi.languages;
+  if (langs && langs[state.lang] && langs[state.lang][field]) {
+    return langs[state.lang][field];
+  }
+  return poi[field] || '';
+}
+
+const IMG_PLACEHOLDER_SVG = `<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 18 8 10 13 15 16 11 21 18"/><circle cx="17" cy="7" r="2"/></svg>`;
+
+function openPoiModal(poi) {
+  state.currentPoi = poi;
+
+  document.getElementById('modal-title').textContent       = t(poi, 'name');
+  document.getElementById('modal-description').textContent = t(poi, 'description');
+
+  // Images
+  const imgWrap = document.getElementById('modal-images');
+  imgWrap.innerHTML = '';
+  const images = poi.images || [];
+  if (images.length === 0) {
+    const ph = document.createElement('div');
+    ph.className = 'modal-img-placeholder';
+    ph.innerHTML = `${IMG_PLACEHOLDER_SVG}<span>${ui('noImage')}</span>`;
+    imgWrap.appendChild(ph);
+  } else {
+    images.forEach(src => {
+      const img = document.createElement('img');
+      img.className = 'modal-img';
+      img.src = src;
+      img.alt = t(poi, 'name');
+      img.loading = 'lazy';
+      img.onerror = () => {
+        const ph = document.createElement('div');
+        ph.className = 'modal-img-placeholder';
+        ph.innerHTML = `${IMG_PLACEHOLDER_SVG}<span>${ui('noImage')}</span>`;
+        img.replaceWith(ph);
+      };
+      imgWrap.appendChild(img);
+    });
+  }
+
+  // Audio
+  const audioSection = document.getElementById('modal-audio-section');
+  if (poi.audio) {
+    audioSection.classList.remove('no-audio');
+    if (audioEl.src !== new URL(poi.audio, location.href).href) {
+      audioEl.src = poi.audio;
+      audioEl.load();
+      setAudioState(false);
+      document.getElementById('audio-progress').value = 0;
+      document.getElementById('audio-time').textContent = '0:00 / 0:00';
+    }
+  } else {
+    audioSection.classList.add('no-audio');
+    audioEl.pause();
+    audioEl.src = '';
+  }
+
+  overlay.classList.add('open');
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  state.currentPoi = null;
+  audioEl.pause();
+  setAudioState(false);
+}
+
+document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+// Audio controls
+document.getElementById('audio-play-btn').addEventListener('click', () => {
+  if (audioEl.paused) {
+    audioEl.play().catch(() => {});
+    setAudioState(true);
+  } else {
+    audioEl.pause();
+    setAudioState(false);
+  }
+});
+
+function fmtTime(s) {
+  if (!isFinite(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60).toString().padStart(2, '0');
+  return `${m}:${sec}`;
+}
+
+audioEl.addEventListener('timeupdate', () => {
+  if (!audioDragging && audioEl.duration) {
+    document.getElementById('audio-progress').value =
+      (audioEl.currentTime / audioEl.duration) * 100;
+    document.getElementById('audio-time').textContent =
+      `${fmtTime(audioEl.currentTime)} / ${fmtTime(audioEl.duration)}`;
+  }
+});
+audioEl.addEventListener('ended', () => setAudioState(false));
+
+const prog = document.getElementById('audio-progress');
+prog.addEventListener('mousedown',  () => { audioDragging = true; });
+prog.addEventListener('touchstart', () => { audioDragging = true; }, { passive: true });
+prog.addEventListener('input', () => {
+  if (audioEl.duration)
+    document.getElementById('audio-time').textContent =
+      `${fmtTime(audioEl.duration * prog.value / 100)} / ${fmtTime(audioEl.duration)}`;
+});
+prog.addEventListener('change', () => {
+  audioDragging = false;
+  if (audioEl.duration) audioEl.currentTime = (prog.value / 100) * audioEl.duration;
+});
+
+// ── GPX & Route ────────────────────────────────────────────────────────────
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function loadGPX() {
+  new L.GPX('assets/route.gpx', {
+    async: true,
+    marker_options: {
+      startIconUrl: null, endIconUrl: null,
+      shadowUrl: null, wptIconUrls: { '': null },
+    },
+    polyline_options: { color: '#5ab040', weight: 4, opacity: 0.9 },
+  })
+  .on('loaded', e => {
+    state.gpxLayer = e.target;
+    map.fitBounds(e.target.getBounds(), { padding: [20, 20] });
+    parseGPXPoints().then(buildElevationProfile);
+    setStatus(ui('routeLoaded'), 'ready');
+  })
+  .on('error', () => {
+    setStatus(ui('routeError'), 'error');
+    parseGPXPoints().then(buildElevationProfile);
+  })
+  .addTo(map);
+}
+
+async function parseGPXPoints() {
+  try {
+    const resp = await fetch('assets/route.gpx');
+    const text = await resp.text();
+    const xml  = new DOMParser().parseFromString(text, 'application/xml');
+    const pts  = xml.querySelectorAll('trkpt');
+    state.gpxPoints = Array.from(pts).map(pt => ({
+      lat: parseFloat(pt.getAttribute('lat')),
+      lon: parseFloat(pt.getAttribute('lon')),
+      ele: parseFloat(pt.querySelector('ele')?.textContent || '0'),
+    }));
+    state.routeDistances = [0];
+    for (let i = 1; i < state.gpxPoints.length; i++) {
+      const prev = state.gpxPoints[i - 1], cur = state.gpxPoints[i];
+      state.routeDistances.push(
+        state.routeDistances[i - 1] + haversine(prev.lat, prev.lon, cur.lat, cur.lon)
+      );
+    }
+    state.totalDistance = state.routeDistances.at(-1) || 0;
+  } catch (e) {
+    console.warn('GPX parse error', e);
+  }
+}
+
+// ── Elevation Profile ──────────────────────────────────────────────────────
+function buildElevationProfile() {
+  const pts = state.gpxPoints;
+  if (!pts || pts.length < 2) { setTimeout(buildElevationProfile, 500); return; }
+
+  if (!pts.some(p => p.ele !== 0)) {
+    document.getElementById('elevation').style.display = 'none';
+    return;
+  }
+
+  const svg  = document.getElementById('elevation-svg');
+  const W    = svg.clientWidth || 400;
+  const H    = svg.clientHeight || 72;
+  const eles = pts.map(p => p.ele);
+  const minE = Math.min(...eles), maxE = Math.max(...eles);
+  const range = maxE - minE || 1;
+  const pad   = { top: 8, bottom: 26, left: 0, right: 0 };
+  const pH    = H - pad.top - pad.bottom;
+  const pW    = W;
+
+  const points = pts.map((p, i) => {
+    const x = (i / (pts.length - 1)) * pW;
+    const y = pad.top + (1 - (p.ele - minE) / range) * pH;
+    return `${x},${y}`;
+  });
+
+  const lastX = pW, baseY = pad.top + pH;
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="#5a8856" stop-opacity="0.65"/>
+        <stop offset="100%" stop-color="#0f1a0f" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <path d="M${points[0]} L${points.join(' L')} L${lastX},${baseY} L0,${baseY} Z" fill="url(#eg)"/>
+    <polyline points="${points.join(' ')}" fill="none" stroke="#96c092" stroke-width="1.5" stroke-linejoin="round"/>
+    <text x="4" y="${H - 9}"    fill="#b0a890" font-size="9" font-family="DM Sans,sans-serif">${Math.round(minE)}m</text>
+    <text x="4" y="${pad.top + 9}" fill="#b0a890" font-size="9" font-family="DM Sans,sans-serif">${Math.round(maxE)}m</text>
+  `;
+}
+
+function updateElevationCursor(lat, lon) {
+  if (!state.gpxPoints.length) return;
+  let minDist = Infinity, idx = 0;
+  state.gpxPoints.forEach((pt, i) => {
+    const d = haversine(lat, lon, pt.lat, pt.lon);
+    if (d < minDist) { minDist = d; idx = i; }
+  });
+  const pct = idx / (state.gpxPoints.length - 1);
+  const W   = document.getElementById('elevation-svg').clientWidth || 400;
+  const cur = document.getElementById('elevation-cursor');
+  cur.style.left    = `${pct * W}px`;
+  cur.style.opacity = '1';
+
+  const walked    = state.routeDistances[idx] || 0;
+  const remaining = (state.totalDistance - walked) || 0;
+  const etaMin    = Math.round(remaining / 4 * 60);
+  document.getElementById('stat-dist').textContent    = walked.toFixed(1);
+  document.getElementById('stat-remain').textContent  = remaining.toFixed(1);
+  document.getElementById('stat-eta').textContent     =
+    etaMin < 60 ? `${etaMin} min` : `${Math.floor(etaMin/60)}h ${etaMin % 60}m`;
+}
+
+// ── GPS ────────────────────────────────────────────────────────────────────
+function startGPS() {
+  if (!('geolocation' in navigator)) return;
+  navigator.geolocation.watchPosition(onPosition, err => console.warn(err.message), {
+    enableHighAccuracy: true, maximumAge: 3000, timeout: 10000,
+  });
+}
+
+function onPosition({ coords: { latitude: lat, longitude: lon, accuracy: acc } }) {
+  state.userLat = lat; state.userLon = lon; state.userAcc = acc;
+
+  if (!state.gpsMarker) {
+    const el = document.createElement('div');
+    el.innerHTML = '<div class="gps-dot-outer"><div class="gps-dot-inner"></div></div>';
+    state.gpsMarker = L.marker([lat, lon], {
+      icon: L.divIcon({ html: el, className: '', iconSize: [24, 24], iconAnchor: [12, 12] }),
+      zIndexOffset: 1000,
+    }).addTo(map);
+    state.gpsAccCircle = L.circle([lat, lon], {
+      radius: acc, color: '#4285f4', fillColor: '#4285f4',
+      fillOpacity: 0.08, weight: 1, opacity: 0.4,
+    }).addTo(map);
+  } else {
+    state.gpsMarker.setLatLng([lat, lon]);
+    state.gpsAccCircle.setLatLng([lat, lon]).setRadius(acc);
+  }
+
+  if (!state.mapCenteredOnUser) {
+    map.setView([lat, lon], 15);
+    state.mapCenteredOnUser = true;
+    document.getElementById('fab-recenter').classList.add('hidden');
+  }
+
+  updateElevationCursor(lat, lon);
+  checkProximity(lat, lon);
+}
+
+map.on('drag', () => {
+  if (state.userLat !== null)
+    document.getElementById('fab-recenter').classList.remove('hidden');
+});
+
+document.getElementById('fab-recenter').addEventListener('click', () => {
+  if (state.userLat !== null) {
+    map.setView([state.userLat, state.userLon], 15);
+    document.getElementById('fab-recenter').classList.add('hidden');
+  }
+});
+
+// ── Proximity Alerts ───────────────────────────────────────────────────────
+const PROXIMITY_M = 50;
+
+function checkProximity(lat, lon) {
+  state.poiMarkers.forEach(({ poi, marker }) => {
+    const dist     = haversine(lat, lon, poi.lat, poi.lon) * 1000;
+    const wasNearby = state.nearbyPois.has(poi.id);
+    const isNearby  = dist < PROXIMITY_M;
+    if (isNearby && !wasNearby) {
+      state.nearbyPois.add(poi.id);
+      marker.setIcon(makePOIIcon(true));
+      if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
+    } else if (!isNearby && wasNearby) {
+      state.nearbyPois.delete(poi.id);
+      marker.setIcon(makePOIIcon(false));
+    }
+  });
+}
+
+// ── Offline / PWA ──────────────────────────────────────────────────────────
+function tile2url(x, y, z) {
+  return `https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/${z}/${y}/${x}`;
+}
+const lat2tile = (lat, z) =>
+  Math.floor((1 - Math.log(Math.tan(lat * Math.PI/180) + 1/Math.cos(lat * Math.PI/180)) / Math.PI) / 2 * 2**z);
+const lon2tile = (lon, z) =>
+  Math.floor((lon + 180) / 360 * 2**z);
+
+async function cacheAssets() {
+  if (!('caches' in window)) { alert(ui('cacheUnavailable')); return; }
+
+  const btn     = document.getElementById('fab-offline');
+  btn.classList.add('hidden');
+  const progWrap  = document.getElementById('download-progress-wrap');
+  const progLabel = document.getElementById('download-progress-label');
+  const progBar   = document.getElementById('download-progress-bar');
+  progWrap.classList.add('visible');
+  setStatus(ui('downloading'), 'downloading');
+
+  const bounds = state.gpxLayer ? state.gpxLayer.getBounds() : map.getBounds();
+  const tileURLs = [];
+  for (let z = 12; z <= 17; z++) {
+    const minX = lon2tile(bounds.getWest(), z), maxX = lon2tile(bounds.getEast(), z);
+    const minY = lat2tile(bounds.getNorth(), z), maxY = lat2tile(bounds.getSouth(), z);
+    for (let x = minX; x <= maxX; x++)
+      for (let y = minY; y <= maxY; y++)
+        tileURLs.push(tile2url(x, y, z));
+  }
+
+  const appAssets = [
+    '/', '/index.html', '/sw.js', '/manifest.json', '/pois.json', '/assets/route.gpx',
+    '/assets/leaflet.css',
+    '/assets/leaflet.js',
+    '/assets/gpx.js',
+  ];
+  const poiAssets = [];
+  state.pois.forEach(p => {
+    if (p.audio) poiAssets.push(p.audio);
+    (p.images || []).forEach(img => poiAssets.push(img));
+  });
+
+  const allURLs = [...appAssets, ...poiAssets, ...tileURLs];
+  const total = allURLs.length;
+  let done = 0;
+  const cache = await caches.open('ruta-interactiva-v1');
+  const BATCH = 8;
+
+  for (let i = 0; i < allURLs.length; i += BATCH) {
+    const batch = allURLs.slice(i, i + BATCH);
+    await Promise.allSettled(
+      batch.map(url =>
+        fetch(url, { mode: 'no-cors' }).then(r => cache.put(url, r)).catch(() => {})
+      )
+    );
+    done += batch.length;
+    const pct = Math.min(100, Math.round(done / total * 100));
+    progLabel.textContent    = `${ui('downloading')} ${pct}%`;
+    progBar.style.width      = `${pct}%`;
+    await new Promise(r => setTimeout(r, 0));
+  }
+
+  progWrap.classList.remove('visible');
+  state.offlineReady = true;
+  setStatus(ui('offlineReady'), 'ready');
+  btn.querySelector('#fab-offline-label').textContent = ui('downloaded');
+  btn.classList.remove('hidden');
+  btn.disabled = true;
+  navigator.serviceWorker.controller?.postMessage({ type: 'CACHE_DONE' });
+}
+
+document.getElementById('fab-offline').addEventListener('click', cacheAssets);
+
+async function checkOfflineStatus() {
+  if (!('caches' in window)) return;
+  try {
+    const keys = await (await caches.open('ruta-interactiva-v1')).keys();
+    if (keys.length > 10) {
+      state.offlineReady = true;
+      setStatus(ui('offlineReady'), 'ready');
+      const btn = document.getElementById('fab-offline');
+      btn.querySelector('#fab-offline-label').textContent = ui('downloaded');
+      btn.disabled = true;
+    }
+  } catch(_) {}
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+async function init() {
+  setStatus(ui('loading'));
+  await parseGPXPoints();
+  setStatus(state.gpxPoints.length > 0 ? ui('routeLoaded') : ui('routeError'),
+            state.gpxPoints.length > 0 ? 'ready' : 'error');
+  loadGPX();
+  loadPOIs();
+  startGPS();
+  checkOfflineStatus();
+}
+
+init();
+</script>
+</body>
+</html>

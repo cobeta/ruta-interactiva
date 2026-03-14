@@ -1,0 +1,59 @@
+[
+  {
+    "id": "poi-01",
+    "name": "Start — Trailhead",
+    "lat": 43.75936,
+    "lon": -72.16104,
+    "description": "The route begins here. Replace this with your own description — what makes this spot special, what to look for, any practical notes for hikers.",
+    "images": ["assets/images/poi-01-a.jpg"],
+    "audio": null,
+    "languages": {
+      "en": {
+        "name": "Start — Trailhead",
+        "description": "Your journey into the forest begins here, where a gap in the old stone wall marks the entrance to the trail. Sugar maples and yellow birch crowd the path on both sides — in autumn their canopy burns with amber and scarlet, while in spring the understory fills with trout lilies and the sweet smell of thaw. Sign in at the register box before you set off, and check the weather: this trail can hold ice well into April."
+      },
+      "es": {
+        "name": "Inicio — Acceso al sendero",
+        "description": "El camino comienza aquí, donde una brecha en el antiguo muro de piedra marca la entrada al bosque. Arces dulces y abedules amarillos flanquean el sendero por ambos lados — en otoño su dosel resplandece en ámbar y escarlata, mientras que en primavera el sotobosque se llena de lirios truchas y del dulce olor del deshielo. Anótate en el registro antes de partir y consulta el tiempo: el hielo puede persistir en este sendero hasta bien entrado abril."
+      }
+    }
+  },
+  {
+    "id": "poi-02",
+    "name": "Midpoint",
+    "lat": 43.75807,
+    "lon": -72.16243,
+    "description": "You're about halfway. Add your own description here — a viewpoint, a historical note, something worth pausing for.",
+    "images": ["assets/images/poi-02-a.jpg"],
+    "audio": null,
+    "languages": {
+      "en": {
+        "name": "Midpoint — Stone Wall Clearing",
+        "description": "You've reached the heart of the trail, where the forest opens briefly around a crumbling colonial-era stone wall — evidence of a farm that stood here long before the trees reclaimed the land. White birches lean in from the edges, their paper-pale bark catching the light, and if you stop and listen you may hear the drumming of a pileated woodpecker in the hemlocks above. This is a good spot to refill water if you have a filter, as a small seasonal stream runs just east of the wall."
+      },
+      "es": {
+        "name": "Punto medio — Claro del muro de piedra",
+        "description": "Has llegado al corazón del sendero, donde el bosque se abre brevemente en torno a un antiguo muro de piedra colonial — testimonio de una granja que existió aquí mucho antes de que los árboles recuperaran la tierra. Abedules blancos se asoman desde los bordes, con su corteza pálida como papel captando la luz, y si te detienes a escuchar quizás oigas el tamborileo de un pájaro carpintero real en los hemlock de arriba. Es un buen lugar para reponer agua si llevas filtro, ya que un pequeño arroyo estacional discurre justo al este del muro."
+      }
+    }
+  },
+  {
+    "id": "poi-03",
+    "name": "End — Finish",
+    "lat": 43.75709,
+    "lon": -72.16356,
+    "description": "The route ends nearby. Replace this with whatever makes this destination worth reaching.",
+    "images": ["assets/images/poi-03-a.jpg"],
+    "audio": null,
+    "languages": {
+      "en": {
+        "name": "End — Summit Outlook",
+        "description": "The trail finishes here at a modest rocky outlook where the treeline breaks and the Green Mountains roll away to the west. On a clear day you can pick out Killington's rounded summit and, further south, the long ridge of Bromley. Take your time — you've earned it. The descent back is the same path, and the late-afternoon light filtering through the maples on the return is something worth slowing down for."
+      },
+      "es": {
+        "name": "Final — Mirador de la cima",
+        "description": "El sendero termina aquí, en un modesto mirador rocoso donde la línea de árboles se abre y las Montañas Verdes se despliegan hacia el oeste. En un día despejado se distingue la redondeada cima de Killington y, más al sur, la larga cresta de Bromley. Tómate tu tiempo — te lo has ganado. El descenso sigue el mismo camino, y la luz de la tarde filtrándose entre los arces en el regreso es algo que vale la pena saborear despacio."
+      }
+    }
+  }
+]
