@@ -507,7 +507,7 @@
 
 <!-- Map -->
 <div id="map">
-  <button id="fab-recenter" class="hidden" title="Recenter">
+  <button id="fab-recenter" title="Recenter">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
   </button>
   <button id="fab-offline">
@@ -973,22 +973,15 @@ function onPosition({ coords: { latitude: lat, longitude: lon, accuracy: acc } }
   if (!state.mapCenteredOnUser) {
     map.setView([lat, lon], 15);
     state.mapCenteredOnUser = true;
-    document.getElementById('fab-recenter').classList.add('hidden');
   }
 
   updateElevationCursor(lat, lon);
   checkProximity(lat, lon);
 }
 
-map.on('drag', () => {
-  if (state.userLat !== null)
-    document.getElementById('fab-recenter').classList.remove('hidden');
-});
-
 document.getElementById('fab-recenter').addEventListener('click', () => {
   if (state.userLat !== null) {
     map.setView([state.userLat, state.userLon], 15);
-    document.getElementById('fab-recenter').classList.add('hidden');
   }
 });
 

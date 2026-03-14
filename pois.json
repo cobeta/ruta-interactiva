@@ -3,7 +3,7 @@
     "id": "poi-01",
     "lat": 43.758068,
     "lon": -72.157624,
-    "images": [],
+    "images": ["assets/images/poi-01-a.jpg"],
     "audio": null,
     "languages": {
       "en": {
@@ -20,7 +20,7 @@
     "id": "poi-02",
     "lat": 43.759185,
     "lon": -72.152768,
-    "images": [],
+    "images": ["assets/images/poi-02-a.jpg"],
     "audio": null,
     "languages": {
       "en": {
@@ -37,7 +37,7 @@
     "id": "poi-03",
     "lat": 43.758589,
     "lon": -72.152330,
-    "images": [],
+    "images": ["assets/images/poi-03-a.jpg"],
     "audio": null,
     "languages": {
       "en": {
