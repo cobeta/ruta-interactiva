@@ -90,97 +90,38 @@
       align-items: center;
     }
 
-    /* ── Hero Section ────────────────────────────────────────────── */
-    .hero {
-      position: relative;
-      padding: 56px 24px 52px;
-      overflow: hidden;
-      background: var(--f950);
-      border-bottom: 1px solid rgba(36,59,36,0.5);
+    /* ── Lang toggle ─────────────────────────────────────────────── */
+    #lang-toggle {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      border: 1px solid var(--f700);
+      border-radius: 8px;
+      overflow: hidden;
+      height: 32px;
     }
-
-    .hero-topo-bg {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.6;
-    }
-
-    .hero-eyebrow {
-      font-family: 'Courier Prime', monospace;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--copper);
-      margin-bottom: 14px;
-      position: relative;
-      z-index: 1;
-      animation: fade-up 0.6s 0.1s ease both;
-    }
-
-    .hero-title {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: clamp(46px, 13vw, 72px);
-      font-weight: 300;
-      line-height: 1.0;
-      color: var(--cream);
-      letter-spacing: -0.02em;
-      margin-bottom: 18px;
-      position: relative;
-      z-index: 1;
-      animation: fade-up 0.7s 0.2s ease both;
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--copper-light);
-      font-weight: 400;
-    }
-
-    .hero-sub {
-      font-size: 15px;
-      font-weight: 400;
+    .lang-opt {
+      padding: 0 11px;
+      background: transparent;
+      border: none;
       color: var(--cream-muted);
-      line-height: 1.5;
-      max-width: 280px;
-      position: relative;
-      z-index: 1;
-      animation: fade-up 0.6s 0.35s ease both;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    .hero-scroll-cue {
-      margin-top: 32px;
-      font-size: 18px;
-      color: var(--copper);
-      opacity: 0.5;
-      position: relative;
-      z-index: 1;
-      animation: bounce-down 2s 1s ease infinite;
-      user-select: none;
-    }
-
-    /* Hero animations */
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes bounce-down {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-      30%            { transform: translateY(8px); opacity: 1; }
-    }
+    .lang-opt:not(:last-child) { border-right: 1px solid var(--f700); }
+    .lang-opt.active { background: var(--f700); color: var(--cream); }
 
     /* ── Gallery Section ─────────────────────────────────────────── */
     .gallery-section {
-      padding: 32px 0 0;
+      padding: 20px 0 0;
       flex: 1;
     }
 
     .gallery-header {
-      padding: 0 20px 18px;
+      padding: 0 20px 14px;
       display: flex;
       align-items: baseline;
       gap: 10px;
@@ -452,8 +393,6 @@
         flex-shrink: 1;
       }
       .gallery-dots { display: none; }
-      .hero { padding: 72px 40px 64px; }
-      .hero-sub { max-width: 360px; }
     }
 
     @media (min-width: 1024px) {
@@ -487,27 +426,15 @@
     </span>
     Ruta Interactiva
   </div>
+  <div id="lang-toggle">
+    <button class="lang-opt active" data-lang="en">EN</button>
+    <button class="lang-opt" data-lang="es">ES</button>
+  </div>
 </header>
-
-<section class="hero">
-  <!-- Animated topo circle background -->
-  <svg class="hero-topo-bg" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMid slice">
-    <ellipse cx="520" cy="180" rx="260" ry="190" fill="none" stroke="rgba(200,135,74,0.07)" stroke-width="1"/>
-    <ellipse cx="520" cy="180" rx="200" ry="145" fill="none" stroke="rgba(200,135,74,0.06)" stroke-width="1"/>
-    <ellipse cx="520" cy="180" rx="140" ry="100" fill="none" stroke="rgba(200,135,74,0.055)" stroke-width="1"/>
-    <ellipse cx="520" cy="180" rx="88" ry="62" fill="none" stroke="rgba(200,135,74,0.045)" stroke-width="1"/>
-    <ellipse cx="520" cy="180" rx="46" ry="32" fill="none" stroke="rgba(200,135,74,0.035)" stroke-width="1"/>
-  </svg>
-
-  <p class="hero-eyebrow">5 trails · 2 continents</p>
-  <h1 class="hero-title">Find Your<br><em>Next Trail.</em></h1>
-  <p class="hero-sub">Download once. Hike without signal.</p>
-  <div class="hero-scroll-cue">↓</div>
-</section>
 
 <section class="gallery-section">
   <div class="gallery-header">
-    <span class="gallery-label">Available Trails</span>
+    <span class="gallery-label" id="label-trails">Available Trails</span>
     <span class="gallery-count">— 05</span>
   </div>
   <div class="gallery-wrap" id="route-grid">
@@ -1180,8 +1107,8 @@ function renderCards(downloaded) {
       <div class="card-actions">
         <div class="card-progress-strip"><div class="card-progress-fill"></div></div>
         <div class="card-progress-label"></div>
-        <button class="btn-download"${isDownloaded ? ' style="display:none"' : ''}>↓ Download &amp; Go</button>
-        <a class="btn-open${isDownloaded ? ' visible' : ''}" href="trail.html?route=${route.id}">→ Open Trail</a>
+        <button class="btn-download"${isDownloaded ? ' style="display:none"' : ''}>${UI[currentLang].download}</button>
+        <a class="btn-open${isDownloaded ? ' visible' : ''}" href="trail.html?route=${route.id}">${UI[currentLang].open}</a>
       </div>
     `;
 
@@ -1196,6 +1123,28 @@ function renderCards(downloaded) {
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
+// ── Language toggle ────────────────────────────────────────────────────────
+const UI = {
+  en: { trails: 'Available Trails', download: 'Download & Go', open: '→ Open Trail', offline: 'Works offline after download · GPS-enabled · No account required' },
+  es: { trails: 'Rutas disponibles',  download: 'Descargar y comenzar', open: '→ Abrir ruta', offline: 'Funciona sin conexión tras descargar · GPS · Sin cuenta' },
+};
+let currentLang = 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-opt').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  document.getElementById('label-trails').textContent = UI[lang].trails;
+  const footer = document.querySelector('footer p');
+  if (footer) footer.textContent = UI[lang].offline;
+  document.querySelectorAll('.btn-download').forEach(b => { if (!b.disabled) b.textContent = UI[lang].download; });
+  document.querySelectorAll('.btn-open').forEach(b => { b.textContent = UI[lang].open; });
+}
+
+document.getElementById('lang-toggle').addEventListener('click', e => {
+  const opt = e.target.closest('.lang-opt');
+  if (opt) applyLang(opt.dataset.lang);
+});
+
 getDownloadedRoutes().then(renderCards);
 </script>
 </body>
