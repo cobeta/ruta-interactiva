@@ -1,13 +1,17 @@
 // Service Worker — Ruta Interactiva
-const CACHE_NAME = 'ruta-interactiva-v1';
+const CACHE_NAME = 'ruta-interactiva-v2';
 
 // Core assets to cache on install
 const PRECACHE = [
   '/',
   '/index.html',
+  '/trail.html',
   '/manifest.json',
-  '/pois.json',
-  '/assets/route.gpx',
+  '/routes/hanover/pois.json',
+  '/routes/allue-casteriello/pois.json',
+  '/routes/allue-san-anton/pois.json',
+  '/routes/allue-collata/pois.json',
+  '/routes/allue-puyaldo/pois.json',
 ];
 
 // ── Install ────────────────────────────────────────────────────────────────
@@ -35,25 +39,28 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // Always try network for navigation (HTML) — fallback to cache
+  // Navigation: try cache first (for offline), then network, fallback to index
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(() =>
-        caches.match('/index.html')
-      )
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+        return fetch(event.request).catch(() => caches.match('/index.html'));
+      })
     );
     return;
   }
 
-  // Cache-first for map tiles (no-cors) and local assets (plain fetch)
-  const isUSGSTile = url.hostname === 'basemap.nationalmap.gov';
-  const isLocalAsset = url.pathname.startsWith('/assets/') && url.origin === self.location.origin;
+  // Cache-first for map tiles and local assets
+  const isUSGSTile  = url.hostname === 'basemap.nationalmap.gov';
+  const isOSMTile   = url.hostname === 'tile.openstreetmap.org' || url.hostname === 'tile.opentopomap.org';
+  const isLocalAsset = url.origin === self.location.origin &&
+    (url.pathname.startsWith('/assets/') || url.pathname.startsWith('/routes/'));
 
-  if (isUSGSTile || isLocalAsset) {
+  if (isUSGSTile || isOSMTile || isLocalAsset) {
     event.respondWith(
       caches.match(event.request).then(cached => {
         if (cached) return cached;
-        const fetchOpts = isUSGSTile ? { mode: 'no-cors' } : {};
+        const fetchOpts = (isUSGSTile || isOSMTile) ? { mode: 'no-cors' } : {};
         return fetch(event.request, fetchOpts).then(resp => {
           if (resp && (resp.status === 200 || resp.type === 'opaque')) {
             const clone = resp.clone();

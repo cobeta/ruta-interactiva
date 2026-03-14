@@ -1,0 +1,53 @@
+[
+  {
+    "id": "poi-01",
+    "lat": 43.758068,
+    "lon": -72.157624,
+    "images": ["routes/hanover/images/poi-01-a.jpg"],
+    "audio": null,
+    "languages": {
+      "en": {
+        "name": "Eastern White Pine",
+        "description": "The tall, straight trunks rising on either side of the path belong to Eastern White Pine — New Hampshire's state tree and one of the tallest conifers in the Northeast. A mature white pine can top 150 feet, its needles bundled in soft clusters of five. Indigenous Abenaki people used its inner bark as emergency food and its long straight trunks as canoe poles. British colonial surveyors marked the finest specimens with a broad arrow to reserve them for the Royal Navy's masts — a monopoly that quietly stoked the fires of revolution. Look up: the crown rarely has a perfect point, giving it a ragged, wind-sculpted silhouette unique among pines."
+      },
+      "es": {
+        "name": "Pino blanco del este",
+        "description": "Los altos y rectos troncos que se elevan a ambos lados del camino pertenecen al pino blanco del este — el árbol emblema de New Hampshire y uno de los coníferos más altos del noreste. Un pino blanco maduro puede superar los 45 metros, con agujas agrupadas en suaves mechones de cinco. Los abenaki, pueblo indígena de la región, usaban su corteza interior como alimento de emergencia y sus largos troncos rectos como pértigas para canoas. Los agrimensores coloniales británicos marcaban los mejores ejemplares con una flecha ancha para reservarlos como mástiles de la Marina Real — un monopolio que avivó silenciosamente las llamas de la revolución. Mira hacia arriba: la copa rara vez tiene una punta perfecta, lo que le da una silueta irregular y esculpida por el viento, única entre los pinos."
+      }
+    }
+  },
+  {
+    "id": "poi-02",
+    "lat": 43.759185,
+    "lon": -72.152768,
+    "images": ["routes/hanover/images/poi-02-a.jpg"],
+    "audio": null,
+    "languages": {
+      "en": {
+        "name": "American Beech & Yellow Birch",
+        "description": "Two of New Hampshire's most distinctive hardwoods share this stretch of trail. American Beech holds its papery, smooth silver-gray bark well into old age — almost every beech you see carries the carved initials of someone who could not resist. Its nuts are a critical fall food for black bears, wild turkeys, and blue jays before winter sets in. Threaded among them are Yellow Birch, easily identified by their shimmering, amber-golden bark that peels in thin curls. Crush a small twig between your fingers and you'll catch a faint scent of wintergreen — the tree produces the same compound, methyl salicylate, that gives wintergreen candy its flavor. Both species thrive in the cool, moist soils of these New England uplands."
+      },
+      "es": {
+        "name": "Haya americana y abedul amarillo",
+        "description": "Dos de los frondosos más característicos de New Hampshire comparten este tramo del sendero. La haya americana conserva su corteza lisa y plateada hasta la vejez — casi todos los ejemplares que ves llevan talladas las iniciales de alguien que no pudo resistirse. Sus nueces son un alimento otoñal fundamental para los osos negros, los pavos silvestres y los arrendajos azules antes de que llegue el invierno. Entretejidos entre ellas aparecen los abedules amarillos, fáciles de identificar por su corteza dorada y ambarino que se pela en finas espirales. Frota una ramita pequeña entre los dedos y percibirás un suave aroma a gaulteria — el árbol produce el mismo compuesto, el salicilato de metilo, que da sabor a los caramelos de menta. Ambas especies prosperan en los suelos frescos y húmedos de estas tierras altas de Nueva Inglaterra."
+      }
+    }
+  },
+  {
+    "id": "poi-03",
+    "lat": 43.758589,
+    "lon": -72.152330,
+    "images": ["routes/hanover/images/poi-03-a.jpg"],
+    "audio": null,
+    "languages": {
+      "en": {
+        "name": "Sugar Maple & the Making of Maple Syrup",
+        "description": "You are standing in the heart of sugar maple country. Acer saccharum — the sugar maple — is the backbone of New Hampshire's sugarbush forests, painting hillsides in blazing orange and red each fall and providing something rarer in spring: maple syrup.\n\nThe process begins when temperatures swing above freezing by day and drop back below at night — typically late February through April. This freeze-thaw cycle creates pressure changes inside the tree that push sap upward through the sapwood. Sugarmakers drill small tap holes, no wider than your thumb, and hang metal or plastic spouts. Gravity and that pressure difference draw the sap — a nearly clear liquid tasting only faintly sweet — into buckets or miles of plastic tubing that web entire hillsides.\n\nIt takes roughly 40 gallons of raw sap to produce a single gallon of syrup. The sap is boiled in a long, flat evaporator pan until water evaporates and the sugar concentration rises to 66 percent. The result, filtered and graded by color and flavor, ranges from the pale and delicate 'Golden' to the robust, dark 'Very Dark' used in cooking. New Hampshire's sugarmakers produce millions of pounds of syrup each year, a tradition stretching back to Abenaki methods long before European settlement."
+      },
+      "es": {
+        "name": "Arce de azúcar y la elaboración del jarabe de arce",
+        "description": "Estás en el corazón del país del arce de azúcar. Acer saccharum — el arce azucarero — es la columna vertebral de los bosques de producción de New Hampshire, tiñendo las laderas de naranja y rojo intenso cada otoño y ofreciendo algo más raro en primavera: el jarabe de arce.\n\nEl proceso comienza cuando las temperaturas superan el punto de congelación durante el día y vuelven a bajar por la noche — generalmente de finales de febrero a abril. Este ciclo de helada y deshielo genera cambios de presión dentro del árbol que empujan la savia hacia arriba a través de la albura. Los productores de azúcar perforan pequeños agujeros de toma, no más anchos que el pulgar, y colocan grifos de metal o plástico. La gravedad y la diferencia de presión hacen fluir la savia — un líquido casi transparente con un sabor apenas dulce — hacia cubos o kilómetros de tuberías de plástico que tejen laderas enteras.\n\nSe necesitan aproximadamente 150 litros de savia cruda para producir un solo litro de jarabe. La savia se hierve en una larga bandeja evaporadora plana hasta que el agua se evapora y la concentración de azúcar sube al 66 por ciento. El resultado, filtrado y clasificado por color y sabor, va desde el pálido y delicado 'Dorado' hasta el robusto y oscuro 'Muy oscuro' usado en cocina. Los productores de jarabe de arce de New Hampshire elaboran millones de kilogramos de jarabe cada año, una tradición que se remonta a los métodos abenaki mucho antes de la colonización europea."
+      }
+    }
+  }
+]

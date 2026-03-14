@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0f1a0f">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,10 +14,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/leaflet.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,600;1,9..144,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ── CSS Variables ───────────────────────────────────────────── */
     :root {
       --f950: #080f08;
       --f900: #0f1a0f;
@@ -30,1080 +30,1173 @@
       --copper:       #c8874a;
       --copper-light: #e0a86a;
       --copper-pale:  #f2ddc0;
+      --copper-dim:   rgba(200,135,74,0.18);
 
       --cream:        #f0e8d5;
       --cream-muted:  #b0a890;
+      --cream-dim:    rgba(240,232,213,0.55);
 
-      --modal-bg:     rgba(12, 20, 12, 0.97);
-      --shadow:       0 4px 20px rgba(0,0,0,0.55);
-      --shadow-lg:    0 8px 40px rgba(0,0,0,0.7);
+      --shadow:    0 4px 20px rgba(0,0,0,0.55);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.7);
 
-      /* Topographic contour pattern */
+      --terrain-overlay: linear-gradient(to top, rgba(8,15,8,0.88) 0%, rgba(8,15,8,0.15) 55%, transparent 100%);
+
       --topo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='120'%3E%3Cellipse cx='80' cy='60' rx='76' ry='56' fill='none' stroke='rgba(255,255,255,0.032)' stroke-width='1'/%3E%3Cellipse cx='80' cy='60' rx='54' ry='38' fill='none' stroke='rgba(255,255,255,0.028)' stroke-width='1'/%3E%3Cellipse cx='80' cy='60' rx='32' ry='22' fill='none' stroke='rgba(255,255,255,0.022)' stroke-width='1'/%3E%3Cellipse cx='80' cy='60' rx='14' ry='9' fill='none' stroke='rgba(255,255,255,0.018)' stroke-width='1'/%3E%3C/svg%3E");
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── Reset & Base ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'DM Sans', -apple-system, sans-serif;
-      background: var(--f900);
+      background: var(--f950);
       color: var(--cream);
-      height: 100dvh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
-    /* ── Top Bar ─────────────────────────────────────────────── */
-    #topbar {
+    /* ── Header ──────────────────────────────────────────────────── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 20px;
+      background: rgba(8,15,8,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(58,94,56,0.3);
       display: flex;
       align-items: center;
-      padding: 0 14px;
-      height: 54px;
-      background: var(--f950);
-      background-image: var(--topo);
-      border-bottom: 1px solid var(--f800);
-      flex-shrink: 0;
-      gap: 10px;
-      z-index: 1000;
+      justify-content: space-between;
     }
 
-    #app-title {
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
       font-family: 'Fraunces', Georgia, serif;
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 600;
       color: var(--copper-light);
-      white-space: nowrap;
       letter-spacing: 0.01em;
+    }
+
+    .brand-icon {
+      color: var(--copper);
       flex-shrink: 0;
       display: flex;
       align-items: center;
-      gap: 6px;
     }
-    #app-title svg { opacity: 0.85; flex-shrink: 0; }
 
-    #status-bar {
+    /* ── Hero Section ────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      padding: 56px 24px 52px;
+      overflow: hidden;
+      background: var(--f950);
+      border-bottom: 1px solid rgba(36,59,36,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .hero-topo-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Courier Prime', monospace;
       font-size: 11px;
-      font-weight: 500;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+      animation: fade-up 0.6s 0.1s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(46px, 13vw, 72px);
+      font-weight: 300;
+      line-height: 1.0;
+      color: var(--cream);
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+      animation: fade-up 0.7s 0.2s ease both;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--copper-light);
+      font-weight: 400;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--cream-muted);
+      line-height: 1.5;
+      max-width: 280px;
+      position: relative;
+      z-index: 1;
+      animation: fade-up 0.6s 0.35s ease both;
+    }
+
+    .hero-scroll-cue {
+      margin-top: 32px;
+      font-size: 18px;
+      color: var(--copper);
+      opacity: 0.5;
+      position: relative;
+      z-index: 1;
+      animation: bounce-down 2s 1s ease infinite;
+      user-select: none;
+    }
+
+    /* Hero animations */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce-down {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30%            { transform: translateY(8px); opacity: 1; }
+    }
+
+    /* ── Gallery Section ─────────────────────────────────────────── */
+    .gallery-section {
+      padding: 32px 0 0;
+      flex: 1;
+    }
+
+    .gallery-header {
+      padding: 0 20px 18px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .gallery-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream-muted);
+      opacity: 0.65;
+    }
+
+    .gallery-count {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--copper);
+      opacity: 0.8;
+    }
+
+    /* Gallery — mobile scroll snap */
+    .gallery-wrap {
+      overflow-x: auto;
+      display: flex;
+      scroll-snap-type: x mandatory;
+      gap: 12px;
+      padding: 0 20px 28px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .gallery-wrap::-webkit-scrollbar { display: none; }
+
+    /* Scroll dots */
+    .gallery-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 4px 0 28px;
+    }
+
+    .gallery-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--f600);
+      transition: width 0.25s ease, background 0.25s ease;
+      cursor: pointer;
+    }
+    .gallery-dot.active {
+      width: 20px;
+      background: var(--copper);
+    }
+
+    /* ── Route Card ──────────────────────────────────────────────── */
+    .route-card {
+      flex-shrink: 0;
+      width: min(84vw, 320px);
+      scroll-snap-align: start;
+      background: var(--f800);
+      border: 1px solid rgba(36,59,36,0.8);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      animation: card-rise 0.5s ease both;
+      animation-delay: calc(var(--i) * 80ms);
+    }
+
+    .route-card:hover {
+      border-color: rgba(58,94,56,0.9);
+      box-shadow: var(--shadow-lg);
+    }
+
+    @keyframes card-rise {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Card terrain hero ───────────────────────────────────────── */
+    .card-terrain {
+      position: relative;
+      height: 190px;
+      overflow: hidden;
+      background: var(--f950);
+      flex-shrink: 0;
+    }
+
+    .card-terrain svg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      inset: 0;
+      display: block;
+    }
+
+    .card-terrain-overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--terrain-overlay);
+      display: flex;
+      align-items: flex-end;
+      padding: 12px 14px;
+    }
+
+    .card-country-badge {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       color: var(--cream-muted);
       display: flex;
       align-items: center;
       gap: 5px;
+      background: rgba(8,15,8,0.55);
+      padding: 4px 9px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    /* ── Card body ───────────────────────────────────────────────── */
+    .card-content {
+      padding: 16px 18px 10px;
       flex: 1;
-      min-width: 0;
-      letter-spacing: 0.02em;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    #status-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--f400);
-      flex-shrink: 0;
-      transition: background 0.4s;
-    }
-    #status-dot.ready      { background: #6dc85a; }
-    #status-dot.downloading{ background: var(--copper); animation: blink 1s infinite; }
-    #status-dot.error      { background: #e05050; }
-
-    #status-text {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    .card-name {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--cream);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
     }
 
-    @keyframes blink { 50% { opacity: 0.25; } }
-
-    /* ── Top Controls ───────────────────────────────────────── */
-    #topbar-controls {
+    .card-meta {
       display: flex;
       align-items: center;
-      gap: 7px;
-      flex-shrink: 0;
+      gap: 8px;
     }
 
-    .icon-btn {
-      width: 34px; height: 34px;
-      border-radius: 8px;
-      border: 1px solid var(--f700);
-      background: var(--f900);
-      color: var(--cream-muted);
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      line-height: 1;
-      transition: background 0.15s, border-color 0.15s, color 0.15s;
-      -webkit-tap-highlight-color: transparent;
+    .difficulty-badge {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 20px;
     }
-    .icon-btn:active { background: var(--f700); }
+    .difficulty-badge.easy       { background: rgba(109,200,90,0.12); color: #6dc85a; border: 1px solid rgba(109,200,90,0.28); }
+    .difficulty-badge.moderate   { background: rgba(200,165,74,0.12); color: #e0c060; border: 1px solid rgba(200,165,74,0.28); }
+    .difficulty-badge.strenuous  { background: rgba(220,90,80,0.12);  color: #e07060; border: 1px solid rgba(220,90,80,0.28); }
 
-    /* Segmented language pill */
-    #lang-toggle {
+    /* ── Card actions ────────────────────────────────────────────── */
+    .card-actions {
+      padding: 0 16px 16px;
       display: flex;
-      border: 1px solid var(--f700);
-      border-radius: 8px;
-      overflow: hidden;
-      height: 34px;
+      flex-direction: column;
+      gap: 8px;
     }
-    .lang-opt {
-      padding: 0 11px;
-      background: transparent;
-      border: none;
-      color: var(--cream-muted);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.07em;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .lang-opt:not(:last-child) { border-right: 1px solid var(--f700); }
-    .lang-opt.active {
+
+    .card-progress-strip {
+      height: 3px;
       background: var(--f700);
-      color: var(--cream);
+      border-radius: 2px;
+      overflow: hidden;
+      display: none;
+    }
+    .card-progress-strip.active { display: block; }
+
+    .card-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--copper) 0%, var(--copper-light) 100%);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s ease;
     }
 
-    /* ── Map ────────────────────────────────────────────────── */
-    #map {
-      flex: 1;
-      position: relative;
-      z-index: 1;
+    .card-progress-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--cream-muted);
+      display: none;
+      letter-spacing: 0.04em;
     }
+    .card-progress-label.active { display: block; }
 
-    /* GPS dot */
-    .gps-dot-outer {
-      width: 24px; height: 24px;
-      border-radius: 50%;
-      background: rgba(66, 133, 244, 0.2);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .gps-dot-inner {
-      width: 13px; height: 13px;
-      border-radius: 50%;
-      background: #4285f4;
-      border: 2.5px solid white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-      animation: gps-pulse 2s ease-out infinite;
-    }
-    @keyframes gps-pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(66,133,244,0.55); }
-      70%  { box-shadow: 0 0 0 10px rgba(66,133,244,0); }
-      100% { box-shadow: 0 0 0 0 rgba(66,133,244,0); }
-    }
-
-    /* POI icon pulse when nearby */
-    .poi-icon-nearby { animation: poi-bounce 1.6s ease-in-out infinite; }
-    @keyframes poi-bounce {
-      0%,100% { transform: translateY(0) scale(1); }
-      45%     { transform: translateY(-4px) scale(1.12); }
-    }
-
-    /* ── Floating Buttons ───────────────────────────────────── */
-    #fab-recenter {
-      position: absolute;
-      bottom: 16px; right: 14px;
-      width: 46px; height: 46px;
+    /* Download button */
+    .btn-download {
+      width: 100%;
+      padding: 14px;
+      background: var(--copper);
+      border: none;
       border-radius: 12px;
-      background: var(--f950);
-      border: 1px solid var(--f700);
-      color: var(--cream);
-      cursor: pointer;
-      box-shadow: var(--shadow-lg);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 400;
-      transition: opacity 0.3s, background 0.15s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    #fab-recenter.hidden { opacity: 0; pointer-events: none; }
-    #fab-recenter:active { background: var(--f700); }
-
-    #fab-offline {
-      position: absolute;
-      bottom: 16px; left: 14px;
-      padding: 0 16px;
-      height: 46px;
-      border-radius: 12px;
-      background: var(--f950);
-      border: 1px solid var(--f700);
-      color: var(--copper-light);
+      color: #080f08;
       font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-download::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+      transform: translateX(-100%);
+    }
+    .btn-download:hover { background: var(--copper-light); }
+    .btn-download:hover::after { animation: shimmer 0.6s ease; }
+    .btn-download:active { transform: scale(0.98); }
+    .btn-download:disabled { opacity: 0.55; cursor: default; }
+
+    @keyframes shimmer {
+      to { transform: translateX(100%); }
+    }
+
+    /* Open trail button */
+    .btn-open {
+      width: 100%;
+      padding: 13px;
+      background: var(--f700);
+      border: 1px solid rgba(58,94,56,0.6);
+      border-radius: 12px;
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
       font-weight: 600;
       letter-spacing: 0.02em;
       cursor: pointer;
-      box-shadow: var(--shadow-lg);
-      display: flex; align-items: center; gap: 7px;
-      z-index: 400;
-      transition: background 0.15s, border-color 0.15s;
-      white-space: nowrap;
-      -webkit-tap-highlight-color: transparent;
-    }
-    #fab-offline:active    { background: var(--f700); }
-    #fab-offline.hidden    { display: none; }
-    #fab-offline:disabled  { opacity: 0.6; cursor: default; }
-
-    /* ── Elevation Strip ────────────────────────────────────── */
-    #elevation {
-      height: 72px;
-      background: var(--f950);
-      border-top: 1px solid var(--f800);
-      position: relative;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-    #elevation-svg { width: 100%; height: 100%; display: block; }
-    #elevation-cursor {
-      position: absolute; top: 0; bottom: 0;
-      width: 2px;
-      background: var(--copper);
-      opacity: 0;
-      pointer-events: none;
-      transition: left 0.5s linear;
-    }
-    #elevation-stats { display: none; }
-
-    /* ── Modal ──────────────────────────────────────────────── */
-    #modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 2000;
-      display: flex; align-items: flex-end;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.25s;
-      backdrop-filter: blur(3px);
-      -webkit-backdrop-filter: blur(3px);
-    }
-    #modal-overlay.open { opacity: 1; pointer-events: all; }
-
-    #modal {
-      background: var(--modal-bg);
-      background-image: var(--topo);
-      border-radius: 22px 22px 0 0;
-      border-top: 1px solid var(--f700);
-      width: 100%;
-      max-height: 88dvh;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      transform: translateY(100%);
-      transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-    #modal-overlay.open #modal { transform: translateY(0); }
-
-    #modal-handle {
-      width: 36px; height: 4px;
-      background: var(--f600);
-      border-radius: 2px;
-      margin: 14px auto 0;
-    }
-
-    #modal-close {
-      position: sticky; top: 0;
-      display: flex; justify-content: flex-end;
-      padding: 8px 16px;
-      z-index: 1;
-    }
-    #modal-close-btn {
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      background: var(--f700);
-      border: none;
-      color: var(--cream-muted);
-      font-size: 13px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s, color 0.15s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    #modal-close-btn:active { background: var(--f600); color: var(--cream); }
-
-    #modal-body { padding: 0 20px 28px; }
-
-    #modal-title {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 24px; font-weight: 600;
-      color: var(--copper-light);
-      margin-bottom: 14px;
-      line-height: 1.2;
-    }
-
-    /* Image carousel */
-    #modal-images {
-      margin: 0 -20px 18px;
-      overflow-x: auto;
-      display: flex; gap: 8px;
-      padding: 0 20px;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-    }
-    #modal-images::-webkit-scrollbar { display: none; }
-
-    .modal-img {
-      flex-shrink: 0;
-      width: calc(100vw - 40px); max-width: 520px;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 14px;
-      scroll-snap-align: start;
-      background: var(--f700);
-    }
-    .modal-img-placeholder {
-      flex-shrink: 0;
-      width: calc(100vw - 40px); max-width: 520px;
-      height: 200px;
-      border-radius: 14px;
-      background: var(--f800);
-      background-image: var(--topo);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 10px;
-      color: var(--f400);
-    }
-    .modal-img-placeholder span {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--cream-muted);
-      opacity: 0.6;
-    }
-
-    #modal-description {
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--cream);
-      opacity: 0.88;
-      margin-bottom: 22px;
-    }
-
-    /* ── Audio Player ───────────────────────────────────────── */
-    #modal-audio-section {
-      background: var(--f900);
-      border: 1px solid var(--f700);
-      border-radius: 16px;
-      padding: 16px 18px;
-    }
-    #audio-label {
-      font-size: 10px; font-weight: 600;
-      color: var(--cream-muted);
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      display: flex; align-items: center; gap: 6px;
-    }
-    #audio-controls {
-      display: flex; align-items: center; gap: 14px;
-    }
-    #audio-play-btn {
-      width: 46px; height: 46px;
-      border-radius: 50%;
-      background: var(--f600);
-      border: none;
-      color: white;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.15s, transform 0.1s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    #audio-play-btn:active   { transform: scale(0.91); }
-    #audio-play-btn.playing  { background: var(--copper); }
-
-    #audio-progress-wrap {
-      flex: 1;
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    #audio-progress {
-      width: 100%; height: 3px;
-      -webkit-appearance: none; appearance: none;
-      background: var(--f700);
-      border-radius: 2px;
-      cursor: pointer; outline: none;
-    }
-    #audio-progress::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--copper-light);
-      cursor: pointer;
-      box-shadow: 0 0 0 3px rgba(200,135,74,0.22);
-    }
-    #audio-progress::-moz-range-thumb {
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--copper-light);
-      cursor: pointer; border: none;
-    }
-    #audio-time {
-      font-size: 11px; font-weight: 500;
-      color: var(--cream-muted);
-      font-variant-numeric: tabular-nums;
-    }
-    #modal-audio-section.no-audio { display: none; }
-
-    /* ── Download Progress ──────────────────────────────────── */
-    #download-progress-wrap {
-      position: fixed;
-      bottom: calc(76px + env(safe-area-inset-bottom));
-      left: 14px; right: 14px;
-      background: var(--f950);
-      border: 1px solid var(--f700);
-      border-radius: 14px;
-      padding: 14px 18px;
-      z-index: 500;
-      box-shadow: var(--shadow-lg);
       display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      text-decoration: none;
+      text-align: center;
+      transition: background 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
-    #download-progress-wrap.visible { display: block; }
-    #download-progress-label {
-      font-size: 12px; font-weight: 500;
-      color: var(--cream-muted);
-      margin-bottom: 10px;
-    }
-    #download-progress-bar-wrap {
-      background: var(--f700);
-      border-radius: 3px; height: 4px;
-      overflow: hidden;
-    }
-    #download-progress-bar {
-      height: 100%;
-      background: var(--copper);
-      border-radius: 3px;
-      width: 0%;
-      transition: width 0.3s;
+    .btn-open.visible { display: flex; }
+    .btn-open:hover   { background: var(--f600); }
+
+    /* ── Desktop grid ────────────────────────────────────────────── */
+    @media (min-width: 640px) {
+      .gallery-wrap {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        overflow-x: visible;
+        scroll-snap-type: none;
+        padding: 0 24px 32px;
+        gap: 16px;
+      }
+      .route-card {
+        width: auto;
+        flex-shrink: 1;
+      }
+      .gallery-dots { display: none; }
+      .hero { padding: 72px 40px 64px; }
+      .hero-sub { max-width: 360px; }
     }
 
-    /* ── Leaflet overrides ──────────────────────────────────── */
-    .leaflet-control-zoom { display: none; }
-    .leaflet-control-attribution {
-      font-size: 9px !important;
-      background: rgba(8,15,8,0.75) !important;
-      color: rgba(255,255,255,0.35) !important;
-      border-radius: 4px 0 0 0 !important;
+    @media (min-width: 1024px) {
+      .gallery-wrap { grid-template-columns: repeat(3, 1fr); padding: 0 32px 40px; }
     }
-    .leaflet-control-attribution a { color: rgba(255,255,255,0.45) !important; }
+
+    /* ── Footer ──────────────────────────────────────────────────── */
+    footer {
+      padding: 24px 24px;
+      border-top: 1px solid rgba(24,38,24,0.8);
+      text-align: center;
+    }
+    footer p {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--cream-muted);
+      opacity: 0.4;
+      letter-spacing: 0.05em;
+    }
   </style>
 </head>
 <body>
 
-<!-- Top bar -->
-<div id="topbar">
-  <div id="app-title">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"/>
-      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-    </svg>
+<header>
+  <div class="brand">
+    <span class="brand-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+      </svg>
+    </span>
     Ruta Interactiva
   </div>
-  <div id="status-bar">
-    <div id="status-dot"></div>
-    <span id="status-text" data-i18n="loading">Loading…</span>
+</header>
+
+<section class="hero">
+  <!-- Animated topo circle background -->
+  <svg class="hero-topo-bg" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMid slice">
+    <ellipse cx="520" cy="180" rx="260" ry="190" fill="none" stroke="rgba(200,135,74,0.07)" stroke-width="1"/>
+    <ellipse cx="520" cy="180" rx="200" ry="145" fill="none" stroke="rgba(200,135,74,0.06)" stroke-width="1"/>
+    <ellipse cx="520" cy="180" rx="140" ry="100" fill="none" stroke="rgba(200,135,74,0.055)" stroke-width="1"/>
+    <ellipse cx="520" cy="180" rx="88" ry="62" fill="none" stroke="rgba(200,135,74,0.045)" stroke-width="1"/>
+    <ellipse cx="520" cy="180" rx="46" ry="32" fill="none" stroke="rgba(200,135,74,0.035)" stroke-width="1"/>
+  </svg>
+
+  <p class="hero-eyebrow">5 trails · 2 continents</p>
+  <h1 class="hero-title">Find Your<br><em>Next Trail.</em></h1>
+  <p class="hero-sub">Download once. Hike without signal.</p>
+  <div class="hero-scroll-cue">↓</div>
+</section>
+
+<section class="gallery-section">
+  <div class="gallery-header">
+    <span class="gallery-label">Available Trails</span>
+    <span class="gallery-count">— 05</span>
   </div>
-  <div id="topbar-controls">
-    <div id="lang-toggle" title="Language / Idioma">
-      <button class="lang-opt active" data-lang="en">EN</button>
-      <button class="lang-opt" data-lang="es">ES</button>
-    </div>
+  <div class="gallery-wrap" id="route-grid">
+    <!-- Cards injected by JS -->
   </div>
-</div>
-
-<!-- Map -->
-<div id="map">
-  <button id="fab-recenter" title="Recenter">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-  </button>
-  <button id="fab-offline">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 12l-4-4m4 4l4-4"/><path d="M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"/></svg>
-    <span id="fab-offline-label">Download offline</span>
-  </button>
-</div>
-
-<!-- Download progress -->
-<div id="download-progress-wrap">
-  <div id="download-progress-label">Downloading… 0%</div>
-  <div id="download-progress-bar-wrap">
-    <div id="download-progress-bar"></div>
+  <div class="gallery-dots" id="gallery-dots">
+    <!-- Dots injected by JS -->
   </div>
-</div>
+</section>
 
-<!-- Elevation strip -->
-<div id="elevation">
-  <svg id="elevation-svg" preserveAspectRatio="none"></svg>
-  <div id="elevation-cursor"></div>
-  <div id="elevation-stats"></div>
-</div>
-
-<!-- POI Modal -->
-<div id="modal-overlay">
-  <div id="modal">
-    <div id="modal-handle"></div>
-    <div id="modal-close">
-      <button id="modal-close-btn">✕</button>
-    </div>
-    <div id="modal-body">
-      <div id="modal-images"></div>
-      <h2 id="modal-title">—</h2>
-      <p id="modal-description">—</p>
-      <div id="modal-audio-section">
-        <div id="audio-label">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/></svg>
-          <span data-i18n="audio">Audio</span>
-        </div>
-        <div id="audio-controls">
-          <button id="audio-play-btn" aria-label="Play">
-            <svg id="play-icon" width="13" height="15" viewBox="0 0 13 15" fill="white"><path d="M0 0l13 7.5L0 15z"/></svg>
-            <svg id="pause-icon" width="13" height="15" viewBox="0 0 13 15" fill="white" style="display:none"><rect x="0" y="0" width="4.5" height="15" rx="1.5"/><rect x="8.5" y="0" width="4.5" height="15" rx="1.5"/></svg>
-          </button>
-          <div id="audio-progress-wrap">
-            <input type="range" id="audio-progress" min="0" max="100" value="0" step="0.1">
-            <div id="audio-time">0:00 / 0:00</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="assets/leaflet.js"></script>
-<script src="assets/gpx.js"></script>
+<footer>
+  <p>Works offline after download &middot; GPS-enabled &middot; No account required</p>
+</footer>
 
 <script>
 'use strict';
 
-// ── State ──────────────────────────────────────────────────────────────────
-const state = {
-  lang: 'en',
-  uiLang: 'en',
-  pois: [],
-  gpxPoints: [],
-  routeDistances: [],
-  totalDistance: 0,
-  userLat: null,
-  userLon: null,
-  userAcc: null,
-  gpxLayer: null,
-  gpsMarker: null,
-  gpsAccCircle: null,
-  poiMarkers: [],
-  mapCenteredOnUser: false,
-  offlineReady: false,
-  nearbyPois: new Set(),
-  currentPoi: null,
-};
-
-const LANG_LABELS = { en: 'EN', es: 'ES', ca: 'CA', fr: 'FR' };
-
-// ── Map Init ───────────────────────────────────────────────────────────────
-const map = L.map('map', {
-  zoomControl: false,
-  attributionControl: true,
-}).setView([43.758, -72.162], 14);
-
-L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}', {
-  attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>',
-  maxZoom: 16,
-}).addTo(map);
-
-// ── Status helpers ─────────────────────────────────────────────────────────
-function setStatus(text, type = '') {
-  document.getElementById('status-text').textContent = text;
-  document.getElementById('status-dot').className = type;
-}
-
-// ── Service Worker ─────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
-// ── i18n ───────────────────────────────────────────────────────────────────
-const UI_STRINGS = {
-  en: {
-    loading:         'Loading…',
-    routeLoaded:     'Route loaded ✓',
-    routeError:      'Error loading route',
-    offlineReady:    'Offline ready ✓',
-    downloading:     'Downloading…',
-    downloaded:      'Downloaded ✓',
-    downloadOffline: 'Download offline',
-    walked:          'km walked',
-    remaining:       'km remaining',
-    audio:           'Audio',
-    recenter:        'Recenter',
-    noImage:         'No photo',
-    cacheUnavailable:'Cache not available',
-  },
-  es: {
-    loading:         'Cargando…',
-    routeLoaded:     'Ruta cargada ✓',
-    routeError:      'Error al cargar la ruta',
-    offlineReady:    'Listo para usar sin conexión ✓',
-    downloading:     'Descargando…',
-    downloaded:      'Descargado ✓',
-    downloadOffline: 'Descargar sin conexión',
-    walked:          'km recorridos',
-    remaining:       'km restantes',
-    audio:           'Audio',
-    recenter:        'Recentrar mapa',
-    noImage:         'Sin foto',
-    cacheUnavailable:'Caché no disponible',
-  },
+// ── Route catalogue ────────────────────────────────────────────────────────
+const ROUTES = [
+  { id: 'hanover',           name: 'Eastern White Pines',           region: 'Hanover, NH',    country: 'US', difficulty: 'Easy',      maxZoom: 16 },
+  { id: 'allue-casteriello', name: 'Cerro Casteriello',             region: 'Allué, Aragón',  country: 'ES', difficulty: 'Moderate',  maxZoom: 17 },
+  { id: 'allue-san-anton',   name: 'Barranco de San Antón',         region: 'Allué, Aragón',  country: 'ES', difficulty: 'Moderate',  maxZoom: 17 },
+  { id: 'allue-collata',     name: 'La Collata y la Selva de Osán', region: 'Allué, Aragón',  country: 'ES', difficulty: 'Moderate',  maxZoom: 17 },
+  { id: 'allue-puyaldo',     name: 'Peña Puyaldo',                  region: 'Allué, Aragón',  country: 'ES', difficulty: 'Strenuous', maxZoom: 17 },
+];
+
+const TILE_TEMPLATES = {
+  US: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}',
+  ES: 'https://tile.opentopomap.org/{z}/{x}/{y}.png',
 };
 
-const LANGS = ['en', 'es'];
+const FLAGS = { US: '🇺🇸', ES: '🇪🇸' };
 
-function ui(key) {
-  return (UI_STRINGS[state.uiLang] || UI_STRINGS.en)[key] || key;
-}
-
-function applyUILang() {
-  // Update pill active states
-  document.querySelectorAll('.lang-opt').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.lang === state.uiLang);
-  });
-  // Update data-i18n elements
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    el.textContent = ui(el.dataset.i18n);
-  });
-  // Update titles
-  document.getElementById('fab-recenter').title = ui('recenter');
-  document.getElementById('fab-offline-label').textContent = ui('downloadOffline');
-  // Re-render open modal
-  if (state.currentPoi) openPoiModal(state.currentPoi);
-}
-
-function setUILang(lang) {
-  state.uiLang = lang;
-  state.lang = lang;
-  applyUILang();
-}
-
-document.getElementById('lang-toggle').addEventListener('click', e => {
-  const opt = e.target.closest('.lang-opt');
-  if (opt) setUILang(opt.dataset.lang);
-});
-
-// ── Audio icon helpers ─────────────────────────────────────────────────────
-function setAudioState(playing) {
-  document.getElementById('play-icon').style.display  = playing ? 'none' : '';
-  document.getElementById('pause-icon').style.display = playing ? '' : 'none';
-  document.getElementById('audio-play-btn').classList.toggle('playing', playing);
-}
-
-// ── POI Markers ────────────────────────────────────────────────────────────
-function makePOIIcon(nearby = false) {
-  const fill   = nearby ? '#6dc85a' : '#c8874a';
-  const inner  = nearby ? '#d0f5cc' : '#f5dfc0';
-  const svg = `<svg width="26" height="34" viewBox="0 0 26 34" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 5px rgba(0,0,0,0.55))"><path d="M13 0C5.82 0 0 5.82 0 13c0 9.5 13 21 13 21S26 22.5 26 13C26 5.82 20.18 0 13 0z" fill="${fill}"/><circle cx="13" cy="12.5" r="5" fill="${inner}" opacity="0.92"/></svg>`;
-  return L.divIcon({
-    html: svg,
-    className: nearby ? 'poi-icon-nearby' : '',
-    iconSize: [26, 34],
-    iconAnchor: [13, 34],
-  });
-}
-
-function loadPOIs() {
-  fetch('pois.json')
-    .then(r => r.json())
-    .then(pois => {
-      state.pois = pois;
-      pois.forEach(poi => {
-        const marker = L.marker([poi.lat, poi.lon], { icon: makePOIIcon() }).addTo(map);
-        marker.on('click', () => openPoiModal(poi));
-        state.poiMarkers.push({ poi, marker });
-      });
-    })
-    .catch(() => console.warn('Could not load POIs'));
-}
-
-// ── Modal ──────────────────────────────────────────────────────────────────
-const overlay  = document.getElementById('modal-overlay');
-const audioEl  = new Audio();
-let audioDragging = false;
-
-function t(poi, field) {
-  const langs = poi.languages;
-  if (langs && langs[state.lang] && langs[state.lang][field]) {
-    return langs[state.lang][field];
-  }
-  return poi[field] || '';
-}
-
-const IMG_PLACEHOLDER_SVG = `<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 18 8 10 13 15 16 11 21 18"/><circle cx="17" cy="7" r="2"/></svg>`;
-
-function openPoiModal(poi) {
-  state.currentPoi = poi;
-
-  document.getElementById('modal-title').textContent       = t(poi, 'name');
-  document.getElementById('modal-description').textContent = t(poi, 'description');
-
-  // Images
-  const imgWrap = document.getElementById('modal-images');
-  imgWrap.innerHTML = '';
-  const images = poi.images || [];
-  if (images.length === 0) {
-    const ph = document.createElement('div');
-    ph.className = 'modal-img-placeholder';
-    ph.innerHTML = `${IMG_PLACEHOLDER_SVG}<span>${ui('noImage')}</span>`;
-    imgWrap.appendChild(ph);
-  } else {
-    images.forEach(src => {
-      const img = document.createElement('img');
-      img.className = 'modal-img';
-      img.src = src;
-      img.alt = t(poi, 'name');
-      img.loading = 'lazy';
-      img.onerror = () => {
-        const ph = document.createElement('div');
-        ph.className = 'modal-img-placeholder';
-        ph.innerHTML = `${IMG_PLACEHOLDER_SVG}<span>${ui('noImage')}</span>`;
-        img.replaceWith(ph);
-      };
-      imgWrap.appendChild(img);
-    });
-  }
-
-  // Audio
-  const audioSection = document.getElementById('modal-audio-section');
-  if (poi.audio) {
-    audioSection.classList.remove('no-audio');
-    if (audioEl.src !== new URL(poi.audio, location.href).href) {
-      audioEl.src = poi.audio;
-      audioEl.load();
-      setAudioState(false);
-      document.getElementById('audio-progress').value = 0;
-      document.getElementById('audio-time').textContent = '0:00 / 0:00';
-    }
-  } else {
-    audioSection.classList.add('no-audio');
-    audioEl.pause();
-    audioEl.src = '';
-  }
-
-  overlay.classList.add('open');
-}
-
-function closeModal() {
-  overlay.classList.remove('open');
-  state.currentPoi = null;
-  audioEl.pause();
-  setAudioState(false);
-}
-
-document.getElementById('modal-close-btn').addEventListener('click', closeModal);
-overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-
-// Audio controls
-document.getElementById('audio-play-btn').addEventListener('click', () => {
-  if (audioEl.paused) {
-    audioEl.play().catch(() => {});
-    setAudioState(true);
-  } else {
-    audioEl.pause();
-    setAudioState(false);
-  }
-});
-
-function fmtTime(s) {
-  if (!isFinite(s)) return '0:00';
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60).toString().padStart(2, '0');
-  return `${m}:${sec}`;
-}
-
-audioEl.addEventListener('timeupdate', () => {
-  if (!audioDragging && audioEl.duration) {
-    document.getElementById('audio-progress').value =
-      (audioEl.currentTime / audioEl.duration) * 100;
-    document.getElementById('audio-time').textContent =
-      `${fmtTime(audioEl.currentTime)} / ${fmtTime(audioEl.duration)}`;
-  }
-});
-audioEl.addEventListener('ended', () => setAudioState(false));
-
-const prog = document.getElementById('audio-progress');
-prog.addEventListener('mousedown',  () => { audioDragging = true; });
-prog.addEventListener('touchstart', () => { audioDragging = true; }, { passive: true });
-prog.addEventListener('input', () => {
-  if (audioEl.duration)
-    document.getElementById('audio-time').textContent =
-      `${fmtTime(audioEl.duration * prog.value / 100)} / ${fmtTime(audioEl.duration)}`;
-});
-prog.addEventListener('change', () => {
-  audioDragging = false;
-  if (audioEl.duration) audioEl.currentTime = (prog.value / 100) * audioEl.duration;
-});
-
-// ── GPX & Route ────────────────────────────────────────────────────────────
-function haversine(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat/2)**2 +
-            Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-function loadGPX() {
-  new L.GPX('assets/route.gpx', {
-    async: true,
-    marker_options: {
-      startIconUrl: null, endIconUrl: null,
-      shadowUrl: null, wptIconUrls: { '': null },
-    },
-    polyline_options: { color: '#5ab040', weight: 4, opacity: 0.9 },
-  })
-  .on('loaded', e => {
-    state.gpxLayer = e.target;
-    map.fitBounds(e.target.getBounds(), { padding: [20, 20] });
-    parseGPXPoints().then(buildElevationProfile);
-    setStatus(ui('routeLoaded'), 'ready');
-  })
-  .on('error', () => {
-    setStatus(ui('routeError'), 'error');
-    parseGPXPoints().then(buildElevationProfile);
-  })
-  .addTo(map);
-}
-
-async function parseGPXPoints() {
-  try {
-    const resp = await fetch('assets/route.gpx');
-    const text = await resp.text();
-    const xml  = new DOMParser().parseFromString(text, 'application/xml');
-    const pts  = xml.querySelectorAll('trkpt');
-    state.gpxPoints = Array.from(pts).map(pt => ({
-      lat: parseFloat(pt.getAttribute('lat')),
-      lon: parseFloat(pt.getAttribute('lon')),
-      ele: parseFloat(pt.querySelector('ele')?.textContent || '0'),
-    }));
-    state.routeDistances = [0];
-    for (let i = 1; i < state.gpxPoints.length; i++) {
-      const prev = state.gpxPoints[i - 1], cur = state.gpxPoints[i];
-      state.routeDistances.push(
-        state.routeDistances[i - 1] + haversine(prev.lat, prev.lon, cur.lat, cur.lon)
-      );
-    }
-    state.totalDistance = state.routeDistances.at(-1) || 0;
-  } catch (e) {
-    console.warn('GPX parse error', e);
-  }
-}
-
-// ── Elevation Profile ──────────────────────────────────────────────────────
-function buildElevationProfile() {
-  const pts = state.gpxPoints;
-  if (!pts || pts.length < 2) { setTimeout(buildElevationProfile, 500); return; }
-
-  if (!pts.some(p => p.ele !== 0)) {
-    document.getElementById('elevation').style.display = 'none';
-    return;
-  }
-
-  const svg  = document.getElementById('elevation-svg');
-  const W    = svg.clientWidth || 400;
-  const H    = svg.clientHeight || 72;
-  const eles = pts.map(p => p.ele);
-  const minE = Math.min(...eles), maxE = Math.max(...eles);
-  const range = maxE - minE || 1;
-  const pad   = { top: 8, bottom: 26, left: 0, right: 0 };
-  const pH    = H - pad.top - pad.bottom;
-  const pW    = W;
-
-  const points = pts.map((p, i) => {
-    const x = (i / (pts.length - 1)) * pW;
-    const y = pad.top + (1 - (p.ele - minE) / range) * pH;
-    return `${x},${y}`;
-  });
-
-  const lastX = pW, baseY = pad.top + pH;
-  svg.innerHTML = `
-    <defs>
-      <linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="#5a8856" stop-opacity="0.65"/>
-        <stop offset="100%" stop-color="#0f1a0f" stop-opacity="0.05"/>
-      </linearGradient>
-    </defs>
-    <path d="M${points[0]} L${points.join(' L')} L${lastX},${baseY} L0,${baseY} Z" fill="url(#eg)"/>
-    <polyline points="${points.join(' ')}" fill="none" stroke="#96c092" stroke-width="1.5" stroke-linejoin="round"/>
-    <text x="4" y="${H - 9}"    fill="#b0a890" font-size="9" font-family="DM Sans,sans-serif">${Math.round(minE)}m</text>
-    <text x="4" y="${pad.top + 9}" fill="#b0a890" font-size="9" font-family="DM Sans,sans-serif">${Math.round(maxE)}m</text>
-  `;
-}
-
-function updateElevationCursor(lat, lon) {
-  if (!state.gpxPoints.length) return;
-  let minDist = Infinity, idx = 0;
-  state.gpxPoints.forEach((pt, i) => {
-    const d = haversine(lat, lon, pt.lat, pt.lon);
-    if (d < minDist) { minDist = d; idx = i; }
-  });
-  const pct = idx / (state.gpxPoints.length - 1);
-  const W   = document.getElementById('elevation-svg').clientWidth || 400;
-  const cur = document.getElementById('elevation-cursor');
-  cur.style.left    = `${pct * W}px`;
-  cur.style.opacity = '1';
-}
-
-// ── GPS ────────────────────────────────────────────────────────────────────
-function startGPS() {
-  if (!('geolocation' in navigator)) return;
-  navigator.geolocation.watchPosition(onPosition, err => console.warn(err.message), {
-    enableHighAccuracy: true, maximumAge: 3000, timeout: 10000,
-  });
-}
-
-function onPosition({ coords: { latitude: lat, longitude: lon, accuracy: acc } }) {
-  state.userLat = lat; state.userLon = lon; state.userAcc = acc;
-
-  if (!state.gpsMarker) {
-    const el = document.createElement('div');
-    el.innerHTML = '<div class="gps-dot-outer"><div class="gps-dot-inner"></div></div>';
-    state.gpsMarker = L.marker([lat, lon], {
-      icon: L.divIcon({ html: el, className: '', iconSize: [24, 24], iconAnchor: [12, 12] }),
-      zIndexOffset: 1000,
-    }).addTo(map);
-    state.gpsAccCircle = L.circle([lat, lon], {
-      radius: acc, color: '#4285f4', fillColor: '#4285f4',
-      fillOpacity: 0.08, weight: 1, opacity: 0.4,
-    }).addTo(map);
-  } else {
-    state.gpsMarker.setLatLng([lat, lon]);
-    state.gpsAccCircle.setLatLng([lat, lon]).setRadius(acc);
-  }
-
-  if (!state.mapCenteredOnUser) {
-    map.setView([lat, lon], 15);
-    state.mapCenteredOnUser = true;
-  }
-
-  updateElevationCursor(lat, lon);
-  checkProximity(lat, lon);
-}
-
-document.getElementById('fab-recenter').addEventListener('click', () => {
-  if (state.userLat !== null) {
-    map.setView([state.userLat, state.userLon], 15);
-  }
-});
-
-// ── Proximity Alerts ───────────────────────────────────────────────────────
-const PROXIMITY_M = 50;
-
-function checkProximity(lat, lon) {
-  state.poiMarkers.forEach(({ poi, marker }) => {
-    const dist     = haversine(lat, lon, poi.lat, poi.lon) * 1000;
-    const wasNearby = state.nearbyPois.has(poi.id);
-    const isNearby  = dist < PROXIMITY_M;
-    if (isNearby && !wasNearby) {
-      state.nearbyPois.add(poi.id);
-      marker.setIcon(makePOIIcon(true));
-      if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
-    } else if (!isNearby && wasNearby) {
-      state.nearbyPois.delete(poi.id);
-      marker.setIcon(makePOIIcon(false));
-    }
-  });
-}
-
-// ── Offline / PWA ──────────────────────────────────────────────────────────
-function tile2url(x, y, z) {
-  return `https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/${z}/${y}/${x}`;
-}
 const lat2tile = (lat, z) =>
   Math.floor((1 - Math.log(Math.tan(lat * Math.PI/180) + 1/Math.cos(lat * Math.PI/180)) / Math.PI) / 2 * 2**z);
 const lon2tile = (lon, z) =>
   Math.floor((lon + 180) / 360 * 2**z);
 
-async function cacheAssets() {
-  if (!('caches' in window)) { alert(ui('cacheUnavailable')); return; }
-
-  const btn     = document.getElementById('fab-offline');
-  btn.classList.add('hidden');
-  const progWrap  = document.getElementById('download-progress-wrap');
-  const progLabel = document.getElementById('download-progress-label');
-  const progBar   = document.getElementById('download-progress-bar');
-  progWrap.classList.add('visible');
-  setStatus(ui('downloading'), 'downloading');
-
-  const bounds = state.gpxLayer ? state.gpxLayer.getBounds() : map.getBounds();
-  const tileURLs = [];
-  for (let z = 12; z <= 17; z++) {
-    const minX = lon2tile(bounds.getWest(), z), maxX = lon2tile(bounds.getEast(), z);
-    const minY = lat2tile(bounds.getNorth(), z), maxY = lat2tile(bounds.getSouth(), z);
-    for (let x = minX; x <= maxX; x++)
-      for (let y = minY; y <= maxY; y++)
-        tileURLs.push(tile2url(x, y, z));
-  }
-
-  const appAssets = [
-    '/', '/index.html', '/sw.js', '/manifest.json', '/pois.json', '/assets/route.gpx',
-    '/assets/leaflet.css',
-    '/assets/leaflet.js',
-    '/assets/gpx.js',
-  ];
-  const poiAssets = [];
-  state.pois.forEach(p => {
-    if (p.audio) poiAssets.push(p.audio);
-    (p.images || []).forEach(img => poiAssets.push(img));
-  });
-
-  const allURLs = [...appAssets, ...poiAssets, ...tileURLs];
-  const total = allURLs.length;
-  let done = 0;
-  const cache = await caches.open('ruta-interactiva-v1');
-  const BATCH = 8;
-
-  for (let i = 0; i < allURLs.length; i += BATCH) {
-    const batch = allURLs.slice(i, i + BATCH);
-    await Promise.allSettled(
-      batch.map(url =>
-        fetch(url, { mode: 'no-cors' }).then(r => cache.put(url, r)).catch(() => {})
-      )
-    );
-    done += batch.length;
-    const pct = Math.min(100, Math.round(done / total * 100));
-    progLabel.textContent    = `${ui('downloading')} ${pct}%`;
-    progBar.style.width      = `${pct}%`;
-    await new Promise(r => setTimeout(r, 0));
-  }
-
-  progWrap.classList.remove('visible');
-  state.offlineReady = true;
-  setStatus(ui('offlineReady'), 'ready');
-  btn.querySelector('#fab-offline-label').textContent = ui('downloaded');
-  btn.classList.remove('hidden');
-  btn.disabled = true;
-  navigator.serviceWorker.controller?.postMessage({ type: 'CACHE_DONE' });
+function tile2url(template, x, y, z) {
+  return template.replace('{z}', z).replace('{x}', x).replace('{y}', y);
 }
 
-document.getElementById('fab-offline').addEventListener('click', cacheAssets);
-
-async function checkOfflineStatus() {
-  if (!('caches' in window)) return;
+// ── Check offline status for all routes ───────────────────────────────────
+async function getDownloadedRoutes() {
+  if (!('caches' in window)) return new Set();
   try {
-    const keys = await (await caches.open('ruta-interactiva-v1')).keys();
-    if (keys.length > 10) {
-      state.offlineReady = true;
-      setStatus(ui('offlineReady'), 'ready');
-      const btn = document.getElementById('fab-offline');
-      btn.querySelector('#fab-offline-label').textContent = ui('downloaded');
-      btn.disabled = true;
+    const cache = await caches.open('ruta-interactiva-v2');
+    const downloaded = new Set();
+    for (const route of ROUTES) {
+      const hit = await cache.match(`/routes/${route.id}/route.gpx`);
+      if (hit) downloaded.add(route.id);
     }
-  } catch(_) {}
+    return downloaded;
+  } catch (_) { return new Set(); }
+}
+
+// ── Download a single route ────────────────────────────────────────────────
+async function downloadRoute(route, cardEl) {
+  const btnDl   = cardEl.querySelector('.btn-download');
+  const btnOpen = cardEl.querySelector('.btn-open');
+  const strip   = cardEl.querySelector('.card-progress-strip');
+  const fill    = cardEl.querySelector('.card-progress-fill');
+  const label   = cardEl.querySelector('.card-progress-label');
+
+  btnDl.disabled = true;
+  btnDl.textContent = 'Preparing…';
+  strip.classList.add('active');
+  label.classList.add('active');
+  label.textContent = 'Reading route…';
+
+  try {
+    // 1. Fetch + parse GPX
+    const gpxResp = await fetch(`routes/${route.id}/route.gpx`);
+    const gpxText = await gpxResp.text();
+    const xml     = new DOMParser().parseFromString(gpxText, 'application/xml');
+    const trkpts  = xml.querySelectorAll('trkpt');
+
+    let minLat = Infinity, maxLat = -Infinity, minLon = Infinity, maxLon = -Infinity;
+    trkpts.forEach(pt => {
+      const lat = parseFloat(pt.getAttribute('lat'));
+      const lon = parseFloat(pt.getAttribute('lon'));
+      if (lat < minLat) minLat = lat;
+      if (lat > maxLat) maxLat = lat;
+      if (lon < minLon) minLon = lon;
+      if (lon > maxLon) maxLon = lon;
+    });
+
+    // 2. Compute tile URLs
+    const template = TILE_TEMPLATES[route.country] || TILE_TEMPLATES.ES;
+    const tileURLs = [];
+    for (let z = 12; z <= route.maxZoom; z++) {
+      const minX = lon2tile(minLon, z), maxX = lon2tile(maxLon, z);
+      const minY = lat2tile(maxLat, z), maxY = lat2tile(minLat, z);
+      for (let x = minX; x <= maxX; x++)
+        for (let y = minY; y <= maxY; y++)
+          tileURLs.push(tile2url(template, x, y, z));
+    }
+
+    // 3. POI assets
+    const poisResp  = await fetch(`routes/${route.id}/pois.json`);
+    const pois      = await poisResp.json();
+    const poiAssets = [];
+    pois.forEach(p => {
+      if (p.audio) poiAssets.push(p.audio);
+      (p.images || []).forEach(img => poiAssets.push(img));
+    });
+
+    // 4. Core app assets
+    const appAssets = [
+      '/', '/trail.html', '/sw.js', '/manifest.json', '/index.html',
+      `/routes/${route.id}/pois.json`, `/routes/${route.id}/route.gpx`,
+      '/assets/leaflet.css', '/assets/leaflet.js', '/assets/gpx.js',
+    ];
+
+    const allURLs = [...appAssets, ...poiAssets, ...tileURLs];
+    const total   = allURLs.length;
+    let done      = 0;
+
+    const cache = await caches.open('ruta-interactiva-v2');
+    const BATCH = 8;
+
+    for (let i = 0; i < allURLs.length; i += BATCH) {
+      const batch = allURLs.slice(i, i + BATCH);
+      await Promise.allSettled(
+        batch.map(url =>
+          fetch(url, { mode: 'no-cors' }).then(r => cache.put(url, r)).catch(() => {})
+        )
+      );
+      done += batch.length;
+      const pct = Math.min(100, Math.round(done / total * 100));
+      fill.style.width  = `${pct}%`;
+      label.textContent = `Downloading… ${pct}%`;
+      await new Promise(r => setTimeout(r, 0));
+    }
+
+    // Done — navigate
+    label.textContent = 'Complete ✓';
+    fill.style.width  = '100%';
+    setTimeout(() => {
+      location.href = `trail.html?route=${route.id}`;
+    }, 400);
+
+  } catch (err) {
+    console.error('Download failed', err);
+    label.textContent = 'Download failed — check connection';
+    btnDl.disabled    = false;
+    btnDl.textContent = 'Retry';
+  }
+}
+
+// ── Terrain SVG illustrations ──────────────────────────────────────────────
+function makeTerrain(routeId) {
+  switch (routeId) {
+
+    // Pine forest night scene
+    case 'hanover': return `
+      <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="h-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0e1e18"/>
+            <stop offset="100%" stop-color="#1e3428"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Sky -->
+        <rect width="320" height="190" fill="url(#h-sky)"/>
+
+        <!-- Stars -->
+        <circle cx="28"  cy="18" r="0.9" fill="rgba(240,232,200,0.7)"/>
+        <circle cx="74"  cy="10" r="0.7" fill="rgba(240,232,200,0.55)"/>
+        <circle cx="130" cy="22" r="1.1" fill="rgba(240,232,200,0.65)"/>
+        <circle cx="180" cy="8"  r="0.8" fill="rgba(240,232,200,0.5)"/>
+        <circle cx="230" cy="26" r="0.7" fill="rgba(240,232,200,0.6)"/>
+        <circle cx="260" cy="14" r="1.0" fill="rgba(240,232,200,0.55)"/>
+        <circle cx="296" cy="34" r="0.6" fill="rgba(240,232,200,0.4)"/>
+        <circle cx="56"  cy="40" r="0.7" fill="rgba(240,232,200,0.45)"/>
+
+        <!-- Moon -->
+        <circle cx="272" cy="36" r="16" fill="rgba(240,232,200,0.12)"/>
+        <circle cx="272" cy="36" r="13" fill="rgba(240,232,200,0.06)"/>
+        <circle cx="272" cy="36" r="9"  fill="rgba(240,232,200,0.09)"/>
+
+        <!-- Far ridge -->
+        <path d="M0,120 Q40,105 80,112 Q120,100 160,108 Q200,96 240,105 Q280,98 320,106 L320,190 L0,190 Z" fill="#162a1e"/>
+
+        <!-- Far pine layer — small trees -->
+        <g fill="#1a3226">
+          <polygon points="10,112  17,90  24,112"/>
+          <polygon points="20,112  29,86  38,112"/>
+          <polygon points="38,114  47,92  56,114"/>
+          <polygon points="55,110  64,88  73,110"/>
+          <polygon points="72,112  80,94  88,112"/>
+          <polygon points="90,110  100,86  110,110"/>
+          <polygon points="110,112 120,90  130,112"/>
+          <polygon points="128,108 139,84  150,108"/>
+          <polygon points="150,112 160,91  170,112"/>
+          <polygon points="168,110 178,88  188,110"/>
+          <polygon points="186,112 196,90  206,112"/>
+          <polygon points="205,108 216,86  227,108"/>
+          <polygon points="226,112 237,91  248,112"/>
+          <polygon points="246,110 256,88  266,110"/>
+          <polygon points="265,112 275,92  285,112"/>
+          <polygon points="285,108 296,87  307,108"/>
+          <polygon points="304,112 314,92  320,108"/>
+        </g>
+
+        <!-- Near pine layer — large trees -->
+        <g fill="#0e2018">
+          <polygon points="-4,190  12,140  28,190"/>
+          <polygon points="16,190  36,130  56,190"/>
+          <polygon points="44,190  67,122  90,190"/>
+          <polygon points="74,190  96,132  118,190"/>
+          <polygon points="104,190 128,126 152,190"/>
+          <polygon points="136,190 158,136 180,190"/>
+          <polygon points="162,190 186,128 210,190"/>
+          <polygon points="192,190 216,134 240,190"/>
+          <polygon points="222,190 246,124 270,190"/>
+          <polygon points="252,190 276,132 300,190"/>
+          <polygon points="280,190 304,136 328,190"/>
+        </g>
+
+        <!-- Ground -->
+        <rect y="175" width="320" height="15" fill="#0a1810"/>
+      </svg>`;
+
+    // Rocky peak at dusk
+    case 'allue-casteriello': return `
+      <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="c-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a0c06"/>
+            <stop offset="45%" stop-color="#3a1a0a"/>
+            <stop offset="100%" stop-color="#5a2e10"/>
+          </linearGradient>
+          <radialGradient id="c-glow" cx="78%" cy="18%" r="28%">
+            <stop offset="0%"   stop-color="rgba(200,120,60,0.38)"/>
+            <stop offset="40%"  stop-color="rgba(200,120,60,0.12)"/>
+            <stop offset="100%" stop-color="rgba(200,120,60,0)"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Sky -->
+        <rect width="320" height="190" fill="url(#c-sky)"/>
+        <!-- Sun glow -->
+        <rect width="320" height="190" fill="url(#c-glow)"/>
+
+        <!-- Sun orb — 3 concentric rings -->
+        <circle cx="256" cy="34" r="22" fill="rgba(200,120,60,0.08)"/>
+        <circle cx="256" cy="34" r="14" fill="rgba(200,120,60,0.14)"/>
+        <circle cx="256" cy="34" r="8"  fill="rgba(220,140,70,0.22)"/>
+
+        <!-- Far range — low silhouette -->
+        <path d="M0,145 Q30,132 60,138 Q90,126 120,133 Q150,122 180,130 Q210,120 240,128 Q270,118 300,126 L320,128 L320,190 L0,190 Z" fill="#2a1208"/>
+
+        <!-- Lit-face highlight — warm reflected light on left face -->
+        <path d="M148,60 L120,120 L158,190 L180,190 L185,150 Z" fill="rgba(200,120,60,0.14)"/>
+
+        <!-- Main peak — bold jagged centre -->
+        <path d="
+          M0,190
+          L0,155
+          Q18,148 30,138
+          Q45,125 52,118
+          Q60,108 68,100
+          L80,138
+          Q85,130 94,118
+          Q102,106 110,92
+          Q116,80 120,68
+          L126,56
+          L132,42
+          L138,30
+          L142,18
+          L148,6
+          L154,18
+          L158,30
+          L164,42
+          L170,58
+          L176,72
+          L184,90
+          L192,108
+          Q198,118 204,126
+          L210,138
+          L220,120
+          Q228,108 236,100
+          Q244,110 252,122
+          Q260,132 268,140
+          Q282,150 296,158
+          L320,165
+          L320,190
+          Z"
+          fill="#1e0e06"/>
+
+        <!-- Secondary ridge right -->
+        <path d="M210,138 Q240,128 270,132 Q295,126 320,130 L320,165 L296,158 Q280,152 268,142 Q258,134 248,126 Q238,116 228,124 L220,120 Z" fill="#2a1208" opacity="0.7"/>
+
+        <!-- Rock debris foreground -->
+        <path d="M0,190 L0,178 Q20,172 45,175 Q60,170 80,174 Q100,168 130,172 Q155,166 180,170 Q205,164 230,168 Q255,162 280,166 Q300,160 320,164 L320,190 Z" fill="#160a04"/>
+
+        <!-- Scree detail -->
+        <path d="M80,180 Q95,175 108,178 Q120,172 135,176" stroke="rgba(90,50,20,0.4)" stroke-width="1" fill="none"/>
+        <path d="M170,178 Q188,173 205,177 Q220,170 240,174" stroke="rgba(90,50,20,0.35)" stroke-width="1" fill="none"/>
+      </svg>`;
+
+    // Slot canyon / gorge — deep navy
+    case 'allue-san-anton': return `
+      <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="sa-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#08101c"/>
+            <stop offset="100%" stop-color="#101828"/>
+          </linearGradient>
+          <linearGradient id="sa-water" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="rgba(30,60,90,0)"/>
+            <stop offset="30%"  stop-color="rgba(40,80,120,0.35)"/>
+            <stop offset="50%"  stop-color="rgba(60,120,160,0.55)"/>
+            <stop offset="70%"  stop-color="rgba(40,80,120,0.35)"/>
+            <stop offset="100%" stop-color="rgba(30,60,90,0)"/>
+          </linearGradient>
+          <linearGradient id="sa-ray" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="rgba(100,160,220,0.08)"/>
+            <stop offset="100%" stop-color="rgba(100,160,220,0)"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Background sky (narrow slit only visible between walls) -->
+        <rect width="320" height="190" fill="url(#sa-sky)"/>
+
+        <!-- Stars in the narrow sky slit above -->
+        <circle cx="150" cy="14" r="0.8" fill="rgba(200,220,255,0.7)"/>
+        <circle cx="162" cy="8"  r="0.6" fill="rgba(200,220,255,0.55)"/>
+        <circle cx="174" cy="18" r="0.9" fill="rgba(200,220,255,0.65)"/>
+
+        <!-- Light rays from top of slit — very subtle -->
+        <polygon points="145,0  155,0  170,190  140,190" fill="url(#sa-ray)" opacity="0.4"/>
+        <polygon points="158,0  168,0  178,190  152,190" fill="url(#sa-ray)" opacity="0.25"/>
+
+        <!-- Left canyon wall — fills left ~42%, tall irregular edge -->
+        <path d="
+          M0,0
+          L0,190
+          L130,190
+          L128,175
+          L122,162
+          L118,148
+          L115,135
+          L118,122
+          L114,108
+          L110,96
+          L113,84
+          L108,72
+          L112,60
+          L107,48
+          L110,36
+          L106,22
+          L108,10
+          L104,0
+          Z"
+          fill="#12182a"/>
+
+        <!-- Left wall inner face — lighter, catches light -->
+        <path d="
+          M104,0
+          L108,10
+          L106,22
+          L110,36
+          L107,48
+          L112,60
+          L108,72
+          L113,84
+          L110,96
+          L114,108
+          L118,122
+          L115,135
+          L118,148
+          L122,162
+          L128,175
+          L130,190
+          L138,190
+          L136,172
+          L132,156
+          L128,142
+          L126,128
+          L130,116
+          L126,102
+          L124,88
+          L128,76
+          L122,64
+          L126,52
+          L122,38
+          L124,24
+          L120,10
+          L118,0
+          Z"
+          fill="#1a2438"/>
+
+        <!-- Right canyon wall — fills right ~42%, mirror -->
+        <path d="
+          M320,0
+          L320,190
+          L190,190
+          L192,175
+          L198,160
+          L202,146
+          L205,132
+          L202,118
+          L206,104
+          L210,92
+          L207,80
+          L212,68
+          L208,56
+          L213,44
+          L210,32
+          L214,20
+          L212,8
+          L216,0
+          Z"
+          fill="#101620"/>
+
+        <!-- Right wall inner face -->
+        <path d="
+          M216,0
+          L212,8
+          L214,20
+          L210,32
+          L213,44
+          L208,56
+          L212,68
+          L207,80
+          L210,92
+          L206,104
+          L202,118
+          L205,132
+          L202,146
+          L198,160
+          L192,175
+          L190,190
+          L182,190
+          L184,172
+          L188,156
+          L192,140
+          L194,124
+          L190,110
+          L194,96
+          L198,84
+          L194,70
+          L198,58
+          L196,44
+          L200,30
+          L198,16
+          L202,4
+          L202,0
+          Z"
+          fill="#18202e"/>
+
+        <!-- Water shimmer at very bottom — narrow strip between walls -->
+        <rect x="130" y="180" width="60" height="10" fill="url(#sa-water)" rx="2"/>
+        <rect x="138" y="184" width="44" height="3"  fill="rgba(80,140,200,0.2)" rx="1"/>
+      </svg>`;
+
+    // Misty forest dawn
+    case 'allue-collata': return `
+      <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="co-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#10181a"/>
+            <stop offset="55%" stop-color="#1a2a24"/>
+            <stop offset="100%" stop-color="#20352a"/>
+          </linearGradient>
+          <radialGradient id="co-dawn" cx="50%" cy="72%" r="35%">
+            <stop offset="0%"   stop-color="rgba(180,220,190,0.18)"/>
+            <stop offset="55%"  stop-color="rgba(140,190,160,0.07)"/>
+            <stop offset="100%" stop-color="rgba(100,160,130,0)"/>
+          </radialGradient>
+          <filter id="co-blur">
+            <feGaussianBlur stdDeviation="6"/>
+          </filter>
+        </defs>
+
+        <!-- Sky -->
+        <rect width="320" height="190" fill="url(#co-sky)"/>
+        <!-- Dawn glow -->
+        <rect width="320" height="190" fill="url(#co-dawn)"/>
+
+        <!-- Faint dawn-glow ellipse on horizon -->
+        <ellipse cx="160" cy="136" rx="90" ry="18" fill="rgba(160,210,170,0.10)" filter="url(#co-blur)"/>
+
+        <!-- Far ridge layer 1 — lightest, most distant -->
+        <path d="M0,138 Q40,124 80,130 Q120,116 160,124 Q200,112 240,120 Q280,110 320,118 L320,190 L0,190 Z" fill="#182e22"/>
+
+        <!-- Mid ridge layer 2 — medium -->
+        <path d="M0,152 Q30,140 55,146 Q85,132 110,140 Q140,128 165,136 Q195,122 220,130 Q250,118 280,126 Q300,120 320,128 L320,190 L0,190 Z" fill="#122418"/>
+
+        <!-- Forest canopy texture — small triangles along mid-ridge top -->
+        <g fill="#0e1e14">
+          <polygon points="10,152  15,138  20,152"/>
+          <polygon points="22,152  28,136  34,152"/>
+          <polygon points="36,150  43,134  50,150"/>
+          <polygon points="52,148  59,132  66,148"/>
+          <polygon points="68,152  74,136  80,152"/>
+          <polygon points="82,150  89,133  96,150"/>
+          <polygon points="98,148  106,132 114,148"/>
+          <polygon points="116,150 123,134 130,150"/>
+          <polygon points="132,152 139,136 146,152"/>
+          <polygon points="148,148 156,131 164,148"/>
+          <polygon points="166,150 173,134 180,150"/>
+          <polygon points="182,152 189,136 196,152"/>
+          <polygon points="198,150 205,133 212,150"/>
+          <polygon points="214,148 222,132 230,148"/>
+          <polygon points="232,150 239,134 246,150"/>
+          <polygon points="248,152 255,136 262,152"/>
+          <polygon points="264,148 271,132 278,148"/>
+          <polygon points="280,150 287,134 294,150"/>
+          <polygon points="296,152 303,136 310,152"/>
+        </g>
+
+        <!-- Near foreground ridge — darkest -->
+        <path d="M0,168 Q25,158 50,162 Q80,152 110,158 Q140,148 170,154 Q200,144 230,150 Q260,140 290,146 Q306,140 320,144 L320,190 L0,190 Z" fill="#0c1a10"/>
+
+        <!-- Mist/fog band across middle — blurred ellipse -->
+        <ellipse cx="160" cy="148" rx="200" ry="14" fill="rgba(150,200,170,0.09)" filter="url(#co-blur)"/>
+        <ellipse cx="160" cy="144" rx="170" ry="8"  fill="rgba(160,210,180,0.07)" filter="url(#co-blur)"/>
+      </svg>`;
+
+    // Dramatic high peak, cold night — near-black indigo
+    case 'allue-puyaldo': return `
+      <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="p-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#040810"/>
+            <stop offset="100%" stop-color="#101828"/>
+          </linearGradient>
+          <filter id="p-blur">
+            <feGaussianBlur stdDeviation="5"/>
+          </filter>
+        </defs>
+
+        <!-- Sky — near-black indigo -->
+        <rect width="320" height="190" fill="url(#p-sky)"/>
+
+        <!-- Milky Way band — wide curved diagonal stroke -->
+        <ellipse cx="160" cy="55" rx="220" ry="38" fill="none"
+                 stroke="rgba(150,170,220,0.07)" stroke-width="38"
+                 transform="rotate(-12 160 55)"
+                 filter="url(#p-blur)"/>
+
+        <!-- Stars — scattered across sky -->
+        <circle cx="14"  cy="12" r="0.9" fill="rgba(200,220,255,0.75)"/>
+        <circle cx="38"  cy="6"  r="0.7" fill="rgba(200,220,255,0.55)"/>
+        <circle cx="62"  cy="20" r="1.1" fill="rgba(200,220,255,0.70)"/>
+        <circle cx="86"  cy="10" r="0.8" fill="rgba(200,220,255,0.50)"/>
+        <circle cx="108" cy="28" r="0.6" fill="rgba(200,220,255,0.60)"/>
+        <circle cx="136" cy="14" r="1.0" fill="rgba(200,220,255,0.65)"/>
+        <circle cx="198" cy="8"  r="0.8" fill="rgba(200,220,255,0.50)"/>
+        <circle cx="228" cy="22" r="0.7" fill="rgba(200,220,255,0.60)"/>
+        <circle cx="252" cy="10" r="1.0" fill="rgba(200,220,255,0.55)"/>
+        <circle cx="280" cy="18" r="0.7" fill="rgba(200,220,255,0.65)"/>
+        <circle cx="304" cy="8"  r="0.9" fill="rgba(200,220,255,0.55)"/>
+        <circle cx="316" cy="28" r="0.6" fill="rgba(200,220,255,0.45)"/>
+
+        <!-- Secondary far range -->
+        <path d="M0,148 Q50,132 100,140 Q150,125 200,134 Q250,121 300,130 L320,132 L320,190 L0,190 Z" fill="#0c1424"/>
+
+        <!-- Main Puyaldo peak — bold triangular summit -->
+        <path d="
+          M0,190
+          L0,160
+          Q15,152 28,145
+          Q42,136 52,128
+          Q58,120 65,112
+          L72,125
+          Q80,114 88,102
+          Q96,90 104,76
+          Q110,62 116,50
+          Q120,40 124,30
+          Q128,20 132,10
+          L136,2
+          L140,10
+          L144,20
+          L148,30
+          L152,44
+          L158,58
+          L164,72
+          Q170,86 176,96
+          Q184,108 190,118
+          L198,128
+          Q204,118 210,108
+          Q218,96 224,108
+          Q230,118 236,126
+          Q244,116 250,108
+          Q258,116 264,124
+          Q272,132 282,140
+          Q296,150 310,158
+          L320,164
+          L320,190
+          Z"
+          fill="#0a1020"/>
+
+        <!-- Moonlit highlight — left face of peak -->
+        <path d="M132,10 L136,2 L140,10 L144,20 L148,30 L152,44 L158,58 L164,72 L170,86 L160,90 L148,70 L140,52 L136,34 L134,18 Z"
+              fill="rgba(200,220,255,0.15)"/>
+
+        <!-- Snow patches near summit — 3 irregular white paths -->
+        <path d="M126,44 Q132,38 138,34 Q142,30 148,28 Q144,36 140,42 Q136,46 130,48 Z" fill="rgba(220,235,255,0.65)"/>
+        <path d="M148,28 Q154,24 160,22 Q164,28 160,34 Q156,32 152,34 Z"              fill="rgba(220,235,255,0.55)"/>
+        <path d="M120,60 Q126,54 132,50 Q134,56 130,62 Q126,64 122,62 Z"              fill="rgba(220,235,255,0.50)"/>
+
+        <!-- Dark foreground ridge -->
+        <path d="M0,190 L0,174 Q24,168 50,172 Q80,164 110,170 Q140,162 170,168 Q200,160 230,166 Q260,158 290,164 Q306,158 320,162 L320,190 Z" fill="#060c18"/>
+      </svg>`;
+
+    default: return `<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg"><rect width="320" height="190" fill="#182618"/></svg>`;
+  }
+}
+
+// ── Scroll dots setup ──────────────────────────────────────────────────────
+function setupScrollDots(cards) {
+  const dotsContainer = document.getElementById('gallery-dots');
+  dotsContainer.innerHTML = '';
+  const dots = ROUTES.map((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+    dotsContainer.appendChild(dot);
+    return dot;
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && e.intersectionRatio >= 0.6) {
+        const idx = [...cards].indexOf(e.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.6 });
+
+  cards.forEach(c => obs.observe(c));
+}
+
+// ── Render cards ───────────────────────────────────────────────────────────
+function renderCards(downloaded) {
+  const grid = document.getElementById('route-grid');
+  grid.innerHTML = '';
+
+  ROUTES.forEach((route, index) => {
+    const isDownloaded = downloaded.has(route.id);
+    const diffClass    = route.difficulty.toLowerCase();
+    const flag         = FLAGS[route.country] || '';
+    const terrain      = makeTerrain(route.id);
+
+    const card = document.createElement('article');
+    card.className = 'route-card';
+    card.dataset.routeId = route.id;
+    card.style = `--i: ${index}`;
+    card.innerHTML = `
+      <div class="card-terrain">
+        ${terrain}
+        <div class="card-terrain-overlay">
+          <span class="card-country-badge">${flag} ${route.region}</span>
+        </div>
+      </div>
+      <div class="card-content">
+        <h2 class="card-name">${route.name}</h2>
+        <div class="card-meta">
+          <span class="difficulty-badge ${diffClass}">${route.difficulty}</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <div class="card-progress-strip"><div class="card-progress-fill"></div></div>
+        <div class="card-progress-label"></div>
+        <button class="btn-download"${isDownloaded ? ' style="display:none"' : ''}>↓ Download &amp; Go</button>
+        <a class="btn-open${isDownloaded ? ' visible' : ''}" href="trail.html?route=${route.id}">→ Open Trail</a>
+      </div>
+    `;
+
+    const btnDl = card.querySelector('.btn-download');
+    btnDl.addEventListener('click', () => downloadRoute(route, card));
+
+    grid.appendChild(card);
+  });
+
+  const cards = grid.querySelectorAll('.route-card');
+  setupScrollDots(cards);
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
-async function init() {
-  setStatus(ui('loading'));
-  await parseGPXPoints();
-  setStatus(state.gpxPoints.length > 0 ? ui('routeLoaded') : ui('routeError'),
-            state.gpxPoints.length > 0 ? 'ready' : 'error');
-  loadGPX();
-  loadPOIs();
-  startGPS();
-  checkOfflineStatus();
-}
-
-init();
+getDownloadedRoutes().then(renderCards);
 </script>
 </body>
 </html>
