@@ -412,6 +412,7 @@ const ROUTES = [
   { id: 'allue-san-anton',   name: 'Barranco de San Antón',         region: 'Allué, Aragón',  country: 'ES', difficulty: 'Moderate',  maxZoom: 17 },
   { id: 'allue-collata',     name: 'La Collata y la Selva de Osán', region: 'Allué, Aragón',  country: 'ES', difficulty: 'Moderate',  maxZoom: 17 },
   { id: 'allue-puyaldo',     name: 'Peña Puyaldo',                  region: 'Allué, Aragón',  country: 'ES', difficulty: 'Strenuous', maxZoom: 17 },
+  { id: 'boniches',          name: 'Misión Boniches',               region: 'Boniches, Cuenca', country: 'ES', difficulty: 'Easy',    maxZoom: 17 },
   { id: 'hanover',           name: 'Eastern White Pines',           region: 'Hanover, NH',    country: 'US', difficulty: 'Easy',      maxZoom: 16 },
 ];
 
@@ -997,6 +998,42 @@ function makeTerrain(routeId) {
 
         <!-- Dark foreground ridge -->
         <path d="M0,190 L0,174 Q24,168 50,172 Q80,164 110,170 Q140,162 170,168 Q200,160 230,166 Q260,158 290,164 Q306,158 320,162 L320,190 Z" fill="#060c18"/>
+      </svg>`;
+
+    // River valley, limestone plateau, Serranía de Cuenca — warm ochre & sage
+    case 'boniches': return `
+      <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="b-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a1408"/>
+            <stop offset="55%" stop-color="#2e2010"/>
+            <stop offset="100%" stop-color="#3e2e14"/>
+          </linearGradient>
+          <linearGradient id="b-glow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(200,160,80,0.18)"/>
+            <stop offset="100%" stop-color="rgba(200,160,80,0)"/>
+          </linearGradient>
+        </defs>
+        <rect width="320" height="190" fill="url(#b-sky)"/>
+        <!-- Warm horizon glow -->
+        <ellipse cx="160" cy="115" rx="180" ry="55" fill="url(#b-glow)"/>
+        <!-- Far limestone plateau (left) -->
+        <path d="M0,115 L0,80 Q20,72 45,78 Q65,83 80,76 Q95,70 110,75 Q120,78 130,72 L130,115 Z" fill="#2a1e0c" opacity="0.85"/>
+        <!-- Far plateau (right) -->
+        <path d="M190,115 L185,78 Q200,70 220,76 Q240,81 260,73 Q278,66 300,72 Q312,75 320,70 L320,115 Z" fill="#281c0a" opacity="0.85"/>
+        <!-- Mid scrubland ridge -->
+        <path d="M0,130 Q30,118 65,124 Q95,129 130,120 Q160,113 195,122 Q225,130 260,119 Q290,110 320,116 L320,190 L0,190 Z" fill="#1e1608"/>
+        <!-- Juniper/pine silhouettes on ridge -->
+        <path d="M15,124 L20,112 L25,124Z M30,122 L35,109 L40,122Z M55,126 L60,114 L65,126Z M75,122 L81,108 L87,122Z M100,121 L105,110 L110,121Z M130,122 L135,112 L140,122Z M155,118 L161,105 L167,118Z M185,120 L190,110 L195,120Z M215,122 L220,111 L225,122Z M245,120 L250,108 L255,120Z M275,118 L281,106 L287,118Z M300,122 L305,112 L310,122Z" fill="#162010" opacity="0.95"/>
+        <!-- River channel (bright catch of light) -->
+        <path d="M88,148 Q110,143 135,147 Q155,150 175,146 Q195,142 215,146 Q230,149 245,145 L245,155 Q228,158 215,154 Q195,150 175,154 Q155,158 135,155 Q110,151 88,156 Z" fill="#1e2e3a" opacity="0.8"/>
+        <path d="M92,150 Q120,146 150,149 Q175,152 200,148 Q220,145 240,149 L240,152 Q220,148 200,151 Q175,155 150,152 Q120,149 92,153 Z" fill="rgba(120,170,200,0.18)"/>
+        <!-- Foreground earth -->
+        <path d="M0,168 Q50,160 100,164 Q160,168 220,162 Q270,158 320,163 L320,190 L0,190 Z" fill="#150e06"/>
+        <!-- Sun/warm light source -->
+        <circle cx="258" cy="28" r="16" fill="rgba(210,160,60,0.14)"/>
+        <circle cx="258" cy="28" r="10" fill="rgba(220,170,70,0.13)"/>
+        <circle cx="258" cy="28" r="5"  fill="rgba(235,185,80,0.15)"/>
       </svg>`;
 
     default: return `<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg"><rect width="320" height="190" fill="#182618"/></svg>`;

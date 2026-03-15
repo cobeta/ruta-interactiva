@@ -12,6 +12,7 @@ const PRECACHE = [
   '/routes/allue-san-anton/pois.json',
   '/routes/allue-collata/pois.json',
   '/routes/allue-puyaldo/pois.json',
+  '/routes/boniches/pois.json',
 ];
 
 // ── Install ────────────────────────────────────────────────────────────────
