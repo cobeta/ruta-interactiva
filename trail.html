@@ -633,8 +633,8 @@ const cfg = ROUTE_CONFIG[ROUTE_ID] || ROUTE_CONFIG.hanover;
 
 // ── State ──────────────────────────────────────────────────────────────────
 const state = {
-  lang: 'en',
-  uiLang: 'en',
+  lang: localStorage.getItem('lang') || 'es',
+  uiLang: localStorage.getItem('lang') || 'es',
   pois: [],
   gpxPoints: [],
   routeDistances: [],
@@ -731,6 +731,7 @@ function applyUILang() {
 function setUILang(lang) {
   state.uiLang = lang;
   state.lang = lang;
+  localStorage.setItem('lang', lang);
   applyUILang();
 }
 
@@ -1165,6 +1166,7 @@ async function checkOfflineStatus() {
 
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
+  applyUILang(); // apply saved language before first render
   setStatus(ui('loading'));
   await parseGPXPoints();
   setStatus(state.gpxPoints.length > 0 ? ui('routeLoaded') : ui('routeError'),

@@ -1008,10 +1008,11 @@ const UI = {
   en: { trails: 'Available Trails', download: 'Download & Go', open: '→ Open Trail', offline: 'Works offline after download · GPS-enabled · No account required' },
   es: { trails: 'Rutas disponibles',  download: 'Descargar y comenzar', open: '→ Abrir ruta', offline: 'Funciona sin conexión tras descargar · GPS · Sin cuenta' },
 };
-let currentLang = 'es';
+let currentLang = localStorage.getItem('lang') || 'es';
 
 function applyLang(lang) {
   currentLang = lang;
+  localStorage.setItem('lang', lang);
   document.querySelectorAll('.lang-opt').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   const footer = document.querySelector('footer p');
   if (footer) footer.textContent = UI[lang].offline;
