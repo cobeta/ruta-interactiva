@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,10 +51,10 @@
       font-family: 'DM Sans', -apple-system, sans-serif;
       background: var(--f950);
       color: var(--cream);
-      min-height: 100dvh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
     /* ── Header ──────────────────────────────────────────────────── */
@@ -70,6 +70,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-shrink: 0;
     }
 
     .brand {
@@ -114,83 +115,43 @@
     .lang-opt:not(:last-child) { border-right: 1px solid var(--f700); }
     .lang-opt.active { background: var(--f700); color: var(--cream); }
 
-    /* ── Gallery Section ─────────────────────────────────────────── */
-    .gallery-section {
-      padding: 20px 0 0;
+    /* ── Carousel Section ────────────────────────────────────────── */
+    .carousel-section {
       flex: 1;
-    }
-
-    .gallery-header {
-      padding: 0 20px 14px;
       display: flex;
-      align-items: baseline;
-      gap: 10px;
-    }
-
-    .gallery-label {
-      font-family: 'Courier Prime', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--cream-muted);
-      opacity: 0.65;
-    }
-
-    .gallery-count {
-      font-family: 'Courier Prime', monospace;
-      font-size: 10px;
-      color: var(--copper);
-      opacity: 0.8;
-    }
-
-    /* Gallery — mobile scroll snap */
-    .gallery-wrap {
-      overflow-x: auto;
-      display: flex;
-      scroll-snap-type: x mandatory;
-      gap: 12px;
-      padding: 0 20px 28px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .gallery-wrap::-webkit-scrollbar { display: none; }
-
-    /* Scroll dots */
-    .gallery-dots {
-      display: flex;
+      flex-direction: column;
       justify-content: center;
-      gap: 6px;
-      padding: 4px 0 28px;
+      padding: 20px 0 28px;
+      overflow: hidden;
     }
 
-    .gallery-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 3px;
-      background: var(--f600);
-      transition: width 0.25s ease, background 0.25s ease;
-      cursor: pointer;
+    .carousel {
+      position: relative;
+      width: 100%;
+      height: 530px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .gallery-dot.active {
-      width: 20px;
-      background: var(--copper);
+
+    @media (min-width: 640px) {
+      .carousel { height: 550px; }
     }
 
     /* ── Route Card ──────────────────────────────────────────────── */
     .route-card {
-      flex-shrink: 0;
-      width: min(84vw, 320px);
-      scroll-snap-align: start;
+      position: absolute;
+      width: min(88vw, 340px);
       background: var(--f800);
       border: 1px solid rgba(36,59,36,0.8);
       border-radius: 20px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      animation: card-rise 0.5s ease both;
-      animation-delay: calc(var(--i) * 80ms);
+      transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.45s ease;
+      will-change: transform, opacity;
+      cursor: pointer;
     }
 
     .route-card:hover {
@@ -198,10 +159,27 @@
       box-shadow: var(--shadow-lg);
     }
 
-    @keyframes card-rise {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
+    @media (min-width: 640px) {
+      .route-card { width: min(42vw, 380px); }
     }
+
+    /* ── Carousel dots ───────────────────────────────────────────── */
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 18px 0 0;
+    }
+
+    .carousel-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--f600);
+      transition: width 0.25s, background 0.25s;
+      cursor: pointer;
+    }
+    .carousel-dot.active { width: 20px; background: var(--copper); }
 
     /* ── Card terrain hero ───────────────────────────────────────── */
     .card-terrain {
@@ -378,32 +356,12 @@
     .btn-open.visible { display: flex; }
     .btn-open:hover   { background: var(--f600); }
 
-    /* ── Desktop grid ────────────────────────────────────────────── */
-    @media (min-width: 640px) {
-      .gallery-wrap {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        overflow-x: visible;
-        scroll-snap-type: none;
-        padding: 0 24px 32px;
-        gap: 16px;
-      }
-      .route-card {
-        width: auto;
-        flex-shrink: 1;
-      }
-      .gallery-dots { display: none; }
-    }
-
-    @media (min-width: 1024px) {
-      .gallery-wrap { grid-template-columns: repeat(3, 1fr); padding: 0 32px 40px; }
-    }
-
     /* ── Footer ──────────────────────────────────────────────────── */
     footer {
       padding: 24px 24px;
       border-top: 1px solid rgba(24,38,24,0.8);
       text-align: center;
+      flex-shrink: 0;
     }
     footer p {
       font-family: 'Courier Prime', monospace;
@@ -427,26 +385,18 @@
     Ruta Interactiva
   </div>
   <div id="lang-toggle">
-    <button class="lang-opt active" data-lang="en">EN</button>
-    <button class="lang-opt" data-lang="es">ES</button>
+    <button class="lang-opt" data-lang="en">EN</button>
+    <button class="lang-opt active" data-lang="es">ES</button>
   </div>
 </header>
 
-<section class="gallery-section">
-  <div class="gallery-header">
-    <span class="gallery-label" id="label-trails">Available Trails</span>
-    <span class="gallery-count">— 05</span>
-  </div>
-  <div class="gallery-wrap" id="route-grid">
-    <!-- Cards injected by JS -->
-  </div>
-  <div class="gallery-dots" id="gallery-dots">
-    <!-- Dots injected by JS -->
-  </div>
+<section class="carousel-section">
+  <div id="carousel" class="carousel"></div>
+  <div id="carousel-dots" class="carousel-dots"></div>
 </section>
 
 <footer>
-  <p>Works offline after download &middot; GPS-enabled &middot; No account required</p>
+  <p>Funciona sin conexión tras descargar · GPS · Sin cuenta</p>
 </footer>
 
 <script>
@@ -458,11 +408,11 @@ if ('serviceWorker' in navigator) {
 
 // ── Route catalogue ────────────────────────────────────────────────────────
 const ROUTES = [
-  { id: 'hanover',           name: 'Eastern White Pines',           region: 'Hanover, NH',    country: 'US', difficulty: 'Easy',      maxZoom: 16 },
   { id: 'allue-casteriello', name: 'Cerro Casteriello',             region: 'Allué, Aragón',  country: 'ES', difficulty: 'Moderate',  maxZoom: 17 },
   { id: 'allue-san-anton',   name: 'Barranco de San Antón',         region: 'Allué, Aragón',  country: 'ES', difficulty: 'Moderate',  maxZoom: 17 },
   { id: 'allue-collata',     name: 'La Collata y la Selva de Osán', region: 'Allué, Aragón',  country: 'ES', difficulty: 'Moderate',  maxZoom: 17 },
   { id: 'allue-puyaldo',     name: 'Peña Puyaldo',                  region: 'Allué, Aragón',  country: 'ES', difficulty: 'Strenuous', maxZoom: 17 },
+  { id: 'hanover',           name: 'Eastern White Pines',           region: 'Hanover, NH',    country: 'US', difficulty: 'Easy',      maxZoom: 16 },
 ];
 
 const TILE_TEMPLATES = {
@@ -1053,49 +1003,77 @@ function makeTerrain(routeId) {
   }
 }
 
-// ── Scroll dots setup ──────────────────────────────────────────────────────
-function setupScrollDots(cards) {
-  const dotsContainer = document.getElementById('gallery-dots');
-  dotsContainer.innerHTML = '';
-  const dots = ROUTES.map((_, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
-    dotsContainer.appendChild(dot);
-    return dot;
-  });
+// ── Language strings ────────────────────────────────────────────────────────
+const UI = {
+  en: { trails: 'Available Trails', download: 'Download & Go', open: '→ Open Trail', offline: 'Works offline after download · GPS-enabled · No account required' },
+  es: { trails: 'Rutas disponibles',  download: 'Descargar y comenzar', open: '→ Abrir ruta', offline: 'Funciona sin conexión tras descargar · GPS · Sin cuenta' },
+};
+let currentLang = 'es';
 
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting && e.intersectionRatio >= 0.6) {
-        const idx = [...cards].indexOf(e.target);
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-      }
-    });
-  }, { threshold: 0.6 });
-
-  cards.forEach(c => obs.observe(c));
+function applyLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-opt').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  const footer = document.querySelector('footer p');
+  if (footer) footer.textContent = UI[lang].offline;
+  document.querySelectorAll('.btn-download').forEach(b => { if (!b.disabled) b.textContent = UI[lang].download; });
+  document.querySelectorAll('.btn-open').forEach(b => { b.textContent = UI[lang].open; });
 }
 
-// ── Render cards ───────────────────────────────────────────────────────────
+document.getElementById('lang-toggle').addEventListener('click', e => {
+  const opt = e.target.closest('.lang-opt');
+  if (opt) applyLang(opt.dataset.lang);
+});
+
+// ── Carousel state ──────────────────────────────────────────────────────────
+let activeIndex = 0;
+let cards = [];
+let dots = [];
+
+function updateCarousel() {
+  cards.forEach((card, i) => {
+    const offset = i - activeIndex;
+    const absOff = Math.abs(offset);
+    const scale   = absOff === 0 ? 1 : absOff === 1 ? 0.78 : 0.62;
+    const tx      = offset * 72;
+    const opacity = absOff === 0 ? 1 : absOff === 1 ? 0.58 : absOff === 2 ? 0.25 : 0;
+    const zIndex  = 10 - absOff * 3;
+    card.style.transform = `translateX(${tx}%) scale(${scale})`;
+    card.style.opacity   = opacity;
+    card.style.zIndex    = zIndex;
+    card.style.pointerEvents = absOff > 2 ? 'none' : 'auto';
+    card.dataset.carouselOffset = offset;
+  });
+  dots.forEach((d, i) => d.classList.toggle('active', i === activeIndex));
+}
+
+function goTo(index) {
+  activeIndex = Math.max(0, Math.min(ROUTES.length - 1, index));
+  updateCarousel();
+}
+
+// ── Render cards ────────────────────────────────────────────────────────────
 function renderCards(downloaded) {
-  const grid = document.getElementById('route-grid');
-  grid.innerHTML = '';
+  const carousel = document.getElementById('carousel');
+  const dotsContainer = document.getElementById('carousel-dots');
+  carousel.innerHTML = '';
+  dotsContainer.innerHTML = '';
+  cards = [];
+  dots = [];
 
   ROUTES.forEach((route, index) => {
     const isDownloaded = downloaded.has(route.id);
-    const diffClass    = route.difficulty.toLowerCase();
-    const flag         = FLAGS[route.country] || '';
-    const terrain      = makeTerrain(route.id);
+    const diffClass = route.difficulty.toLowerCase();
+    const flag = FLAGS[route.country] || '';
 
     const card = document.createElement('article');
     card.className = 'route-card';
     card.dataset.routeId = route.id;
-    card.style = `--i: ${index}`;
+    card.style.setProperty('--i', index);
     card.innerHTML = `
       <div class="card-terrain">
-        ${terrain}
+        ${makeTerrain(route.id)}
         <div class="card-terrain-overlay">
-          <span class="card-country-badge">${flag} ${route.region}</span>
+          <span class="card-country-badge"><span>${flag}</span>${route.region}</span>
         </div>
       </div>
       <div class="card-content">
@@ -1112,39 +1090,49 @@ function renderCards(downloaded) {
       </div>
     `;
 
-    const btnDl = card.querySelector('.btn-download');
-    btnDl.addEventListener('click', () => downloadRoute(route, card));
+    // Download button
+    card.querySelector('.btn-download').addEventListener('click', (e) => {
+      e.stopPropagation();
+      downloadRoute(route, card);
+    });
 
-    grid.appendChild(card);
+    // Side card click → navigate
+    card.addEventListener('click', () => {
+      const off = parseInt(card.dataset.carouselOffset || '0');
+      if (off !== 0) goTo(index);
+    });
+
+    carousel.appendChild(card);
+    cards.push(card);
+
+    // Dot
+    const dot = document.createElement('div');
+    dot.className = 'carousel-dot' + (index === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goTo(index));
+    dotsContainer.appendChild(dot);
+    dots.push(dot);
   });
 
-  const cards = grid.querySelectorAll('.route-card');
-  setupScrollDots(cards);
+  // Touch swipe
+  let touchStartX = 0;
+  carousel.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  carousel.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) goTo(activeIndex + (dx < 0 ? 1 : -1));
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  goTo(activeIndex - 1);
+    if (e.key === 'ArrowRight') goTo(activeIndex + 1);
+  });
+
+  activeIndex = 0;
+  updateCarousel();
+  applyLang(currentLang);
 }
 
-// ── Init ───────────────────────────────────────────────────────────────────
-// ── Language toggle ────────────────────────────────────────────────────────
-const UI = {
-  en: { trails: 'Available Trails', download: 'Download & Go', open: '→ Open Trail', offline: 'Works offline after download · GPS-enabled · No account required' },
-  es: { trails: 'Rutas disponibles',  download: 'Descargar y comenzar', open: '→ Abrir ruta', offline: 'Funciona sin conexión tras descargar · GPS · Sin cuenta' },
-};
-let currentLang = 'en';
-
-function applyLang(lang) {
-  currentLang = lang;
-  document.querySelectorAll('.lang-opt').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-  document.getElementById('label-trails').textContent = UI[lang].trails;
-  const footer = document.querySelector('footer p');
-  if (footer) footer.textContent = UI[lang].offline;
-  document.querySelectorAll('.btn-download').forEach(b => { if (!b.disabled) b.textContent = UI[lang].download; });
-  document.querySelectorAll('.btn-open').forEach(b => { b.textContent = UI[lang].open; });
-}
-
-document.getElementById('lang-toggle').addEventListener('click', e => {
-  const opt = e.target.closest('.lang-opt');
-  if (opt) applyLang(opt.dataset.lang);
-});
-
+// ── Init ────────────────────────────────────────────────────────────────────
 getDownloadedRoutes().then(renderCards);
 </script>
 </body>
