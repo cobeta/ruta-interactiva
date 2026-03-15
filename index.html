@@ -1005,8 +1005,8 @@ function makeTerrain(routeId) {
 
 // ── Language strings ────────────────────────────────────────────────────────
 const UI = {
-  en: { trails: 'Available Trails', download: 'Download & Go', open: '→ Open Trail', offline: 'Works offline after download · GPS-enabled · No account required' },
-  es: { trails: 'Rutas disponibles',  download: 'Descargar y comenzar', open: '→ Abrir ruta', offline: 'Funciona sin conexión tras descargar · GPS · Sin cuenta' },
+  en: { trails: 'Available Trails', download: 'Download & Go', open: '→ Open Trail', offline: 'Works offline after download · GPS-enabled · No account required', easy: 'Easy', moderate: 'Moderate', strenuous: 'Strenuous' },
+  es: { trails: 'Rutas disponibles',  download: 'Descargar y comenzar', open: '→ Abrir ruta', offline: 'Funciona sin conexión tras descargar · GPS · Sin cuenta', easy: 'Fácil', moderate: 'Moderado', strenuous: 'Exigente' },
 };
 let currentLang = localStorage.getItem('lang') || 'es';
 
@@ -1018,6 +1018,7 @@ function applyLang(lang) {
   if (footer) footer.textContent = UI[lang].offline;
   document.querySelectorAll('.btn-download').forEach(b => { if (!b.disabled) b.textContent = UI[lang].download; });
   document.querySelectorAll('.btn-open').forEach(b => { b.textContent = UI[lang].open; });
+  document.querySelectorAll('.difficulty-badge').forEach(b => { b.textContent = UI[lang][b.dataset.diff]; });
 }
 
 document.getElementById('lang-toggle').addEventListener('click', e => {
@@ -1080,7 +1081,7 @@ function renderCards(downloaded) {
       <div class="card-content">
         <h2 class="card-name">${route.name}</h2>
         <div class="card-meta">
-          <span class="difficulty-badge ${diffClass}">${route.difficulty}</span>
+          <span class="difficulty-badge ${diffClass}" data-diff="${diffClass}">${UI[currentLang][diffClass]}</span>
         </div>
       </div>
       <div class="card-actions">
