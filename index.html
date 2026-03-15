@@ -7,7 +7,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Ruta Interactiva</title>
+  <title>Rutas Interactivas</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="manifest" href="manifest.json">
@@ -49,7 +49,10 @@
 
     body {
       font-family: 'DM Sans', -apple-system, sans-serif;
-      background: var(--f950);
+      background:
+        linear-gradient(to bottom, rgba(8,15,8,0.52) 0%, rgba(8,15,8,0.78) 100%),
+        url('assets/images/topo-bg.jpg') center/cover no-repeat fixed;
+      background-color: var(--f950);
       color: var(--cream);
       height: 100dvh;
       display: flex;
@@ -82,6 +85,12 @@
       font-weight: 600;
       color: var(--copper-light);
       letter-spacing: 0.01em;
+    }
+
+    @media (min-width: 1024px) {
+      header { padding: 16px 48px; }
+      .brand { font-size: 20px; gap: 11px; }
+      .brand-icon svg { width: 24px; height: 24px; }
     }
 
     .brand-icon {
@@ -138,25 +147,79 @@
       .carousel { height: 550px; }
     }
 
+    @media (min-width: 1024px) {
+      .carousel-section {
+        overflow: hidden;
+        justify-content: flex-start;
+        padding: 20px 48px 20px;
+      }
+
+      .carousel {
+        flex: 1;
+        min-height: 0;
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 16px;
+        height: 100% !important;
+        align-items: stretch;
+      }
+
+      .route-card {
+        position: relative !important;
+        width: 100% !important;
+        height: 100% !important;
+        transform: none !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        z-index: 1 !important;
+        cursor: default;
+        overflow: hidden;
+      }
+      .route-card:hover {
+        transform: translateY(-4px) scale(1.01) !important;
+        border-color: rgba(200,135,74,0.55) !important;
+        box-shadow: 0 0 0 1px rgba(200,135,74,0.22), 0 16px 48px rgba(0,0,0,0.65) !important;
+      }
+
+      .card-content  { padding: 12px 16px 8px; }
+      .card-actions  { padding: 0 14px 14px; }
+      .btn-download, .btn-open { padding: 10px 14px; }
+
+      .carousel-dots { display: none !important; }
+    }
+
+    /* ── Card entrance animation ─────────────────────────────────── */
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    }
+
     /* ── Route Card ──────────────────────────────────────────────── */
     .route-card {
       position: absolute;
       width: min(88vw, 340px);
-      background: var(--f800);
-      border: 1px solid rgba(36,59,36,0.8);
+      background: rgba(24, 38, 24, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(58,94,56,0.45);
       border-radius: 20px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                  opacity 0.45s ease;
+                  opacity 0.45s ease,
+                  border-color 0.25s ease,
+                  box-shadow 0.25s ease;
       will-change: transform, opacity;
       cursor: pointer;
+      animation: cardIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: calc(var(--i, 0) * 0.07s);
     }
 
     .route-card:hover {
-      border-color: rgba(58,94,56,0.9);
-      box-shadow: var(--shadow-lg);
+      border-color: rgba(200,135,74,0.5);
+      box-shadow: 0 0 0 1px rgba(200,135,74,0.18), var(--shadow-lg);
     }
 
     @media (min-width: 640px) {
@@ -183,11 +246,10 @@
 
     /* ── Card terrain hero ───────────────────────────────────────── */
     .card-terrain {
-      position: relative;
-      height: 190px;
+      position: absolute;
+      inset: 0;
       overflow: hidden;
       background: var(--f950);
-      flex-shrink: 0;
     }
 
     .card-terrain svg {
@@ -201,9 +263,13 @@
     .card-terrain-overlay {
       position: absolute;
       inset: 0;
-      background: var(--terrain-overlay);
+      background: linear-gradient(to top,
+        rgba(8,15,8,0.96) 0%,
+        rgba(8,15,8,0.70) 40%,
+        rgba(8,15,8,0.18) 75%,
+        rgba(8,15,8,0.04) 100%);
       display: flex;
-      align-items: flex-end;
+      align-items: flex-start;
       padding: 12px 14px;
     }
 
@@ -227,8 +293,10 @@
 
     /* ── Card body ───────────────────────────────────────────────── */
     .card-content {
+      position: relative;
+      z-index: 1;
       padding: 16px 18px 10px;
-      flex: 1;
+      margin-top: auto;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -264,6 +332,8 @@
 
     /* ── Card actions ────────────────────────────────────────────── */
     .card-actions {
+      position: relative;
+      z-index: 1;
       padding: 0 16px 16px;
       display: flex;
       flex-direction: column;
@@ -358,8 +428,8 @@
 
     /* ── Footer ──────────────────────────────────────────────────── */
     footer {
-      padding: 24px 24px;
-      border-top: 1px solid rgba(24,38,24,0.8);
+      padding: 16px 24px;
+      border-top: 1px solid rgba(58,94,56,0.2);
       text-align: center;
       flex-shrink: 0;
     }
@@ -367,8 +437,11 @@
       font-family: 'Courier Prime', monospace;
       font-size: 11px;
       color: var(--cream-muted);
-      opacity: 0.4;
-      letter-spacing: 0.05em;
+      opacity: 0.38;
+      letter-spacing: 0.06em;
+    }
+    @media (min-width: 1024px) {
+      footer { padding: 14px 48px; }
     }
   </style>
 </head>
@@ -382,7 +455,7 @@
         <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
       </svg>
     </span>
-    Ruta Interactiva
+    Rutas Interactivas
   </div>
   <div id="lang-toggle">
     <button class="lang-opt" data-lang="en">EN</button>
