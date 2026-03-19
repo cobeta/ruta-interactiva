@@ -361,8 +361,12 @@
     }
 
     /* Image carousel */
+    #modal-carousel-wrap {
+      position: relative;
+      margin: 0 0 18px;
+    }
     #modal-images {
-      margin: 0 -20px 18px;
+      margin: 0 -20px 0;
       overflow-x: auto;
       display: flex; gap: 8px;
       padding: 0 20px;
@@ -370,6 +374,20 @@
       scrollbar-width: none;
     }
     #modal-images::-webkit-scrollbar { display: none; }
+    #carousel-prev, #carousel-next {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(10,10,8,0.55);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.85); font-size: 20px;
+      cursor: pointer; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #carousel-prev { left: 6px; }
+    #carousel-next { right: 6px; }
+    #carousel-prev.hidden, #carousel-next.hidden { opacity: 0; pointer-events: none; }
 
     .modal-img {
       flex-shrink: 0;
@@ -410,10 +428,10 @@
       flex-shrink: 0;
     }
     #lightbox-caption {
-      color: rgba(255,255,255,0.72);
-      font-size: 14px; line-height: 1.65;
+      color: rgba(255,255,255,0.6);
+      font-size: 13px; font-weight: 500;
       text-align: center;
-      max-width: 560px;
+      letter-spacing: 0.03em;
       padding: 0 8px;
     }
     #lightbox-close {
@@ -681,7 +699,11 @@
       <button id="modal-close-btn">✕</button>
     </div>
     <div id="modal-body">
-      <div id="modal-images"></div>
+      <div id="modal-carousel-wrap">
+        <div id="modal-images"></div>
+        <button id="carousel-prev" class="hidden">&#8249;</button>
+        <button id="carousel-next" class="hidden">&#8250;</button>
+      </div>
       <h2 id="modal-title">—</h2>
       <p id="modal-description">—</p>
       <div id="modal-audio-section">
@@ -913,13 +935,16 @@ function openPoiModal(poi) {
     ph.innerHTML = `${IMG_PLACEHOLDER_SVG}<span>${ui('noImage')}</span>`;
     imgWrap.appendChild(ph);
   } else {
-    images.forEach((src, i) => {
+    // Normalise: items may be strings or {src, caption} objects
+    const imgItems = images.map(item => typeof item === 'string' ? { src: item, caption: '' } : item);
+    const srcs     = imgItems.map(it => it.src);
+    imgItems.forEach((item, i) => {
       const img = document.createElement('img');
       img.className = 'modal-img';
-      img.src = src;
-      img.alt = t(poi, 'name');
+      img.src = item.src;
+      img.alt = item.caption || t(poi, 'name');
       img.loading = 'lazy';
-      img.addEventListener('click', () => openLightbox(images, i, t(poi, 'description')));
+      img.addEventListener('click', () => openLightbox(srcs, i, imgItems.map(it => it.caption)));
       img.onerror = () => {
         const ph = document.createElement('div');
         ph.className = 'modal-img-placeholder';
@@ -929,6 +954,8 @@ function openPoiModal(poi) {
       imgWrap.appendChild(img);
     });
   }
+  imgWrap.scrollLeft = 0;
+  updateCarouselArrows();
 
   const audioSection = document.getElementById('modal-audio-section');
   const tracks = poi.audioTracks || (poi.audio ? [{ labels: {}, src: poi.audio }] : []);
@@ -993,12 +1020,12 @@ document.getElementById('modal-close-btn').addEventListener('click', closeModal)
 overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 
 // ── Lightbox ───────────────────────────────────────────────────────────────
-let lbImages = [], lbIndex = 0, lbCaption = '';
+let lbImages = [], lbCaptions = [], lbIndex = 0;
 
-function openLightbox(images, index, caption) {
-  lbImages  = images;
-  lbIndex   = index;
-  lbCaption = caption || '';
+function openLightbox(images, index, captions) {
+  lbImages   = images;
+  lbCaptions = Array.isArray(captions) ? captions : [];
+  lbIndex    = index;
   renderLightbox();
   document.getElementById('lightbox').classList.add('open');
 }
@@ -1008,12 +1035,29 @@ function closeLightbox() {
 }
 
 function renderLightbox() {
-  document.getElementById('lightbox-img').src        = lbImages[lbIndex];
-  document.getElementById('lightbox-caption').textContent = lbCaption;
+  document.getElementById('lightbox-img').src = lbImages[lbIndex];
+  const cap = lbCaptions[lbIndex] || '';
+  const capEl = document.getElementById('lightbox-caption');
+  capEl.textContent = cap;
+  capEl.style.display = cap ? '' : 'none';
   document.getElementById('lightbox-prev').classList.toggle('hidden', lbIndex === 0);
   document.getElementById('lightbox-next').classList.toggle('hidden', lbIndex === lbImages.length - 1);
   document.getElementById('lightbox-content').scrollTop = 0;
 }
+
+// ── Carousel arrows ────────────────────────────────────────────────────────
+const carousel     = document.getElementById('modal-images');
+const carouselPrev = document.getElementById('carousel-prev');
+const carouselNext = document.getElementById('carousel-next');
+
+function updateCarouselArrows() {
+  const single = carousel.children.length <= 1;
+  carouselPrev.classList.toggle('hidden', single || carousel.scrollLeft <= 4);
+  carouselNext.classList.toggle('hidden', single || carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 4);
+}
+carouselPrev.addEventListener('click', () => { carousel.scrollBy({ left: -carousel.clientWidth, behavior: 'smooth' }); });
+carouselNext.addEventListener('click', () => { carousel.scrollBy({ left:  carousel.clientWidth, behavior: 'smooth' }); });
+carousel.addEventListener('scroll', updateCarouselArrows);
 
 document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
 document.getElementById('lightbox').addEventListener('click', e => { if (e.target === document.getElementById('lightbox')) closeLightbox(); });

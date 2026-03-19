@@ -42,7 +42,10 @@
     "id": "poi-03",
     "lat": 43.758589,
     "lon": -72.152330,
-    "images": ["routes/hanover/images/poi-03-a.jpg", "routes/hanover/images/poi-03-b.jpg"],
+    "images": [
+      "routes/hanover/images/poi-03-a.jpg",
+      { "src": "routes/hanover/images/poi-03-b.jpg", "caption": "Farm manufacture of maple sugar — The Encyclopedia of Food, Artemas Ward (c. 1911)" }
+    ],
     "audio": null,
     "languages": {
       "en": {
@@ -60,12 +63,12 @@
     "lat": 43.758800,
     "lon": -72.155600,
     "images": [
-      "routes/hanover/images/poi-04-a.jpg",
-      "routes/hanover/images/poi-04-b.jpg",
-      "routes/hanover/images/poi-04-c.jpg",
-      "routes/hanover/images/poi-04-d.jpg",
-      "routes/hanover/images/poi-04-e.jpg",
-      "routes/hanover/images/poi-04-f.jpg"
+      { "src": "routes/hanover/images/poi-04-a.jpg", "caption": "Black-capped Chickadee" },
+      { "src": "routes/hanover/images/poi-04-b.jpg", "caption": "Black-capped Chickadee" },
+      { "src": "routes/hanover/images/poi-04-c.jpg", "caption": "Black-capped Chickadee (Poecile atricapillus)" },
+      { "src": "routes/hanover/images/poi-04-d.jpg", "caption": "Downy Woodpecker" },
+      { "src": "routes/hanover/images/poi-04-e.jpg", "caption": "Downy Woodpecker" },
+      { "src": "routes/hanover/images/poi-04-f.jpg", "caption": "Downy Woodpecker at Earle Park" }
     ],
     "audio": null,
     "audioTracks": [
