@@ -59,7 +59,11 @@
     "id": "poi-04",
     "lat": 43.758800,
     "lon": -72.155600,
-    "images": [],
+    "images": [
+      "routes/hanover/images/poi-04-a.jpg",
+      "routes/hanover/images/poi-04-b.jpg",
+      "routes/hanover/images/poi-04-c.jpg"
+    ],
     "audio": null,
     "audioTracks": [
       { "labels": { "en": "Chickadee — Song",    "es": "Carbonero — Canto"    }, "src": "assets/audio/11 Black-capped Chickadee Song.mp3" },
