@@ -22,14 +22,19 @@
     "lon": -72.152768,
     "images": ["routes/hanover/images/poi-02-a.jpg"],
     "audio": null,
+    "audioTracks": [
+      { "labels": { "en": "Call 1", "es": "Llamada 1" }, "src": "assets/audio/08 Blue Jay Call 1.mp3" },
+      { "labels": { "en": "Call 2", "es": "Llamada 2" }, "src": "assets/audio/09 Blue Jay Call 2.mp3" },
+      { "labels": { "en": "Call 3", "es": "Llamada 3" }, "src": "assets/audio/10 Blue Jay Call 3.mp3" }
+    ],
     "languages": {
       "en": {
         "name": "American Beech & Yellow Birch",
-        "description": "Two of New Hampshire's most distinctive hardwoods share this stretch of trail. American Beech holds its papery, smooth silver-gray bark well into old age — almost every beech you see carries the carved initials of someone who could not resist. Its nuts are a critical fall food for black bears, wild turkeys, and blue jays before winter sets in. Threaded among them are Yellow Birch, easily identified by their shimmering, amber-golden bark that peels in thin curls. Crush a small twig between your fingers and you'll catch a faint scent of wintergreen — the tree produces the same compound, methyl salicylate, that gives wintergreen candy its flavor. Both species thrive in the cool, moist soils of these New England uplands."
+        "description": "Two of New Hampshire's most distinctive hardwoods share this stretch of trail. American Beech holds its papery, smooth silver-gray bark well into old age — almost every beech you see carries the carved initials of someone who could not resist. Its nuts are a critical fall food for black bears, wild turkeys, and Blue Jays before winter sets in. Listen for the Blue Jay's sharp, scolding calls as it works through the canopy caching beech nuts to eat months later — its memory for buried seeds is nearly perfect. Threaded among the beeches are Yellow Birch, easily identified by their shimmering, amber-golden bark that peels in thin curls. Crush a small twig between your fingers and you'll catch a faint scent of wintergreen — the tree produces the same compound, methyl salicylate, that gives wintergreen candy its flavor."
       },
       "es": {
         "name": "Haya americana y abedul amarillo",
-        "description": "Dos de los frondosos más característicos de New Hampshire comparten este tramo del sendero. La haya americana conserva su corteza lisa y plateada hasta la vejez — casi todos los ejemplares que ves llevan talladas las iniciales de alguien que no pudo resistirse. Sus nueces son un alimento otoñal fundamental para los osos negros, los pavos silvestres y los arrendajos azules antes de que llegue el invierno. Entretejidos entre ellas aparecen los abedules amarillos, fáciles de identificar por su corteza dorada y ambarino que se pela en finas espirales. Frota una ramita pequeña entre los dedos y percibirás un suave aroma a gaulteria — el árbol produce el mismo compuesto, el salicilato de metilo, que da sabor a los caramelos de menta. Ambas especies prosperan en los suelos frescos y húmedos de estas tierras altas de Nueva Inglaterra."
+        "description": "Dos de los frondosos más característicos de New Hampshire comparten este tramo del sendero. La haya americana conserva su corteza lisa y plateada hasta la vejez — casi todos los ejemplares que ves llevan talladas las iniciales de alguien que no pudo resistirse. Sus nueces son un alimento otoñal fundamental para los osos negros, los pavos silvestres y los arrendajos azules antes de que llegue el invierno. Escucha las llamadas agudas y alertas del arrendajo azul mientras recorre el dosel almacenando nueces de haya que comerá meses después — su memoria para las semillas enterradas es casi perfecta. Entretejidos entre las hayas aparecen los abedules amarillos, fáciles de identificar por su corteza dorada y ambarino que se pela en finas espirales. Frota una ramita pequeña entre los dedos y percibirás un suave aroma a gaulteria — el árbol produce el mismo compuesto, el salicilato de metilo, que da sabor a los caramelos de menta."
       }
     }
   },
@@ -47,6 +52,29 @@
       "es": {
         "name": "Arce de azúcar y la elaboración del jarabe de arce",
         "description": "Estás en el corazón del país del arce de azúcar. Acer saccharum — el arce azucarero — es la columna vertebral de los bosques de producción de New Hampshire, tiñendo las laderas de naranja y rojo intenso cada otoño y ofreciendo algo más raro en primavera: el jarabe de arce.\n\nEl proceso comienza cuando las temperaturas superan el punto de congelación durante el día y vuelven a bajar por la noche — generalmente de finales de febrero a abril. Este ciclo de helada y deshielo genera cambios de presión dentro del árbol que empujan la savia hacia arriba a través de la albura. Los productores de azúcar perforan pequeños agujeros de toma, no más anchos que el pulgar, y colocan grifos de metal o plástico. La gravedad y la diferencia de presión hacen fluir la savia — un líquido casi transparente con un sabor apenas dulce — hacia cubos o kilómetros de tuberías de plástico que tejen laderas enteras.\n\nSe necesitan aproximadamente 150 litros de savia cruda para producir un solo litro de jarabe. La savia se hierve en una larga bandeja evaporadora plana hasta que el agua se evapora y la concentración de azúcar sube al 66 por ciento. El resultado, filtrado y clasificado por color y sabor, va desde el pálido y delicado 'Dorado' hasta el robusto y oscuro 'Muy oscuro' usado en cocina. Los productores de jarabe de arce de New Hampshire elaboran millones de kilogramos de jarabe cada año, una tradición que se remonta a los métodos abenaki mucho antes de la colonización europea."
+      }
+    }
+  },
+  {
+    "id": "poi-04",
+    "lat": 43.758800,
+    "lon": -72.155600,
+    "images": [],
+    "audio": null,
+    "audioTracks": [
+      { "labels": { "en": "Chickadee — Song",    "es": "Carbonero — Canto"    }, "src": "assets/audio/11 Black-capped Chickadee Song.mp3" },
+      { "labels": { "en": "Chickadee — Call",    "es": "Carbonero — Llamada"  }, "src": "assets/audio/12 Black-capped Chickadee Call.mp3" },
+      { "labels": { "en": "Woodpecker — Calls",  "es": "Carpintero — Llamadas"}, "src": "assets/audio/03 Downy Woodpecker Calls.mp3" },
+      { "labels": { "en": "Woodpecker — Drum",   "es": "Carpintero — Tambor"  }, "src": "assets/audio/04 Downy Woodpecker Drum.mp3" }
+    ],
+    "languages": {
+      "en": {
+        "name": "Forest Voices: Chickadee & Woodpecker",
+        "description": "Pause here and listen. Two of this forest's most dependable voices are the Black-capped Chickadee and the Downy Woodpecker.\n\nThe Black-capped Chickadee is named for its two-note whistled song — a clear fee-bee that drops a whole step — but its familiar chick-a-dee-dee-dee call carries social meaning: the more 'dee' notes at the end, the greater the perceived threat. Chickadees cache food in hundreds of different spots each fall and can remember every location for weeks, helped by a hippocampus that actually grows new neurons each autumn.\n\nThe Downy Woodpecker is the smallest woodpecker in North America, barely the size of a sparrow, yet its rapid drumming on dead snags can be heard across the entire forest. It drills for wood-boring beetle larvae hidden under bark that no other bird can reach. Look for its crisp black-and-white pattern and the red patch on the back of the male's head. Use the buttons below to compare their voices."
+      },
+      "es": {
+        "name": "Voces del bosque: carbonero y carpintero",
+        "description": "Detente y escucha. Dos de las voces más constantes de este bosque son las del carbonero de cabeza negra y el carpintero velloso.\n\nEl carbonero de cabeza negra debe su nombre a su canto silbado de dos notas — un fee-bee claro que desciende un tono entero — pero su familiar llamada chick-a-dee-dee-dee tiene un significado social: cuantas más notas 'dee' al final, mayor es la amenaza percibida. Los carboneros almacenan alimento en cientos de lugares distintos cada otoño y recuerdan cada ubicación durante semanas, ayudados por un hipocampo que realmente genera nuevas neuronas cada año.\n\nEl carpintero velloso es el carpintero más pequeño de Norteamérica, apenas del tamaño de un gorrión, pero su rápido tamborileo sobre troncos muertos se puede escuchar en todo el bosque. Taladra en busca de larvas de escarabajos barrenadores ocultas bajo la corteza, inaccesibles para cualquier otra ave. Busca su nítido patrón blanco y negro y el parche rojo en la nuca del macho. Usa los botones de abajo para comparar sus voces."
       }
     }
   }

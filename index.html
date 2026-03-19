@@ -1119,7 +1119,8 @@ const UI = {
   en: { trails: 'Available Trails', download: 'Download & Go', open: '→ Open Trail', offline: 'Works offline after download · GPS-enabled · No account required', easy: 'Easy', moderate: 'Moderate', strenuous: 'Strenuous' },
   es: { trails: 'Rutas disponibles',  download: 'Descargar y comenzar', open: '→ Abrir ruta', offline: 'Funciona sin conexión tras descargar · GPS · Sin cuenta', easy: 'Fácil', moderate: 'Moderado', strenuous: 'Exigente' },
 };
-let currentLang = localStorage.getItem('lang') || 'es';
+const _urlLang = new URLSearchParams(location.search).get('lang');
+let currentLang = _urlLang || localStorage.getItem('lang') || 'es';
 
 function applyLang(lang) {
   currentLang = lang;
@@ -1199,7 +1200,7 @@ function renderCards(downloaded) {
         <div class="card-progress-strip"><div class="card-progress-fill"></div></div>
         <div class="card-progress-label"></div>
         <button class="btn-download"${isDownloaded ? ' style="display:none"' : ''}>${UI[currentLang].download}</button>
-        <a class="btn-open${isDownloaded ? ' visible' : ''}" href="trail.html?route=${route.id}">${UI[currentLang].open}</a>
+        <a class="btn-open${isDownloaded ? ' visible' : ''}" href="trail.html?route=${route.id}${_urlLang ? `&lang=${_urlLang}` : ''}">${UI[currentLang].open}</a>
       </div>
     `;
 
