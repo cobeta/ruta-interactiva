@@ -427,6 +427,22 @@
     .btn-open.visible { display: flex; }
     .btn-open:hover   { background: var(--f600); }
 
+    /* Clear data button */
+    .btn-clear {
+      width: 100%; margin-top: 6px;
+      background: none; border: none;
+      color: var(--cream-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 500;
+      cursor: pointer; padding: 4px 0 2px;
+      opacity: 0.45;
+      display: none; align-items: center; justify-content: center; gap: 5px;
+      transition: opacity 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-clear.visible { display: flex; }
+    .btn-clear:hover   { opacity: 0.85; }
+
     /* ── Footer ──────────────────────────────────────────────────── */
     footer {
       padding: 16px 24px;
@@ -567,8 +583,9 @@ async function downloadRoute(route, cardEl) {
     const pois      = await poisResp.json();
     const poiAssets = [];
     pois.forEach(p => {
-      if (p.audio) poiAssets.push(p.audio);
-      (p.images || []).forEach(img => poiAssets.push(img));
+      const tracks = p.audioTracks || (p.audio ? [{ src: p.audio }] : []);
+      tracks.forEach(tr => poiAssets.push(tr.src));
+      (p.images || []).forEach(img => poiAssets.push(typeof img === 'string' ? img : img.src));
     });
 
     // 4. Core app assets
@@ -611,6 +628,28 @@ async function downloadRoute(route, cardEl) {
     label.textContent = 'Download failed — check connection';
     btnDl.disabled    = false;
     btnDl.textContent = 'Retry';
+  }
+}
+
+// ── Clear cached route data ────────────────────────────────────────────────
+async function clearRouteData(route, cardEl) {
+  if (!('caches' in window)) return;
+  const btn = cardEl.querySelector('.btn-clear');
+  btn.textContent = '…';
+  btn.disabled = true;
+  try {
+    const cache = await caches.open('ruta-interactiva-v2');
+    const keys  = await cache.keys();
+    const routeKeys = keys.filter(req => req.url.includes(`/routes/${route.id}/`));
+    await Promise.all(routeKeys.map(req => cache.delete(req)));
+    cardEl.querySelector('.btn-download').style.display = '';
+    cardEl.querySelector('.btn-open').classList.remove('visible');
+    btn.classList.remove('visible');
+    btn.disabled = false;
+    btn.textContent = UI[currentLang].clear;
+  } catch (_) {
+    btn.textContent = 'Error';
+    btn.disabled = false;
   }
 }
 
@@ -1116,8 +1155,8 @@ function makeTerrain(routeId) {
 
 // ── Language strings ────────────────────────────────────────────────────────
 const UI = {
-  en: { trails: 'Available Trails', download: 'Download & Go', open: '→ Open Trail', offline: 'Works offline after download · GPS-enabled · No account required', easy: 'Easy', moderate: 'Moderate', strenuous: 'Strenuous' },
-  es: { trails: 'Rutas disponibles',  download: 'Descargar y comenzar', open: '→ Abrir ruta', offline: 'Funciona sin conexión tras descargar · GPS · Sin cuenta', easy: 'Fácil', moderate: 'Moderado', strenuous: 'Exigente' },
+  en: { trails: 'Available Trails', download: 'Download & Go', open: '→ Open Trail', clear: '✕ Clear downloaded data', offline: 'Works offline after download · GPS-enabled · No account required', easy: 'Easy', moderate: 'Moderate', strenuous: 'Strenuous' },
+  es: { trails: 'Rutas disponibles',  download: 'Descargar y comenzar', open: '→ Abrir ruta', clear: '✕ Borrar datos descargados', offline: 'Funciona sin conexión tras descargar · GPS · Sin cuenta', easy: 'Fácil', moderate: 'Moderado', strenuous: 'Exigente' },
 };
 const _urlLang = new URLSearchParams(location.search).get('lang');
 let currentLang = _urlLang || localStorage.getItem('lang') || 'es';
@@ -1130,6 +1169,7 @@ function applyLang(lang) {
   if (footer) footer.textContent = UI[lang].offline;
   document.querySelectorAll('.btn-download').forEach(b => { if (!b.disabled) b.textContent = UI[lang].download; });
   document.querySelectorAll('.btn-open').forEach(b => { b.textContent = UI[lang].open; });
+  document.querySelectorAll('.btn-clear').forEach(b => { if (!b.disabled) b.textContent = UI[lang].clear; });
   document.querySelectorAll('.difficulty-badge').forEach(b => { b.textContent = UI[lang][b.dataset.diff]; });
 }
 
@@ -1201,6 +1241,7 @@ function renderCards(downloaded) {
         <div class="card-progress-label"></div>
         <button class="btn-download"${isDownloaded ? ' style="display:none"' : ''}>${UI[currentLang].download}</button>
         <a class="btn-open${isDownloaded ? ' visible' : ''}" href="trail.html?route=${route.id}${_urlLang ? `&lang=${_urlLang}` : ''}">${UI[currentLang].open}</a>
+        <button class="btn-clear${isDownloaded ? ' visible' : ''}">${UI[currentLang].clear}</button>
       </div>
     `;
 
@@ -1208,6 +1249,12 @@ function renderCards(downloaded) {
     card.querySelector('.btn-download').addEventListener('click', (e) => {
       e.stopPropagation();
       downloadRoute(route, card);
+    });
+
+    // Clear data button
+    card.querySelector('.btn-clear').addEventListener('click', (e) => {
+      e.stopPropagation();
+      clearRouteData(route, card);
     });
 
     // Side card click → navigate

@@ -475,12 +475,13 @@
       opacity: 0.6;
     }
 
+    #modal-title { margin-top: 20px; }
+
     #modal-description {
       font-size: 15px;
       line-height: 1.7;
       color: var(--cream);
       opacity: 0.88;
-      margin-bottom: 22px;
     }
 
     /* ── Audio Player ───────────────────────────────────────── */
@@ -489,6 +490,7 @@
       border: 1px solid var(--f700);
       border-radius: 16px;
       padding: 16px 18px;
+      margin-bottom: 20px;
     }
     #audio-label {
       font-size: 10px; font-weight: 600;
@@ -704,8 +706,6 @@
         <button id="carousel-prev" class="hidden">&#8249;</button>
         <button id="carousel-next" class="hidden">&#8250;</button>
       </div>
-      <h2 id="modal-title">—</h2>
-      <p id="modal-description">—</p>
       <div id="modal-audio-section">
         <div id="audio-label">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/></svg>
@@ -723,6 +723,8 @@
           </div>
         </div>
       </div>
+      <h2 id="modal-title">—</h2>
+      <p id="modal-description">—</p>
     </div>
   </div>
 </div>
