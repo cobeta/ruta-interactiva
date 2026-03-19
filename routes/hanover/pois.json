@@ -42,7 +42,7 @@
     "id": "poi-03",
     "lat": 43.758589,
     "lon": -72.152330,
-    "images": ["routes/hanover/images/poi-03-a.jpg"],
+    "images": ["routes/hanover/images/poi-03-a.jpg", "routes/hanover/images/poi-03-b.jpg"],
     "audio": null,
     "languages": {
       "en": {
