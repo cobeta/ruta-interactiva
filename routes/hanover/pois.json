@@ -62,7 +62,10 @@
     "images": [
       "routes/hanover/images/poi-04-a.jpg",
       "routes/hanover/images/poi-04-b.jpg",
-      "routes/hanover/images/poi-04-c.jpg"
+      "routes/hanover/images/poi-04-c.jpg",
+      "routes/hanover/images/poi-04-d.jpg",
+      "routes/hanover/images/poi-04-e.jpg",
+      "routes/hanover/images/poi-04-f.jpg"
     ],
     "audio": null,
     "audioTracks": [
