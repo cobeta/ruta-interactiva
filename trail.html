@@ -482,17 +482,21 @@
       padding: 5px 13px;
       border-radius: 20px;
       border: 1px solid var(--f600);
-      background: transparent;
+      background: var(--f800);
       color: var(--cream-muted);
       font-size: 12px; font-weight: 500;
       cursor: pointer;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      transition: color 0.15s, border-color 0.15s;
       -webkit-tap-highlight-color: transparent;
     }
     .audio-track-btn.active {
-      background: var(--f600);
-      color: var(--cream);
       border-color: var(--copper);
+      color: var(--cream);
+      background: linear-gradient(
+        to right,
+        rgba(200,135,74,0.55) var(--track-progress, 0%),
+        var(--f700) var(--track-progress, 0%)
+      );
     }
 
     /* ── Download Progress ──────────────────────────────────── */
@@ -862,20 +866,43 @@ function openPoiModal(poi) {
   trackBtnsEl.innerHTML = '';
   if (tracks.length > 0) {
     audioSection.classList.remove('no-audio');
-    if (tracks.length > 1) {
+    const multiTrack = tracks.length > 1;
+    document.getElementById('audio-controls').style.display = multiTrack ? 'none' : '';
+    if (multiTrack) {
       tracks.forEach((track, i) => {
         const btn = document.createElement('button');
         btn.className = 'audio-track-btn' + (i === 0 ? ' active' : '');
         btn.textContent = (track.labels && (track.labels[state.lang] || track.labels.en)) || '';
+        btn.style.setProperty('--track-progress', '0%');
         btn.addEventListener('click', () => {
-          document.querySelectorAll('.audio-track-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          loadAudioTrack(track.src);
+          const isPlaying = btn.classList.contains('active') && !audioEl.paused;
+          if (isPlaying) {
+            audioEl.pause();
+            audioEl.currentTime = 0;
+            btn.style.setProperty('--track-progress', '0%');
+            setAudioState(false);
+          } else {
+            document.querySelectorAll('.audio-track-btn').forEach(b => {
+              b.classList.remove('active');
+              b.style.setProperty('--track-progress', '0%');
+            });
+            btn.classList.add('active');
+            audioEl.pause();
+            audioEl.src = track.src;
+            audioEl.load();
+            audioEl.currentTime = 0;
+            audioEl.play().catch(() => {});
+            setAudioState(true);
+          }
         });
         trackBtnsEl.appendChild(btn);
       });
+      audioEl.pause();
+      audioEl.src = tracks[0].src;
+      audioEl.load();
+    } else {
+      loadAudioTrack(tracks[0].src);
     }
-    loadAudioTrack(tracks[0].src);
   } else {
     audioSection.classList.add('no-audio');
     audioEl.pause();
@@ -913,14 +940,21 @@ function fmtTime(s) {
 }
 
 audioEl.addEventListener('timeupdate', () => {
-  if (!audioDragging && audioEl.duration) {
-    document.getElementById('audio-progress').value =
-      (audioEl.currentTime / audioEl.duration) * 100;
+  if (!audioEl.duration) return;
+  const pct = (audioEl.currentTime / audioEl.duration) * 100;
+  const activePill = document.querySelector('.audio-track-btn.active');
+  if (activePill) activePill.style.setProperty('--track-progress', pct + '%');
+  if (!audioDragging) {
+    document.getElementById('audio-progress').value = pct;
     document.getElementById('audio-time').textContent =
       `${fmtTime(audioEl.currentTime)} / ${fmtTime(audioEl.duration)}`;
   }
 });
-audioEl.addEventListener('ended', () => setAudioState(false));
+audioEl.addEventListener('ended', () => {
+  setAudioState(false);
+  const activePill = document.querySelector('.audio-track-btn.active');
+  if (activePill) activePill.style.setProperty('--track-progress', '0%');
+});
 
 const prog = document.getElementById('audio-progress');
 prog.addEventListener('mousedown',  () => { audioDragging = true; });
