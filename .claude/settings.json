@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/c/Users/**)",
+      "Bash(ls -lh \"/mnt/c/Users/Belen/Downloads/image-removebg-preview.png\" \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(1\\).png\" \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(2\\).png\" \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(3\\).png\" \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(4\\).png\" \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(5\\).png\" \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(6\\).png\" \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(7\\).png\")",
+      "Bash(cp \"/mnt/c/Users/Belen/Downloads/image-removebg-preview.png\" /home/cobeta/code/ruta-interactiva/assets/images/patrimonio/center.png)",
+      "Bash(cp \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(1\\).png\" /home/cobeta/code/ruta-interactiva/assets/images/patrimonio/hex-1.png)",
+      "Bash(cp \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(2\\).png\" /home/cobeta/code/ruta-interactiva/assets/images/patrimonio/hex-2.png)",
+      "Bash(cp \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(3\\).png\" /home/cobeta/code/ruta-interactiva/assets/images/patrimonio/hex-3.png)",
+      "Bash(cp \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(4\\).png\" /home/cobeta/code/ruta-interactiva/assets/images/patrimonio/hex-4.png)"
+    ]
+  }
+}

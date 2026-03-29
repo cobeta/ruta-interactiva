@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#f5ede0">
+  <title>Patrimonio Intangible</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Variables ──────────────────────────────────────────────── */
+    :root {
+      --sw: 20vw;   /* fallback — each hex overrides this */
+      --brown:     #6b4226;
+      --brown-mid: #8b6244;
+      --brown-dim: rgba(107,66,38,0.4);
+      --cream-bg:  #f5ede0;
+      --cream-hex: #eddfc8;
+      --text:      #3d2512;
+    }
+
+    /* ── Individual hex sizes — portrait (vw) ───────────────────── */
+    .hx--center    { --sw: 50vw; }
+    .hx--proyecto  { --sw: 28vw; }
+    .hx--memoria   { --sw: 21vw; }
+    .hx--creacion  { --sw: 25vw; }
+    .hx--propuesta { --sw: 17vw; }
+    .hx--activid   { --sw: 23vw; }
+    .hx--quienes   { --sw: 15vw; }
+    .hx--deco-a    { --sw: 12vw; }
+    .hx--deco-b    { --sw: 16vw; }
+    .hx--deco-c    { --sw: 10vw; }
+
+    /* ── Background colour hexes — portrait ─────────────────────── */
+    .hx--bg1  { --sw: 38vw; }
+    .hx--bg2  { --sw: 28vw; }
+    .hx--bg3  { --sw: 44vw; }
+    .hx--bg4  { --sw: 22vw; }
+    .hx--bg5  { --sw: 32vw; }
+    .hx--bg6  { --sw: 18vw; }
+    .hx--bg7  { --sw: 26vw; }
+    .hx--bg8  { --sw: 35vw; }
+
+    /* ── Individual hex sizes — landscape (vh) ──────────────────── */
+    @media (orientation: landscape) {
+      .hx--center    { --sw: 42vh; }
+      .hx--proyecto  { --sw: 24vh; }
+      .hx--memoria   { --sw: 18vh; }
+      .hx--creacion  { --sw: 21vh; }
+      .hx--propuesta { --sw: 14vh; }
+      .hx--activid   { --sw: 20vh; }
+      .hx--quienes   { --sw: 13vh; }
+      .hx--deco-a    { --sw: 10vh; }
+      .hx--deco-b    { --sw: 14vh; }
+      .hx--deco-c    { --sw:  9vh; }
+
+      /* background hexes — landscape */
+      .hx--bg1  { --sw: 32vh; }
+      .hx--bg2  { --sw: 24vh; }
+      .hx--bg3  { --sw: 38vh; }
+      .hx--bg4  { --sw: 18vh; }
+      .hx--bg5  { --sw: 27vh; }
+      .hx--bg6  { --sw: 15vh; }
+      .hx--bg7  { --sw: 22vh; }
+      .hx--bg8  { --sw: 30vh; }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      background-color: var(--cream-bg);
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='62'%3E%3Cpolygon points='27,1 53,15 53,46 27,60 1,46 1,15' fill='none' stroke='rgba(107%2C66%2C38%2C0.065)' stroke-width='1'/%3E%3C/svg%3E"),
+        radial-gradient(ellipse at 15% 10%, rgba(255,232,208,0.5) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 90%, rgba(220,185,148,0.38) 0%, transparent 55%);
+    }
+
+    /* ── Full-page stage ────────────────────────────────────────── */
+    .pt-stage { position: absolute; inset: 0; }
+
+    /* ── Title ──────────────────────────────────────────────────── */
+    .pt-title {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 14vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 20;
+      /* warm radial glow so title reads over anything */
+      background: radial-gradient(ellipse 70% 120% at 50% 40%,
+        rgba(245,237,224,0.96) 0%,
+        rgba(245,237,224,0.75) 55%,
+        transparent 100%
+      );
+    }
+
+    .pt-title__inner {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+    }
+
+    .pt-title__inner h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(34px, 9vw, 70px);
+      font-weight: 700;
+      color: var(--brown);
+      line-height: 1;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      text-shadow:
+        0 1px 0 rgba(255,255,255,0.8),
+        0 2px 8px rgba(107,66,38,0.15);
+    }
+
+    @media (orientation: landscape) {
+      .pt-title { height: 16vh; }
+      .pt-title__inner h1 { font-size: clamp(28px, 8vh, 60px); }
+    }
+
+
+    /* ── Background colour hex (no border, no image) ───────────── */
+    .hx--bg {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hx--bg .hx-fill {
+      width: var(--sw);
+      aspect-ratio: 1 / 1.1547;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+
+    /* portrait positions */
+    .hx--bg1  { left:  8%;  top: 18%; }
+    .hx--bg2  { left: 88%;  top: 12%; }
+    .hx--bg3  { left: 92%;  top: 62%; }
+    .hx--bg4  { left:  5%;  top: 60%; }
+    .hx--bg5  { left: 50%;  top:  8%; }
+    .hx--bg6  { left: 14%;  top: 92%; }
+    .hx--bg7  { left: 82%;  top: 88%; }
+    .hx--bg8  { left: 50%;  top: 95%; }
+
+    @media (orientation: landscape) {
+      .hx--bg1  { left:  6%;  top: 22%; }
+      .hx--bg2  { left: 88%;  top:  8%; }
+      .hx--bg3  { left: 96%;  top: 65%; }
+      .hx--bg4  { left:  4%;  top: 72%; }
+      .hx--bg5  { left: 46%;  top:  5%; }
+      .hx--bg6  { left: 18%;  top: 95%; }
+      .hx--bg7  { left: 80%;  top: 94%; }
+      .hx--bg8  { left: 52%;  top: 98%; }
+    }
+
+    /* ── Hex cell ───────────────────────────────────────────────── */
+    .hx {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+    .hx--large { z-index: 3; }
+
+    /* ── Hex shell (outer border) ───────────────────────────────── */
+    .hx-shell {
+      width: var(--sw);
+      aspect-ratio: 1 / 1.1547;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: var(--brown);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hx--large .hx-shell  { cursor: default; }
+    .hx--deco .hx-shell   { background: var(--brown-dim); }
+
+    /* ── Hex body (inner fill) ──────────────────────────────────── */
+    .hx-body {
+      width: 91%;
+      aspect-ratio: 1 / 1.1547;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: var(--cream-hex);
+      overflow: hidden;
+      position: relative;
+    }
+    .hx--deco .hx-body { background: rgba(240,226,202,0.5); }
+
+    /* ── Image inside hex ───────────────────────────────────────── */
+    .hx-body img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── Floating section labels ────────────────────────────────── */
+    .pt-label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      pointer-events: auto;
+      cursor: pointer;
+      text-align: center;
+      background: radial-gradient(ellipse at center,
+        rgba(255,255,255,0.92) 0%,
+        rgba(255,255,255,0.75) 30%,
+        rgba(255,255,255,0.35) 60%,
+        transparent 75%
+      );
+      padding: 1.2em 1.8em;
+      transition: transform 0.2s ease;
+    }
+    .pt-label:hover  { transform: translate(-50%, -50%) scale(1.12); }
+    .pt-label:active { transform: translate(-50%, -50%) scale(1.04); }
+    .pt-label span {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(20px, 5.5vw, 42px);
+      font-weight: 700;
+      color: var(--brown);
+      line-height: 1.2;
+      display: block;
+      transition: color 0.2s ease;
+    }
+    .pt-label:hover span { color: #4a2808; }
+    @media (orientation: landscape) {
+      .pt-label span { font-size: clamp(18px, 4.5vh, 38px); }
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       PORTRAIT — hex positions
+       ══════════════════════════════════════════════════════════════ */
+    .hx--center    { left: 50%;  top: 51%; }
+    .hx--proyecto  { left: 74%;  top: 30%; }
+    .hx--memoria   { left: 80%;  top: 48%; }
+    .hx--creacion  { left: 20%;  top: 48%; }
+    .hx--propuesta { left: 26%;  top: 70%; }
+    .hx--activid   { left: 74%;  top: 70%; }
+    .hx--quienes   { left: 23%;  top: 85%; }
+    .hx--deco-a    { left: 22%;  top: 22%; }
+    .hx--deco-b    { left: 50%;  top: 21%; }
+    .hx--deco-c    { left: 50%;  top: 77%; }
+
+    /* ── PORTRAIT — label positions ─────────────────────────────── */
+    /* Labels float between / beside their hex and the centre       */
+    .lbl--proyecto  { left: 57%;  top: 22%; }
+    .lbl--memoria   { left: 64%;  top: 36%; }
+    .lbl--creacion  { left: 36%;  top: 36%; }
+    .lbl--propuesta { left: 38%;  top: 62%; }
+    .lbl--activid   { left: 62%;  top: 62%; }
+    .lbl--quienes   { left: 38%;  top: 80%; }
+
+    /* ══════════════════════════════════════════════════════════════
+       LANDSCAPE — hex positions
+       ══════════════════════════════════════════════════════════════ */
+    @media (orientation: landscape) {
+      .hx--center    { left: 50%;  top: 58%; }
+      .hx--proyecto  { left: 67%;  top: 28%; }
+      .hx--memoria   { left: 77%;  top: 56%; }
+      .hx--creacion  { left: 23%;  top: 56%; }
+      .hx--propuesta { left: 33%;  top: 84%; }
+      .hx--activid   { left: 67%;  top: 84%; }
+      .hx--quienes   { left: 18%;  top: 84%; }
+      .hx--deco-a    { left: 23%;  top: 22%; }
+      .hx--deco-b    { left: 50%;  top: 19%; }
+      .hx--deco-c    { left: 50%;  top: 90%; }
+
+      /* ── LANDSCAPE — label positions ──────────────────────────── */
+      .lbl--proyecto  { left: 57%;  top: 20%; }
+      .lbl--memoria   { left: 65%;  top: 38%; }
+      .lbl--creacion  { left: 35%;  top: 38%; }
+      .lbl--propuesta { left: 42%;  top: 76%; }
+      .lbl--activid   { left: 58%;  top: 76%; }
+      .lbl--quienes   { left: 27%;  top: 76%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="pt-stage">
+
+  <!-- Title -->
+  <div class="pt-title">
+    <div class="pt-title__inner">
+      <h1>Patrimonio Intangible</h1>
+    </div>
+  </div>
+
+  <!-- ══ Background colour hexes (behind everything) ══ -->
+  <div class="hx--bg hx--bg1"><div class="hx-fill" style="background:#e8c8d4;opacity:0.55;"></div></div>
+  <div class="hx--bg hx--bg2"><div class="hx-fill" style="background:#d4b898;opacity:0.45;"></div></div>
+  <div class="hx--bg hx--bg3"><div class="hx-fill" style="background:#eacfc0;opacity:0.4;"></div></div>
+  <div class="hx--bg hx--bg4"><div class="hx-fill" style="background:#c8d4b8;opacity:0.4;"></div></div>
+  <div class="hx--bg hx--bg5"><div class="hx-fill" style="background:#e0c8b0;opacity:0.45;"></div></div>
+  <div class="hx--bg hx--bg6"><div class="hx-fill" style="background:#d8bcc8;opacity:0.5;"></div></div>
+  <div class="hx--bg hx--bg7"><div class="hx-fill" style="background:#c8b8d4;opacity:0.38;"></div></div>
+  <div class="hx--bg hx--bg8"><div class="hx-fill" style="background:#ddc8a8;opacity:0.42;"></div></div>
+
+  <!-- ══ Decorative hexes (no image, no label) ══ -->
+  <div class="hx hx--deco hx--deco-a">
+    <div class="hx-shell"><div class="hx-body"></div></div>
+  </div>
+  <div class="hx hx--deco hx--deco-b">
+    <div class="hx-shell"><div class="hx-body"></div></div>
+  </div>
+  <div class="hx hx--deco hx--deco-c">
+    <div class="hx-shell"><div class="hx-body"></div></div>
+  </div>
+
+  <!-- ══ Large centre hex ══ -->
+  <div class="hx hx--large hx--center">
+    <div class="hx-shell">
+      <div class="hx-body">
+        <img src="assets/images/patrimonio/center.png" alt="Patrimonio vivo">
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Proyecto y Enfoque ══ -->
+  <div class="hx hx--proyecto">
+    <div class="hx-shell">
+      <div class="hx-body">
+        <img src="assets/images/patrimonio/hex-2.png" alt="Proyecto y Enfoque">
+      </div>
+    </div>
+  </div>
+  <div class="pt-label lbl--proyecto"><span>Proyecto y<br>Enfoque</span></div>
+
+  <!-- ══ Memoria del Territorio ══ -->
+  <div class="hx hx--memoria">
+    <div class="hx-shell">
+      <div class="hx-body">
+        <img src="assets/images/patrimonio/hex-3.png" alt="Memoria del Territorio">
+      </div>
+    </div>
+  </div>
+  <div class="pt-label lbl--memoria"><span>Memoria del<br>Territorio</span></div>
+
+  <!-- ══ Creación de contenidos y difusión ══ -->
+  <div class="hx hx--creacion">
+    <div class="hx-shell">
+      <div class="hx-body">
+        <img src="assets/images/patrimonio/hex-1.png" alt="Creación de contenidos">
+      </div>
+    </div>
+  </div>
+  <div class="pt-label lbl--creacion"><span>Creación de<br>contenidos<br>y difusión</span></div>
+
+  <!-- ══ Propuesta ══ -->
+  <div class="hx hx--propuesta">
+    <div class="hx-shell">
+      <div class="hx-body">
+        <img src="assets/images/patrimonio/hex-4.png" alt="Propuesta">
+      </div>
+    </div>
+  </div>
+  <div class="pt-label lbl--propuesta"><span>Propuesta</span></div>
+
+  <!-- ══ Actividades y talleres ══ -->
+  <div class="hx hx--activid">
+    <div class="hx-shell">
+      <div class="hx-body">
+        <img src="assets/images/patrimonio/hex-5.png" alt="Actividades y talleres">
+      </div>
+    </div>
+  </div>
+  <div class="pt-label lbl--activid"><span>Actividades<br>y talleres</span></div>
+
+  <!-- ══ ¿Quiénes somos? ══ -->
+  <div class="hx hx--quienes">
+    <div class="hx-shell">
+      <div class="hx-body">
+        <img src="assets/images/patrimonio/hex-6.png" alt="¿Quiénes somos?">
+      </div>
+    </div>
+  </div>
+  <div class="pt-label lbl--quienes"><span>¿Quiénes<br>somos?</span></div>
+
+</div><!-- /.pt-stage -->
+
+</body>
+</html>
