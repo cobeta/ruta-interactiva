@@ -86,7 +86,7 @@
       height: 100%;
       object-fit: cover;
       object-position: center;
-      opacity: 0.85;
+      opacity: 0.5;
     }
 
 
@@ -275,13 +275,6 @@
       50%      { transform: translate(-50%, -50%) scale(1.04) translateY(-6px); }
     }
 
-    .hx--center    { animation: hex-float-1  9s  ease-in-out infinite; animation-delay: 0s;   }
-    .hx--creacion  { animation: hex-float-2  11s ease-in-out infinite; animation-delay: -3s;  }
-    .hx--proyecto  { animation: hex-float-3  8s  ease-in-out infinite; animation-delay: -5s;  }
-    .hx--memoria   { animation: hex-float-1  13s ease-in-out infinite; animation-delay: -2s;  }
-    .hx--propuesta { animation: hex-float-4  10s ease-in-out infinite; animation-delay: -7s;  }
-    .hx--activid   { animation: hex-float-2  12s ease-in-out infinite; animation-delay: -1s;  }
-
     /* ── Idle hint animation ────────────────────────────────────── */
     @keyframes hint-pulse {
       0%, 100% { transform: translate(-50%, -50%) scale(1);    background: rgba(245,237,224,0.55); }
@@ -292,23 +285,16 @@
       5%       { transform: translate(-50%, -50%) scale(1.22); background: rgba(245,237,224,0.97); }
     }
 
-    /* First round: fast (18s cycle). After ~2 full rounds, switch to slow (40s cycle). */
-    .pt-label {
+    /* Hint pulse only before page is loaded (fallback) */
+    .pt-stage:not(.is-loaded) .pt-label {
       animation: hint-pulse 18s 2 ease-in-out, hint-pulse-slow 40s ease-in-out infinite;
-      animation-delay: 0s, 36s;
     }
-    .lbl--creacion  { animation-delay: 1s,  37s;  }
-    .lbl--proyecto  { animation-delay: 4s,  40s;  }
-    .lbl--memoria   { animation-delay: 7s,  43s;  }
-    .lbl--propuesta { animation-delay: 10s, 46s;  }
-    .lbl--activid   { animation-delay: 13s, 49s;  }
-    .lbl--quienes   { animation-delay: 16s, 52s;  }
 
-    /* Stop animating once the user has interacted */
-    .pt-label:hover,
-    .pt-label:focus { animation: none; }
+    /* Stop float on hover/focus */
+    .pt-stage.is-loaded .pt-label:hover,
+    .pt-stage.is-loaded .pt-label:focus { animation: none; }
     @media (orientation: landscape) {
-      .pt-label span { font-size: clamp(10px, 2.4vh, 20px); }
+      .pt-label span { font-size: clamp(12px, 3vh, 24px); }
     }
 
     /* ══════════════════════════════════════════════════════════════
@@ -335,8 +321,8 @@
     .lbl--creacion  { left: calc(50% - 21vw);           top: calc(51% - 3vw); }
     /* proyecto hex at (50%+6vw, 51%-38.77vw): label to its left */
     .lbl--proyecto  { left: calc(50% - 8vw);            top: calc(51% - 38.77vw); }
-    /* memoria: vertically centered */
-    .lbl--memoria   { left: calc(50% + 27vw);           top: 50%; }
+    /* memoria: moved down */
+    .lbl--memoria   { left: calc(50% + 27vw);           top: calc(50% + 6vw); }
     /* propuesta: lower side shifted right */
     .lbl--propuesta { left: calc(50% - 22vw);           top: calc(51% + 35vw); }
     /* activid: lower side shifted left */
@@ -351,24 +337,93 @@
     @media (orientation: landscape) {
       .hx--center    { left: 50%;                       top: 58%; }
       /* creacion: top-left, pushed further left */
-      .hx--creacion  { left: calc(50% - 36vh);          top: calc(58% - 17vh); }
-      /* proyecto: top-center, slightly left of center */
-      .hx--proyecto  { left: calc(50% + 3vh);           top: calc(58% - 36vh); }
+      .hx--creacion  { left: calc(50% - 44vh);          top: calc(58% - 17vh); }
+      /* proyecto: top-center, moved right */
+      .hx--proyecto  { left: calc(50% + 10vh);          top: calc(58% - 36vh); }
       /* memoria: top-right, pushed further right */
-      .hx--memoria   { left: calc(50% + 38vh);          top: calc(58% - 13.5vh); }
+      .hx--memoria   { left: calc(50% + 46vh);          top: calc(58% - 13.5vh); }
       /* propuesta: bottom-left, pushed further left */
       .hx--propuesta { left: calc(50% - 38vh);          top: calc(58% + 26vh); }
       /* activid: bottom-right, pushed further right */
       .hx--activid   { left: calc(50% + 42vh);          top: calc(58% + 28vh); }
 
       /* ── LANDSCAPE — label positions ──────────────────────────── */
-      .lbl--creacion  { left: calc(50% - 27vh);         top: calc(58% - 7vh); }
-      .lbl--proyecto  { left: calc(50% - 9vh);          top: calc(58% - 36vh); }
-      .lbl--memoria   { left: calc(50% + 30vh);         top: calc(58% - 28vh); }
+      .lbl--creacion  { left: calc(50% - 35vh);         top: calc(58% - 7vh); }
+      .lbl--proyecto  { left: calc(50% - 2vh);          top: calc(58% - 36vh); }
+      .lbl--memoria   { left: calc(50% + 38vh);         top: calc(58% - 28vh); }
       .lbl--propuesta { left: calc(50% - 28vh);         top: calc(58% + 33vh); }
       .lbl--activid   { left: calc(50% + 33vh);         top: calc(58% + 35vh); }
       .lbl--quienes   { left: 10%;                      top: 88%; }
     }
+
+    /* ── Label float — synchronized with hex float ─────────────── */
+    /* Each label uses translate(-50%,-50%) as base, mirrors hex float Y */
+    @keyframes lbl-float-1 {
+      0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+      38%      { transform: translate(-50%, -50%) translateY(-7px); }
+      70%      { transform: translate(-50%, -50%) translateY(4px); }
+    }
+    @keyframes lbl-float-2 {
+      0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+      42%      { transform: translate(-50%, -50%) translateY(6px); }
+      75%      { transform: translate(-50%, -50%) translateY(-5px); }
+    }
+    @keyframes lbl-float-3 {
+      0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+      30%      { transform: translate(-50%, -50%) translateY(-5px); }
+      65%      { transform: translate(-50%, -50%) translateY(7px); }
+    }
+    @keyframes lbl-float-4 {
+      0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+      50%      { transform: translate(-50%, -50%) translateY(-6px); }
+    }
+
+    /* ── Entry animation ────────────────────────────────────────── */
+    @keyframes enter-up {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.82); }
+      to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes enter-title {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes enter-label {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.88); }
+      to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* Before JS fires, keep everything hidden */
+    .pt-stage:not(.is-loaded) .hx,
+    .pt-stage:not(.is-loaded) .pt-label,
+    .pt-stage:not(.is-loaded) .pt-title { opacity: 0; }
+
+    /* Once loaded, stagger in: title → center hex → satellites → labels */
+    .pt-stage.is-loaded .pt-title {
+      animation: enter-title 0.8s ease-out both;
+      animation-delay: 0.1s;
+    }
+    .pt-stage.is-loaded .hx--center    { animation: enter-up 0.9s cubic-bezier(0.34,1.4,0.64,1) both; animation-delay: 0.4s; }
+    .pt-stage.is-loaded .hx--creacion  { animation: enter-up 0.8s cubic-bezier(0.34,1.4,0.64,1) both; animation-delay: 0.75s; }
+    .pt-stage.is-loaded .hx--proyecto  { animation: enter-up 0.8s cubic-bezier(0.34,1.4,0.64,1) both; animation-delay: 0.9s; }
+    .pt-stage.is-loaded .hx--memoria   { animation: enter-up 0.8s cubic-bezier(0.34,1.4,0.64,1) both; animation-delay: 1.05s; }
+    .pt-stage.is-loaded .hx--propuesta { animation: enter-up 0.8s cubic-bezier(0.34,1.4,0.64,1) both; animation-delay: 1.2s; }
+    .pt-stage.is-loaded .hx--activid   { animation: enter-up 0.8s cubic-bezier(0.34,1.4,0.64,1) both; animation-delay: 1.35s; }
+
+    /* entry + synchronized float (same variant/duration/delay as paired hex) */
+    .pt-stage.is-loaded .lbl--creacion  { animation: enter-label 0.6s ease-out both 1.1s,  lbl-float-2 11s ease-in-out infinite 1.7s; }
+    .pt-stage.is-loaded .lbl--proyecto  { animation: enter-label 0.6s ease-out both 1.25s, lbl-float-3  8s ease-in-out infinite 1.8s; }
+    .pt-stage.is-loaded .lbl--memoria   { animation: enter-label 0.6s ease-out both 1.4s,  lbl-float-1 13s ease-in-out infinite 1.9s; }
+    .pt-stage.is-loaded .lbl--propuesta { animation: enter-label 0.6s ease-out both 1.55s, lbl-float-4 10s ease-in-out infinite 2.0s; }
+    .pt-stage.is-loaded .lbl--activid   { animation: enter-label 0.6s ease-out both 1.7s,  lbl-float-2 12s ease-in-out infinite 2.1s; }
+    .pt-stage.is-loaded .lbl--quienes   { animation: enter-label 0.6s ease-out both 1.85s; }
+
+    /* After entry, hex float animation takes over (needs delay to match entry end) */
+    .pt-stage.is-loaded .hx--center    { animation: enter-up 0.9s cubic-bezier(0.34,1.4,0.64,1) both 0.4s,  hex-float-1  9s  ease-in-out infinite 1.5s; }
+    .pt-stage.is-loaded .hx--creacion  { animation: enter-up 0.8s cubic-bezier(0.34,1.4,0.64,1) both 0.75s, hex-float-2  11s ease-in-out infinite 1.7s; }
+    .pt-stage.is-loaded .hx--proyecto  { animation: enter-up 0.8s cubic-bezier(0.34,1.4,0.64,1) both 0.9s,  hex-float-3  8s  ease-in-out infinite 1.8s; }
+    .pt-stage.is-loaded .hx--memoria   { animation: enter-up 0.8s cubic-bezier(0.34,1.4,0.64,1) both 1.05s, hex-float-1  13s ease-in-out infinite 1.9s; }
+    .pt-stage.is-loaded .hx--propuesta { animation: enter-up 0.8s cubic-bezier(0.34,1.4,0.64,1) both 1.2s,  hex-float-4  10s ease-in-out infinite 2.0s; }
+    .pt-stage.is-loaded .hx--activid   { animation: enter-up 0.8s cubic-bezier(0.34,1.4,0.64,1) both 1.35s, hex-float-2  12s ease-in-out infinite 2.1s; }
   </style>
 </head>
 <body>
@@ -454,5 +509,12 @@
 
 </div><!-- /.pt-stage -->
 
+<script>
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() =>
+      document.querySelector('.pt-stage').classList.add('is-loaded')
+    )
+  );
+</script>
 </body>
 </html>
