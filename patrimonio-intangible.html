@@ -222,10 +222,17 @@
       padding: 0.45em 0.9em;
       background: rgba(245,237,224,0.55);
       border-radius: 0;
-      border-top: 2px solid var(--brown);
-      padding-top: 0.35em;
+      border: 2px solid var(--lbl-border, var(--brown));
       transition: transform 0.2s ease, background 0.2s ease;
     }
+
+    /* Alternate border colors from palette */
+    .lbl--creacion  { --lbl-border: var(--col-rose);   }
+    .lbl--proyecto  { --lbl-border: var(--col-gold);   }
+    .lbl--memoria   { --lbl-border: var(--col-mauve);  }
+    .lbl--propuesta { --lbl-border: var(--col-slate);  }
+    .lbl--activid   { --lbl-border: var(--col-blush);  }
+    .lbl--quienes   { --lbl-border: var(--col-taupe);  }
     .pt-label:hover  {
       transform: translate(-50%, -50%) scale(1.12);
       background: rgba(245,237,224,0.93);
