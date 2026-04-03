@@ -29,6 +29,7 @@
       --col-mauve:  #c09898;   /* dusty mauve */
       --col-slate:  #9a8878;   /* slate taupe */
       --col-blush:  #e0b8b0;   /* soft blush */
+      --col-plum:   #52407a;   /* dusty plum accent */
     }
 
     /* ── Individual hex sizes — portrait (vw) ───────────────────── */
@@ -137,9 +138,10 @@
       font-size: clamp(32px, 10vw, 58px);
       font-weight: 400;
       font-style: italic;
+      color: var(--col-plum);
       text-shadow:
         0 1px 0 rgba(255,255,255,0.8),
-        0 2px 8px rgba(107,66,38,0.15);
+        0 2px 8px rgba(82,64,122,0.15);
     }
 
     /* Landscape: single line, words share baseline */
@@ -176,7 +178,7 @@
       justify-content: center;
     }
 
-    .hx--large    { --hx-border: var(--col-taupe);  }
+    .hx--large    { --hx-border: var(--col-plum);   }
     .hx--creacion { --hx-border: var(--col-rose);   }
     .hx--proyecto { --hx-border: var(--col-gold);   }
     .hx--memoria  { --hx-border: var(--col-mauve);  }
@@ -195,6 +197,7 @@
       overflow: hidden;
       position: relative;
     }
+    .hx--large .hx-body { width: 97%; }
     .hx--deco .hx-body { background: rgba(240,226,202,0.5); }
 
     /* ── Image inside hex ───────────────────────────────────────── */
@@ -232,7 +235,7 @@
     .lbl--memoria   { --lbl-border: var(--col-mauve);  }
     .lbl--propuesta { --lbl-border: var(--col-slate);  }
     .lbl--activid   { --lbl-border: var(--col-blush);  }
-    .lbl--quienes   { --lbl-border: var(--col-taupe);  }
+    .lbl--quienes   { --lbl-border: var(--col-plum); color: var(--col-plum); }
     .pt-label:hover  {
       transform: translate(-50%, -50%) scale(1.12);
       background: rgba(245,237,224,0.93);
@@ -250,6 +253,34 @@
       transition: color 0.2s ease;
     }
     .pt-label:hover span { color: #4a2808; }
+
+    /* ── Hex float animation ────────────────────────────────────── */
+    @keyframes hex-float-1 {
+      0%, 100% { transform: translate(-50%, -50%) scale(1)    translateY(0px); }
+      38%      { transform: translate(-50%, -50%) scale(1.04) translateY(-7px); }
+      70%      { transform: translate(-50%, -50%) scale(0.97) translateY(4px); }
+    }
+    @keyframes hex-float-2 {
+      0%, 100% { transform: translate(-50%, -50%) scale(1)    translateY(0px); }
+      42%      { transform: translate(-50%, -50%) scale(1.05) translateY(6px); }
+      75%      { transform: translate(-50%, -50%) scale(0.96) translateY(-5px); }
+    }
+    @keyframes hex-float-3 {
+      0%, 100% { transform: translate(-50%, -50%) scale(1)    translateY(0px); }
+      30%      { transform: translate(-50%, -50%) scale(1.03) translateY(-5px); }
+      65%      { transform: translate(-50%, -50%) scale(1.06) translateY(7px); }
+    }
+    @keyframes hex-float-4 {
+      0%, 100% { transform: translate(-50%, -50%) scale(1)    translateY(0px); }
+      50%      { transform: translate(-50%, -50%) scale(1.04) translateY(-6px); }
+    }
+
+    .hx--center    { animation: hex-float-1  9s  ease-in-out infinite; animation-delay: 0s;   }
+    .hx--creacion  { animation: hex-float-2  11s ease-in-out infinite; animation-delay: -3s;  }
+    .hx--proyecto  { animation: hex-float-3  8s  ease-in-out infinite; animation-delay: -5s;  }
+    .hx--memoria   { animation: hex-float-1  13s ease-in-out infinite; animation-delay: -2s;  }
+    .hx--propuesta { animation: hex-float-4  10s ease-in-out infinite; animation-delay: -7s;  }
+    .hx--activid   { animation: hex-float-2  12s ease-in-out infinite; animation-delay: -1s;  }
 
     /* ── Idle hint animation ────────────────────────────────────── */
     @keyframes hint-pulse {
