@@ -9,7 +9,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@600&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
 
   <style>
     /* ── Variables ──────────────────────────────────────────────── */
@@ -21,52 +21,41 @@
       --cream-bg:  #f5ede0;
       --cream-hex: #eddfc8;
       --text:      #3d2512;
+
+      /* Palette from hex-bg.png */
+      --col-rose:   #d4a090;   /* dusty rose */
+      --col-taupe:  #b0998a;   /* warm taupe */
+      --col-gold:   #c8b86a;   /* muted gold */
+      --col-mauve:  #c09898;   /* dusty mauve */
+      --col-slate:  #9a8878;   /* slate taupe */
+      --col-blush:  #e0b8b0;   /* soft blush */
     }
 
     /* ── Individual hex sizes — portrait (vw) ───────────────────── */
-    .hx--center    { --sw: 50vw; }
-    .hx--proyecto  { --sw: 28vw; }
-    .hx--memoria   { --sw: 21vw; }
-    .hx--creacion  { --sw: 25vw; }
-    .hx--propuesta { --sw: 17vw; }
-    .hx--activid   { --sw: 23vw; }
-    .hx--quienes   { --sw: 15vw; }
+    .hx--center    { --sw: 60vw; }
+    .hx--proyecto  { --sw: 34vw; }
+    .hx--memoria   { --sw: 26vw; }
+    .hx--creacion  { --sw: 30vw; }
+    .hx--propuesta { --sw: 21vw; }
+    .hx--activid   { --sw: 28vw; }
+    .hx--quienes   { --sw: 18vw; }
     .hx--deco-a    { --sw: 12vw; }
     .hx--deco-b    { --sw: 16vw; }
     .hx--deco-c    { --sw: 10vw; }
 
-    /* ── Background colour hexes — portrait ─────────────────────── */
-    .hx--bg1  { --sw: 38vw; }
-    .hx--bg2  { --sw: 28vw; }
-    .hx--bg3  { --sw: 44vw; }
-    .hx--bg4  { --sw: 22vw; }
-    .hx--bg5  { --sw: 32vw; }
-    .hx--bg6  { --sw: 18vw; }
-    .hx--bg7  { --sw: 26vw; }
-    .hx--bg8  { --sw: 35vw; }
 
     /* ── Individual hex sizes — landscape (vh) ──────────────────── */
     @media (orientation: landscape) {
-      .hx--center    { --sw: 42vh; }
-      .hx--proyecto  { --sw: 24vh; }
-      .hx--memoria   { --sw: 18vh; }
-      .hx--creacion  { --sw: 21vh; }
-      .hx--propuesta { --sw: 14vh; }
-      .hx--activid   { --sw: 20vh; }
-      .hx--quienes   { --sw: 13vh; }
+      .hx--center    { --sw: 52vh; }
+      .hx--proyecto  { --sw: 30vh; }
+      .hx--memoria   { --sw: 23vh; }
+      .hx--creacion  { --sw: 27vh; }
+      .hx--propuesta { --sw: 18vh; }
+      .hx--activid   { --sw: 25vh; }
+      .hx--quienes   { --sw: 16vh; }
       .hx--deco-a    { --sw: 10vh; }
       .hx--deco-b    { --sw: 14vh; }
       .hx--deco-c    { --sw:  9vh; }
-
-      /* background hexes — landscape */
-      .hx--bg1  { --sw: 32vh; }
-      .hx--bg2  { --sw: 24vh; }
-      .hx--bg3  { --sw: 38vh; }
-      .hx--bg4  { --sw: 18vh; }
-      .hx--bg5  { --sw: 27vh; }
-      .hx--bg6  { --sw: 15vh; }
-      .hx--bg7  { --sw: 22vh; }
-      .hx--bg8  { --sw: 30vh; }
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -81,11 +70,24 @@
       font-family: 'DM Sans', sans-serif;
       color: var(--text);
       background-color: var(--cream-bg);
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='62'%3E%3Cpolygon points='27,1 53,15 53,46 27,60 1,46 1,15' fill='none' stroke='rgba(107%2C66%2C38%2C0.065)' stroke-width='1'/%3E%3C/svg%3E"),
-        radial-gradient(ellipse at 15% 10%, rgba(255,232,208,0.5) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 90%, rgba(220,185,148,0.38) 0%, transparent 55%);
     }
+
+    /* ── Background image ───────────────────────────────────────── */
+    .pt-bg-img {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .pt-bg-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0.85;
+    }
+
 
     /* ── Full-page stage ────────────────────────────────────────── */
     .pt-stage { position: absolute; inset: 0; }
@@ -100,12 +102,6 @@
       justify-content: center;
       pointer-events: none;
       z-index: 20;
-      /* warm radial glow so title reads over anything */
-      background: radial-gradient(ellipse 70% 120% at 50% 40%,
-        rgba(245,237,224,0.96) 0%,
-        rgba(245,237,224,0.75) 55%,
-        transparent 100%
-      );
     }
 
     .pt-title__inner {
@@ -115,57 +111,50 @@
     }
 
     .pt-title__inner h1 {
-      font-family: 'Dancing Script', cursive;
-      font-size: clamp(34px, 9vw, 70px);
-      font-weight: 700;
       color: var(--brown);
-      line-height: 1;
-      letter-spacing: 0.01em;
-      white-space: nowrap;
+      line-height: 1.15;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* "Patrimonio" — Cinzel 600 upright */
+    .pt-title__inner h1 .t-solid {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(16px, 5vw, 28px);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       text-shadow:
         0 1px 0 rgba(255,255,255,0.8),
         0 2px 8px rgba(107,66,38,0.15);
     }
 
+    /* "Intangible" — IM Fell italic */
+    .pt-title__inner h1 .t-script {
+      font-family: 'IM Fell English', serif;
+      font-size: clamp(32px, 10vw, 58px);
+      font-weight: 400;
+      font-style: italic;
+      text-shadow:
+        0 1px 0 rgba(255,255,255,0.8),
+        0 2px 8px rgba(107,66,38,0.15);
+    }
+
+    /* Landscape: single line, words share baseline */
     @media (orientation: landscape) {
       .pt-title { height: 16vh; }
-      .pt-title__inner h1 { font-size: clamp(28px, 8vh, 60px); }
+      .pt-title__inner h1 {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 0.35em;
+        white-space: nowrap;
+      }
+      .pt-title__inner h1 .t-solid { font-size: clamp(16px, 4vh, 32px); }
+      .pt-title__inner h1 .t-script { font-size: clamp(26px, 7vh, 54px); }
     }
 
-
-    /* ── Background colour hex (no border, no image) ───────────── */
-    .hx--bg {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      z-index: 0;
-      pointer-events: none;
-    }
-    .hx--bg .hx-fill {
-      width: var(--sw);
-      aspect-ratio: 1 / 1.1547;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    }
-
-    /* portrait positions */
-    .hx--bg1  { left:  8%;  top: 18%; }
-    .hx--bg2  { left: 88%;  top: 12%; }
-    .hx--bg3  { left: 92%;  top: 62%; }
-    .hx--bg4  { left:  5%;  top: 60%; }
-    .hx--bg5  { left: 50%;  top:  8%; }
-    .hx--bg6  { left: 14%;  top: 92%; }
-    .hx--bg7  { left: 82%;  top: 88%; }
-    .hx--bg8  { left: 50%;  top: 95%; }
-
-    @media (orientation: landscape) {
-      .hx--bg1  { left:  6%;  top: 22%; }
-      .hx--bg2  { left: 88%;  top:  8%; }
-      .hx--bg3  { left: 96%;  top: 65%; }
-      .hx--bg4  { left:  4%;  top: 72%; }
-      .hx--bg5  { left: 46%;  top:  5%; }
-      .hx--bg6  { left: 18%;  top: 95%; }
-      .hx--bg7  { left: 80%;  top: 94%; }
-      .hx--bg8  { left: 52%;  top: 98%; }
-    }
 
     /* ── Hex cell ───────────────────────────────────────────────── */
     .hx {
@@ -174,26 +163,34 @@
       z-index: 2;
     }
     .hx--large { z-index: 3; }
+    .hx--deco  { display: none; }
 
     /* ── Hex shell (outer border) ───────────────────────────────── */
     .hx-shell {
       width: var(--sw);
-      aspect-ratio: 1 / 1.1547;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      background: var(--brown);
+      aspect-ratio: 1.1547 / 1;
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+      background: var(--hx-border, var(--brown));
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
+    .hx--large    { --hx-border: var(--col-taupe);  }
+    .hx--creacion { --hx-border: var(--col-rose);   }
+    .hx--proyecto { --hx-border: var(--col-gold);   }
+    .hx--memoria  { --hx-border: var(--col-mauve);  }
+    .hx--propuesta{ --hx-border: var(--col-slate);  }
+    .hx--activid  { --hx-border: var(--col-blush);  }
 
     .hx--large .hx-shell  { cursor: default; }
     .hx--deco .hx-shell   { background: var(--brown-dim); }
 
     /* ── Hex body (inner fill) ──────────────────────────────────── */
     .hx-body {
-      width: 91%;
-      aspect-ratio: 1 / 1.1547;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      width: 93%;
+      aspect-ratio: 1.1547 / 1;
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
       background: var(--cream-hex);
       overflow: hidden;
       position: relative;
@@ -202,10 +199,16 @@
 
     /* ── Image inside hex ───────────────────────────────────────── */
     .hx-body img {
-      width: 100%;
-      height: 100%;
+      width: 108%;
+      height: 108%;
+      margin: -4%;
       object-fit: cover;
       display: block;
+    }
+
+    /* Soften proyecto image to match warm palette */
+    .hx--proyecto .hx-body img {
+      filter: sepia(40%) saturate(70%) brightness(1.05) contrast(0.88);
     }
 
     /* ── Floating section labels ────────────────────────────────── */
@@ -216,76 +219,117 @@
       pointer-events: auto;
       cursor: pointer;
       text-align: center;
-      background: radial-gradient(ellipse at center,
-        rgba(255,255,255,0.92) 0%,
-        rgba(255,255,255,0.75) 30%,
-        rgba(255,255,255,0.35) 60%,
-        transparent 75%
-      );
-      padding: 1.2em 1.8em;
-      transition: transform 0.2s ease;
+      padding: 0.45em 0.9em;
+      background: rgba(245,237,224,0.55);
+      border-radius: 0;
+      border-top: 2px solid var(--brown);
+      padding-top: 0.35em;
+      transition: transform 0.2s ease, background 0.2s ease;
     }
-    .pt-label:hover  { transform: translate(-50%, -50%) scale(1.12); }
+    .pt-label:hover  {
+      transform: translate(-50%, -50%) scale(1.12);
+      background: rgba(245,237,224,0.93);
+    }
     .pt-label:active { transform: translate(-50%, -50%) scale(1.04); }
     .pt-label span {
-      font-family: 'Dancing Script', cursive;
-      font-size: clamp(20px, 5.5vw, 42px);
-      font-weight: 700;
+      font-family: 'Cinzel', serif;
+      font-size: clamp(11px, 3.6vw, 22px);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       color: var(--brown);
-      line-height: 1.2;
+      line-height: 1.4;
       display: block;
       transition: color 0.2s ease;
     }
     .pt-label:hover span { color: #4a2808; }
+
+    /* ── Idle hint animation ────────────────────────────────────── */
+    @keyframes hint-pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1);    background: rgba(245,237,224,0.55); }
+      5%       { transform: translate(-50%, -50%) scale(1.22); background: rgba(245,237,224,0.97); }
+    }
+    @keyframes hint-pulse-slow {
+      0%, 100% { transform: translate(-50%, -50%) scale(1);    background: rgba(245,237,224,0.55); }
+      5%       { transform: translate(-50%, -50%) scale(1.22); background: rgba(245,237,224,0.97); }
+    }
+
+    /* First round: fast (18s cycle). After ~2 full rounds, switch to slow (40s cycle). */
+    .pt-label {
+      animation: hint-pulse 18s 2 ease-in-out, hint-pulse-slow 40s ease-in-out infinite;
+      animation-delay: 0s, 36s;
+    }
+    .lbl--creacion  { animation-delay: 1s,  37s;  }
+    .lbl--proyecto  { animation-delay: 4s,  40s;  }
+    .lbl--memoria   { animation-delay: 7s,  43s;  }
+    .lbl--propuesta { animation-delay: 10s, 46s;  }
+    .lbl--activid   { animation-delay: 13s, 49s;  }
+    .lbl--quienes   { animation-delay: 16s, 52s;  }
+
+    /* Stop animating once the user has interacted */
+    .pt-label:hover,
+    .pt-label:focus { animation: none; }
     @media (orientation: landscape) {
-      .pt-label span { font-size: clamp(18px, 4.5vh, 38px); }
+      .pt-label span { font-size: clamp(10px, 2.4vh, 20px); }
     }
 
     /* ══════════════════════════════════════════════════════════════
-       PORTRAIT — hex positions
+       PORTRAIT — hex positions (360×700 viewport)
+       Flat-top hex: width=--sw, height=--sw*0.866, half-h=--sw*0.433
+       Center: left:50% top:51%, size 50vw → half-w=25vw, half-h=21.65vw
        ══════════════════════════════════════════════════════════════ */
-    .hx--center    { left: 50%;  top: 51%; }
-    .hx--proyecto  { left: 74%;  top: 30%; }
-    .hx--memoria   { left: 80%;  top: 48%; }
-    .hx--creacion  { left: 20%;  top: 48%; }
-    .hx--propuesta { left: 26%;  top: 70%; }
-    .hx--activid   { left: 74%;  top: 70%; }
-    .hx--quienes   { left: 23%;  top: 85%; }
-    .hx--deco-a    { left: 22%;  top: 22%; }
-    .hx--deco-b    { left: 50%;  top: 21%; }
-    .hx--deco-c    { left: 50%;  top: 77%; }
+    .hx--center    { left: 50%;                         top: 51%; }
+    /* top-left (creacion 25vw): pulled down */
+    .hx--creacion  { left: calc(50% - 27.5vw - 10vw);   top: calc(51% - 20vw); }
+    /* top-center (proyecto 28vw): moved right toward center */
+    .hx--proyecto  { left: calc(50% + 6vw);             top: calc(51% - 38.77vw - 5vw); }
+    /* top-right (memoria 21vw): pulled down a bit */
+    .hx--memoria   { left: calc(50% + 35.5vw + 2vw);    top: calc(51% - 16vw + 2vw); }
+    /* bottom-left (propuesta 17vw, half-w=8.5vw, half-h=7.36vw):
+       upper-right corner → center lower-left corner */
+    .hx--propuesta { left: calc(50% - 33.5vw);          top: calc(51% + 29.01vw); }
+    /* bottom-right (activid 23vw, half-w=11.5vw, half-h=9.96vw):
+       upper-left corner → center lower-right corner */
+    .hx--activid   { left: calc(50% + 36.5vw);          top: calc(51% + 31.61vw); }
 
     /* ── PORTRAIT — label positions ─────────────────────────────── */
-    /* Labels float between / beside their hex and the centre       */
-    .lbl--proyecto  { left: 57%;  top: 22%; }
-    .lbl--memoria   { left: 64%;  top: 36%; }
-    .lbl--creacion  { left: 36%;  top: 36%; }
-    .lbl--propuesta { left: 38%;  top: 62%; }
-    .lbl--activid   { left: 62%;  top: 62%; }
-    .lbl--quienes   { left: 38%;  top: 80%; }
+    /* creacion: 5vw lower, 2vw left */
+    .lbl--creacion  { left: calc(50% - 21vw);           top: calc(51% - 3vw); }
+    /* proyecto hex at (50%+6vw, 51%-38.77vw): label to its left */
+    .lbl--proyecto  { left: calc(50% - 8vw);            top: calc(51% - 38.77vw); }
+    /* memoria: vertically centered */
+    .lbl--memoria   { left: calc(50% + 27vw);           top: 50%; }
+    /* propuesta: lower side shifted right */
+    .lbl--propuesta { left: calc(50% - 22vw);           top: calc(51% + 35vw); }
+    /* activid: lower side shifted left */
+    .lbl--activid   { left: calc(50% + 27vw);           top: calc(51% + 40vw); }
+    /* quienes: floating lower-left, no hex */
+    .lbl--quienes   { left: 50%;                        top: 90%; }
 
     /* ══════════════════════════════════════════════════════════════
-       LANDSCAPE — hex positions
+       LANDSCAPE — satellites fan outward from center
+       Center: left:50% top:58%, size 42vh → half-w=21vh, half-h=18.19vh
        ══════════════════════════════════════════════════════════════ */
     @media (orientation: landscape) {
-      .hx--center    { left: 50%;  top: 58%; }
-      .hx--proyecto  { left: 67%;  top: 28%; }
-      .hx--memoria   { left: 77%;  top: 56%; }
-      .hx--creacion  { left: 23%;  top: 56%; }
-      .hx--propuesta { left: 33%;  top: 84%; }
-      .hx--activid   { left: 67%;  top: 84%; }
-      .hx--quienes   { left: 18%;  top: 84%; }
-      .hx--deco-a    { left: 23%;  top: 22%; }
-      .hx--deco-b    { left: 50%;  top: 19%; }
-      .hx--deco-c    { left: 50%;  top: 90%; }
+      .hx--center    { left: 50%;                       top: 58%; }
+      /* creacion: top-left, pushed further left */
+      .hx--creacion  { left: calc(50% - 36vh);          top: calc(58% - 17vh); }
+      /* proyecto: top-center, slightly left of center */
+      .hx--proyecto  { left: calc(50% + 3vh);           top: calc(58% - 36vh); }
+      /* memoria: top-right, pushed further right */
+      .hx--memoria   { left: calc(50% + 38vh);          top: calc(58% - 13.5vh); }
+      /* propuesta: bottom-left, pushed further left */
+      .hx--propuesta { left: calc(50% - 38vh);          top: calc(58% + 26vh); }
+      /* activid: bottom-right, pushed further right */
+      .hx--activid   { left: calc(50% + 42vh);          top: calc(58% + 28vh); }
 
       /* ── LANDSCAPE — label positions ──────────────────────────── */
-      .lbl--proyecto  { left: 57%;  top: 20%; }
-      .lbl--memoria   { left: 65%;  top: 38%; }
-      .lbl--creacion  { left: 35%;  top: 38%; }
-      .lbl--propuesta { left: 42%;  top: 76%; }
-      .lbl--activid   { left: 58%;  top: 76%; }
-      .lbl--quienes   { left: 27%;  top: 76%; }
+      .lbl--creacion  { left: calc(50% - 27vh);         top: calc(58% - 7vh); }
+      .lbl--proyecto  { left: calc(50% - 9vh);          top: calc(58% - 36vh); }
+      .lbl--memoria   { left: calc(50% + 30vh);         top: calc(58% - 28vh); }
+      .lbl--propuesta { left: calc(50% - 28vh);         top: calc(58% + 33vh); }
+      .lbl--activid   { left: calc(50% + 33vh);         top: calc(58% + 35vh); }
+      .lbl--quienes   { left: 10%;                      top: 88%; }
     }
   </style>
 </head>
@@ -296,29 +340,16 @@
   <!-- Title -->
   <div class="pt-title">
     <div class="pt-title__inner">
-      <h1>Patrimonio Intangible</h1>
+      <h1>
+        <span class="t-solid">Patrimonio</span>
+        <span class="t-script">Intangible</span>
+      </h1>
     </div>
   </div>
 
-  <!-- ══ Background colour hexes (behind everything) ══ -->
-  <div class="hx--bg hx--bg1"><div class="hx-fill" style="background:#e8c8d4;opacity:0.55;"></div></div>
-  <div class="hx--bg hx--bg2"><div class="hx-fill" style="background:#d4b898;opacity:0.45;"></div></div>
-  <div class="hx--bg hx--bg3"><div class="hx-fill" style="background:#eacfc0;opacity:0.4;"></div></div>
-  <div class="hx--bg hx--bg4"><div class="hx-fill" style="background:#c8d4b8;opacity:0.4;"></div></div>
-  <div class="hx--bg hx--bg5"><div class="hx-fill" style="background:#e0c8b0;opacity:0.45;"></div></div>
-  <div class="hx--bg hx--bg6"><div class="hx-fill" style="background:#d8bcc8;opacity:0.5;"></div></div>
-  <div class="hx--bg hx--bg7"><div class="hx-fill" style="background:#c8b8d4;opacity:0.38;"></div></div>
-  <div class="hx--bg hx--bg8"><div class="hx-fill" style="background:#ddc8a8;opacity:0.42;"></div></div>
-
-  <!-- ══ Decorative hexes (no image, no label) ══ -->
-  <div class="hx hx--deco hx--deco-a">
-    <div class="hx-shell"><div class="hx-body"></div></div>
-  </div>
-  <div class="hx hx--deco hx--deco-b">
-    <div class="hx-shell"><div class="hx-body"></div></div>
-  </div>
-  <div class="hx hx--deco hx--deco-c">
-    <div class="hx-shell"><div class="hx-body"></div></div>
+  <!-- ══ Background image ══ -->
+  <div class="pt-bg-img">
+    <img src="assets/images/patrimonio/hex-bg.png" alt="">
   </div>
 
   <!-- ══ Large centre hex ══ -->
@@ -380,14 +411,7 @@
   </div>
   <div class="pt-label lbl--activid"><span>Actividades<br>y talleres</span></div>
 
-  <!-- ══ ¿Quiénes somos? ══ -->
-  <div class="hx hx--quienes">
-    <div class="hx-shell">
-      <div class="hx-body">
-        <img src="assets/images/patrimonio/hex-6.png" alt="¿Quiénes somos?">
-      </div>
-    </div>
-  </div>
+  <!-- ══ ¿Quiénes somos? — floating label only, no hex ══ -->
   <div class="pt-label lbl--quienes"><span>¿Quiénes<br>somos?</span></div>
 
 </div><!-- /.pt-stage -->
