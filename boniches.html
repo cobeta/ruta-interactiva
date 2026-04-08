@@ -554,6 +554,119 @@
       font-variant-numeric: tabular-nums;
       min-width: 36px; text-align: right;
     }
+
+    /* ── Story Overlay ────────────────────────────────────────── */
+    #story {
+      position: fixed; inset: 0; z-index: 3000;
+      background: #1a0f07;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    #story.hidden { display: none; }
+
+    #story-scene {
+      position: relative;
+      width: 100%; flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      padding: 1rem;
+    }
+
+    /* Scene types */
+    .scene-wanted {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      animation: storyZoomIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .scene-wanted img {
+      max-width: min(340px, 80vw);
+      max-height: 70vh;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 32px rgba(0,0,0,0.7));
+    }
+
+    .scene-text {
+      max-width: min(560px, 92vw);
+      animation: storyFadeUp 0.5s ease both;
+    }
+    .scene-text .story-label {
+      font-family: 'Georgia', serif;
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: #a07040; margin-bottom: 0.5rem;
+    }
+    .scene-text .story-title {
+      font-family: 'Georgia', serif;
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      color: #f5ede0; font-weight: bold;
+      margin-bottom: 0.75rem; line-height: 1.3;
+    }
+    .scene-text .story-body {
+      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+      color: #d4b896; line-height: 1.65;
+    }
+    .scene-text .story-stamp {
+      display: inline-block;
+      border: 2px solid #4a7a2a; border-radius: 4px;
+      color: #4a7a2a; font-size: 0.75rem; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.2rem 0.6rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.85;
+    }
+
+    /* Animations */
+    @keyframes storyZoomIn {
+      from { opacity: 0; transform: scale(0.1); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes storyFadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Progress dots */
+    #story-progress {
+      display: flex; gap: 6px;
+      padding: 0.5rem 0 0.25rem;
+    }
+    .story-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #4a4030; transition: background 0.3s;
+    }
+    .story-dot.active { background: #c8943a; }
+    .story-dot.done   { background: #6b4226; }
+
+    /* Controls */
+    #story-controls {
+      display: flex; gap: 1rem; align-items: center;
+      padding: 0.5rem 0;
+    }
+    #story-controls button {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%; color: #f5ede0;
+      width: 40px; height: 40px; font-size: 1.1rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    #story-controls button:hover { background: rgba(255,255,255,0.16); }
+    #story-play.playing::after { content: '⏸'; }
+    #story-play:not(.playing)::after { content: '▶'; }
+    #story-play { font-size: 0; } /* hide ▶ text, use ::after */
+
+    /* Corner buttons */
+    #story-close, #story-skip {
+      position: absolute;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px; color: #d4b896;
+      cursor: pointer; font-size: 0.8rem; padding: 0.3rem 0.8rem;
+    }
+    #story-close { top: 1rem; left: 1rem; width: 32px; height: 32px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      padding: 0; font-size: 0.9rem; }
+    #story-skip  { top: 1rem; right: 1rem; }
   </style>
 </head>
 <body>
@@ -619,6 +732,19 @@
     <button id="modal-close" aria-label="Cerrar">✕</button>
     <div id="modal-tabs"></div>
     <div id="modal-content"></div>
+  </div>
+
+  <!-- ── Story Overlay ──────────────────────────────────────────────────── -->
+  <div id="story" class="hidden">
+    <div id="story-scene"></div>
+    <div id="story-controls">
+      <button id="story-prev" aria-label="Anterior">‹</button>
+      <button id="story-play" aria-label="Autoplay">▶</button>
+      <button id="story-next" aria-label="Siguiente">›</button>
+    </div>
+    <div id="story-progress"></div>
+    <button id="story-close" aria-label="Cerrar historia">✕</button>
+    <button id="story-skip" aria-label="Ver ficha">Ver ficha →</button>
   </div>
 
 </div>
@@ -755,7 +881,7 @@ function missionIcon(poi) {
 function addMissionMarker(poi) {
   const marker = L.marker([poi.lat, poi.lon], { icon: missionIcon(poi) });
   marker.addTo(map);
-  marker.on('click', () => openModal(poi));
+  marker.on('click', () => STORIES[poi.id] ? openStory(poi) : openModal(poi));
 }
 
 // ── GPS tracking ──────────────────────────────────────────────────────────
@@ -795,7 +921,7 @@ function setupMissionList(pois) {
     `;
     item.addEventListener('click', () => {
       map.setView([poi.lat, poi.lon], 16);
-      openModal(poi);
+      STORIES[poi.id] ? openStory(poi) : openModal(poi);
     });
     list.appendChild(item);
   });
@@ -966,6 +1092,132 @@ function closeModal() {
   document.getElementById('modal').classList.add('hidden');
   document.getElementById('modal-overlay').classList.add('hidden');
 }
+
+// ── Story Mode ────────────────────────────────────────────────────────────
+const STORIES = {
+  'poi-boniches-01': [
+    {
+      type: 'wanted',
+      img: 'routes/boniches/images/mission-01/wanted-poster.png',
+      sound: null
+    },
+    {
+      type: 'text',
+      label: 'Misión 1 · Salicornia',
+      stamp: '📍 Destino: Reajo / Arroyo Valhondo, Boniches',
+      title: '¡Prepárate, intrépido explorador!',
+      body: 'Vas a convertirte en nuestro agente de campo en tu primera misión.',
+      sound: null
+    }
+  ]
+};
+
+let storyPoi   = null;
+let storyIndex = 0;
+let storyTimer = null;
+const AUTOPLAY_MS = 3500;
+
+function openStory(poi) {
+  const scenes = STORIES[poi.id];
+  if (!scenes) { openModal(poi); return; }
+  storyPoi   = poi;
+  storyIndex = 0;
+  buildProgressDots(scenes.length);
+  renderStoryScene(scenes, storyIndex);
+  document.getElementById('story').classList.remove('hidden');
+}
+
+function buildProgressDots(n) {
+  const bar = document.getElementById('story-progress');
+  bar.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('div');
+    d.className = 'story-dot';
+    bar.appendChild(d);
+  }
+}
+
+function updateDots(index, total) {
+  document.querySelectorAll('.story-dot').forEach((d, i) => {
+    d.className = 'story-dot' + (i < index ? ' done' : i === index ? ' active' : '');
+  });
+}
+
+function renderStoryScene(scenes, index) {
+  const scene = scenes[index];
+  const el    = document.getElementById('story-scene');
+
+  // Force re-animation by replacing the child
+  el.innerHTML = '';
+  const wrap = document.createElement('div');
+
+  if (scene.type === 'wanted') {
+    wrap.className = 'scene-wanted';
+    wrap.innerHTML = `<img src="${scene.img}" alt="Wanted">`;
+  } else if (scene.type === 'text') {
+    wrap.className = 'scene-text';
+    wrap.innerHTML = `
+      ${scene.stamp  ? `<div class="story-stamp">${scene.stamp}</div>` : ''}
+      ${scene.label  ? `<div class="story-label">${scene.label}</div>` : ''}
+      ${scene.title  ? `<div class="story-title">${scene.title}</div>` : ''}
+      ${scene.body   ? `<div class="story-body">${scene.body}</div>`   : ''}
+    `;
+  }
+
+  el.appendChild(wrap);
+  updateDots(index, scenes.length);
+
+  if (scene.sound) {
+    new Audio(scene.sound).play().catch(() => {});
+  }
+}
+
+function storyAdvance(dir) {
+  const scenes = STORIES[storyPoi.id];
+  storyIndex = Math.max(0, Math.min(scenes.length - 1, storyIndex + dir));
+  renderStoryScene(scenes, storyIndex);
+  // If autoplay is running, reset timer
+  if (storyTimer) { clearInterval(storyTimer); startAutoplay(); }
+}
+
+function startAutoplay() {
+  const scenes = STORIES[storyPoi.id];
+  storyTimer = setInterval(() => {
+    if (storyIndex < scenes.length - 1) {
+      storyIndex++;
+      renderStoryScene(scenes, storyIndex);
+    } else {
+      stopAutoplay();
+    }
+  }, AUTOPLAY_MS);
+  document.getElementById('story-play').classList.add('playing');
+}
+
+function stopAutoplay() {
+  clearInterval(storyTimer);
+  storyTimer = null;
+  document.getElementById('story-play').classList.remove('playing');
+}
+
+function closeStory() {
+  stopAutoplay();
+  document.getElementById('story').classList.add('hidden');
+}
+
+// Tap anywhere on the scene to advance
+document.getElementById('story-scene').addEventListener('click', () => storyAdvance(1));
+document.getElementById('story-next').addEventListener('click', e => { e.stopPropagation(); storyAdvance(1); });
+document.getElementById('story-prev').addEventListener('click', e => { e.stopPropagation(); storyAdvance(-1); });
+document.getElementById('story-play').addEventListener('click', e => {
+  e.stopPropagation();
+  storyTimer ? stopAutoplay() : startAutoplay();
+});
+document.getElementById('story-close').addEventListener('click', e => { e.stopPropagation(); closeStory(); });
+document.getElementById('story-skip').addEventListener('click', e => {
+  e.stopPropagation();
+  closeStory();
+  openModal(storyPoi);
+});
 </script>
 
 </body>
