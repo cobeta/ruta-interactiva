@@ -620,7 +620,7 @@ async function downloadRoute(route, cardEl) {
     label.textContent = 'Complete ✓';
     fill.style.width  = '100%';
     setTimeout(() => {
-      location.href = `trail.html?route=${route.id}`;
+      location.href = route.id === 'boniches' ? 'boniches.html' : `trail.html?route=${route.id}`;
     }, 400);
 
   } catch (err) {
@@ -1240,7 +1240,7 @@ function renderCards(downloaded) {
         <div class="card-progress-strip"><div class="card-progress-fill"></div></div>
         <div class="card-progress-label"></div>
         <button class="btn-download"${isDownloaded ? ' style="display:none"' : ''}>${UI[currentLang].download}</button>
-        <a class="btn-open${isDownloaded ? ' visible' : ''}" href="trail.html?route=${route.id}${_urlLang ? `&lang=${_urlLang}` : ''}">${UI[currentLang].open}</a>
+        <a class="btn-open${isDownloaded ? ' visible' : ''}" href="${route.id === 'boniches' ? 'boniches.html' : `trail.html?route=${route.id}${_urlLang ? `&lang=${_urlLang}` : ''}`}">${UI[currentLang].open}</a>
         <button class="btn-clear${isDownloaded ? ' visible' : ''}">${UI[currentLang].clear}</button>
       </div>
     `;

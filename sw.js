@@ -1,11 +1,12 @@
 // Service Worker — Ruta Interactiva
-const CACHE_NAME = 'ruta-interactiva-v2';
+const CACHE_NAME = 'ruta-interactiva-v3';
 
 // Core assets to cache on install
 const PRECACHE = [
   '/',
   '/index.html',
   '/trail.html',
+  '/boniches.html',
   '/manifest.json',
   '/routes/hanover/pois.json',
   '/routes/allue-casteriello/pois.json',
