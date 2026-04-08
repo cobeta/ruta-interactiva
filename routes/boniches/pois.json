@@ -3,16 +3,46 @@
     "id": "poi-boniches-01",
     "lat": 39.985540,
     "lon": -1.626672,
+    "mission": 1,
     "images": [],
     "audio": null,
     "languages": {
-      "en": {
-        "name": "Mission 1 · Salicornia",
-        "description": "Welcome to your first mission. The stream running beside you carries something unusual for an inland plateau: salt. The white crusts on the soil and the fleshy, jointed stems of the plants growing here are Salicornia — sea asparagus — a halophytic species that thrives where salt concentrations would kill most plants. This is a gypsum-rich karst landscape, and the springs that feed this channel dissolve minerals from ancient Triassic evaporite rock, creating a miniature saline ecosystem hundreds of kilometres from the sea. Look for the small succulent stems turning red in autumn. They are edible and taste faintly of the sea."
-      },
       "es": {
         "name": "Misión 1 · Salicornia",
-        "description": "Bienvenido a tu primera misión. El arroyo que corre a tu lado arrastra algo inusual para una meseta interior: sal. Las costras blancas en el suelo y los tallos carnosos y articulados de las plantas que crecen aquí son Salicornia — espárrago de mar — una especie halófita que prospera donde la concentración de sal mataría a la mayoría de las plantas. Este es un paisaje kárstico rico en yeso, y los manantiales que alimentan este canal disuelven minerales de la antigua roca evaporítica triásica, creando un miniecosistema salino a cientos de kilómetros del mar. Busca los pequeños tallos suculentos que se tornan rojos en otoño. Son comestibles y saben ligeramente a mar."
+        "description": "Bienvenidos al Reajo o Arroyo Valhondo. Este no es un lugar cualquiera; es un refugio natural que esconde especies únicas, algunas de ellas tan importantes que están protegidas. El arroyo arrastra algo inusual para una meseta interior: sal. Hace millones de años, Boniches era parte de un inmenso mar. Con el tiempo, este mar se fue retirando y dejó depósitos de sal en los huecos de las montañas. Los manantiales disuelven esos minerales y crean un miniecosistema salino a cientos de kilómetros del mar.",
+        "challenge": "Busca una planta que encontrarías en la playa",
+        "species": [
+          {
+            "common": "Salicornia, espárrago de mar",
+            "scientific": "Salicornia europaea",
+            "image": null,
+            "note": "Especie halófita protegida. Sus tallos suculentos se vuelven rojos en otoño y son comestibles."
+          },
+          {
+            "common": "Junco marino",
+            "scientific": "Juncus maritimus",
+            "image": null,
+            "note": "Compañero inseparable de la Salicornia. Si encuentras uno, el otro no está lejos."
+          },
+          {
+            "common": "Ánade azulón",
+            "scientific": "Anas platyrhynchos",
+            "image": null,
+            "note": "El macho tiene la cabeza verde brillante. Busca su espejuelo azul violáceo en las alas."
+          },
+          {
+            "common": "Sapo corredor",
+            "scientific": "Epidalea calamita",
+            "image": null,
+            "note": "No escupe a los ojos. Lávate las manos después de tocarlo, nada más."
+          },
+          {
+            "common": "Rana común",
+            "scientific": "Pelophylax perezi",
+            "image": null,
+            "note": "Indicadora de agua limpia y ecosistemas acuáticos saludables."
+          }
+        ]
       }
     }
   },
@@ -20,16 +50,58 @@
     "id": "poi-boniches-02",
     "lat": 39.985119,
     "lon": -1.628655,
+    "mission": 2,
     "images": [],
     "audio": null,
     "languages": {
-      "en": {
-        "name": "Mission 2 · Nature Detectives",
-        "description": "Stop and look both ways. On your left, the ground is dry, pale, and sparse — a xeric scrubland of rosemary, esparto grass, and dwarf fan palm. On your right, the soil is darker and moist, sheltering willows, reeds, and lush grasses. Two completely different plant communities separated by just a few metres of altitude and drainage. This boundary — called an ecotone — is one of the richest zones for biodiversity: insects, birds, and reptiles exploit both environments in the same small area. Try to find five species on each side before you move on."
-      },
       "es": {
-        "name": "Misión 2 · Detectives de la naturaleza",
-        "description": "Para y mira a ambos lados. A tu izquierda, el suelo es seco, pálido y escaso — un matorral xerófilo de romero, esparto y palmito. A tu derecha, el suelo es más oscuro y húmedo, con sauces, carrizos y hierbas exuberantes. Dos comunidades vegetales completamente diferentes separadas por apenas unos metros de altitud y drenaje. Esta frontera — llamada ecotono — es una de las zonas más ricas en biodiversidad: insectos, aves y reptiles aprovechan ambos entornos en el mismo pequeño espacio. Intenta encontrar cinco especies a cada lado antes de seguir."
+        "name": "Misión 2 · Detectives del Camino",
+        "description": "Esta misión consiste en recorrer con calma el camino hacia la playa fluvial y fijarse bien en las plantas a ambos lados. El camino divide claramente dos tipos de suelo: a la izquierda suelo seco y ácido con areniscas y rocas silíceas; a la derecha suelo más fresco y húmedo. Dos comunidades vegetales completamente diferentes separadas por apenas unos metros. Esta frontera —llamada ecotono— es una de las zonas más ricas para la biodiversidad.",
+        "challenge": "Encuentra 5 especies a cada lado del camino antes de seguir",
+        "species": [
+          {
+            "common": "Pino salgareño, Laricio",
+            "scientific": "Pinus nigra sp salzmannii",
+            "image": null,
+            "note": "Corteza más oscura y grisácea que el pino resinero. Piñas más pequeñas."
+          },
+          {
+            "common": "Pino resinero, rodeno",
+            "scientific": "Pinus pinaster",
+            "image": null,
+            "note": "Corteza rojiza. Piñas más grandes y acículas más largas que el pino negral."
+          },
+          {
+            "common": "Jara pringosa",
+            "scientific": "Cistus ladanifer",
+            "image": null,
+            "note": "Flores grandes y blancas con mancha oscura en la base. Tronco liso y resinoso."
+          },
+          {
+            "common": "Jara de estepa",
+            "scientific": "Cistus laurifolius",
+            "image": null,
+            "note": "Hojas más grandes y elípticas, verde oscuro por el haz y blanquecino por el envés."
+          },
+          {
+            "common": "Enebro común",
+            "scientific": "Juniperus communis",
+            "image": null,
+            "note": "Arbusto resistente a la sequía con frutos azulados usados en ginebra."
+          },
+          {
+            "common": "Cantueso",
+            "scientific": "Lavandula stoechas",
+            "image": null,
+            "note": "Florece en invierno y principios de primavera. Muy visitado por abejorros."
+          },
+          {
+            "common": "Tejo",
+            "scientific": "Taxus baccata",
+            "image": null,
+            "note": "Árbol sagrado para los celtas. Casi todas sus partes son venenosas excepto la carne del fruto."
+          }
+        ]
       }
     }
   },
@@ -37,16 +109,40 @@
     "id": "poi-boniches-03",
     "lat": 39.984639,
     "lon": -1.629790,
+    "mission": 3,
     "images": [],
     "audio": null,
     "languages": {
-      "en": {
-        "name": "Mission 3 · The Miraculous Spring",
-        "description": "This spring has never been known to run dry, even in the fiercest droughts that have emptied the wells of Boniches. Local tradition held it to have healing properties — people travelled to wash wounds and treat skin ailments with its mineral-rich water. The riparian gallery forest around it — poplars, willows, ash trees — depends entirely on this constant flow. Listen: on a still morning you may hear the kingfisher that hunts this stretch, a flash of cobalt and orange diving for the small fish sheltering under the bank roots."
-      },
       "es": {
-        "name": "Misión 3 · La fuente milagrosa",
-        "description": "Esta fuente nunca ha llegado a secarse, ni siquiera en las sequías más severas que han vaciado los pozos de Boniches. La tradición local le atribuía propiedades curativas — la gente acudía a lavar heridas y tratar dolencias de piel con su agua rica en minerales. El bosque galería que la rodea — chopos, sauces, fresnos — depende por completo de este caudal constante. Escucha: en una mañana tranquila podrías oír al martín pescador que caza en este tramo, un destello de azul cobalto y naranja zambulléndose tras los pequeños peces que se refugian bajo las raíces de la orilla."
+        "name": "Misión 3 · La Fuente Milagrosa",
+        "description": "Vuestra siguiente misión os lleva a la Fuente del Canal, un lugar lleno de historia y magia. Esta fuente nunca ha llegado a secarse, ni siquiera en las sequías más severas. La tradición local le atribuía propiedades curativas. Con esta agua salina, las mujeres del pueblo elaboraban pan, maceraban aceitunas, ciruelas y otros frutos. El bosque galería que la rodea —chopos, sauces, fresnos— depende por completo de este caudal constante. Fíjate en el agua: ¿qué color tiene? ¿deja sedimento en las piedras? ¿cómo huele?",
+        "challenge": "¿Puedes identificar la especie que da frutos muy sabrosos entre las plantas de este lugar?",
+        "species": [
+          {
+            "common": "Nogal, noguera",
+            "scientific": "Juglans regia",
+            "image": null,
+            "note": "Da frutos muy sabrosos. Busca entre las hojas más grandes."
+          },
+          {
+            "common": "Gran pavón nocturno",
+            "scientific": "Saturnia pyri",
+            "image": null,
+            "note": "El insecto más grande de Europa. Sus ocelos imitan ojos de búho para asustar depredadores."
+          },
+          {
+            "common": "Fresno",
+            "scientific": "Fraxinus angustifolia",
+            "image": null,
+            "note": "Árbol sagrado en culturas celtas y nórdicas. Las brujas usaban sus ramas para fabricar escobas."
+          },
+          {
+            "common": "Martín pescador",
+            "scientific": "Alcedo atthis",
+            "image": null,
+            "note": "Plumaje azul metálico y naranja. Indicador de ríos limpios. Bucea hasta 10 metros."
+          }
+        ]
       }
     }
   },
@@ -54,16 +150,46 @@
     "id": "poi-boniches-04",
     "lat": 39.981490,
     "lon": -1.633360,
+    "mission": 4,
     "images": [],
     "audio": null,
     "languages": {
-      "en": {
-        "name": "Mission 4 · River Beach & Wildlife",
-        "description": "The wider, sandy stretch of the Guadazaón river ahead functions as a natural corridor for wildlife. Look carefully at the soft mud near the water's edge: otter tracks are five-toed with a distinctive web impression; heron prints show three long forward toes; and the neat, paired footprints of the water vole trace the bank. Otters have returned to this river in recent decades as water quality improved. At dusk, hoopoes, bee-eaters, and Montagu's harriers may be spotted hunting over the adjacent scrubland. Walk quietly and keep your eyes low."
-      },
       "es": {
-        "name": "Misión 4 · Playa fluvial y fauna",
-        "description": "El tramo más ancho y arenoso del río Guadazaón que tienes delante funciona como un corredor natural para la fauna. Observa con atención el barro blando cerca del borde del agua: las huellas de la nutria tienen cinco dedos con una impresión de membrana característica; las del garza muestran tres largos dedos hacia delante; y los menudos rastros pareados del topillo acuático recorren la orilla. La nutria ha vuelto a este río en las últimas décadas gracias a la mejora de la calidad del agua. Al atardecer, abubillas, abejarucos y aguiluchos cenizos pueden verse cazando sobre el matorral adyacente. Camina despacio y mantén la vista baja."
+        "name": "Misión 4 · Exploradores de la Playa Fluvial",
+        "description": "En esta parada exploramos las plantas de ribera y buscamos a los animales que comparten este entorno. Observa bien el barro blando cerca del agua: las huellas de la nutria tienen cinco dedos con membrana; las de la garza muestran tres largos dedos; el visón americano —especie invasora— desplaza al visón europeo. Mientras caminas, la botánica se convierte en una farmacia: el tomillo y el romero como antisépticos, el esparto para cestas y cuerdas, el saúco para jarabe contra la tos. Estas abuelas eran las científicas de su época.",
+        "challenge": "¿Cuántas huellas distintas puedes identificar en el barro cerca del agua?",
+        "species": [
+          {
+            "common": "Nutria",
+            "scientific": "Lutra lutra",
+            "image": null,
+            "note": "Cinco dedos con membrana. Ha vuelto al río gracias a la mejora de la calidad del agua."
+          },
+          {
+            "common": "Garza real",
+            "scientific": "Ardea cinerea",
+            "image": null,
+            "note": "Hasta 1m de altura, envergadura >2m. Al volar retrae el cuello en forma de S."
+          },
+          {
+            "common": "Visón americano",
+            "scientific": "Neovison vison",
+            "image": null,
+            "note": "Especie exótica invasora. Desplaza al visón europeo y afecta el equilibrio del ecosistema."
+          },
+          {
+            "common": "Abejaruco",
+            "scientific": "Merops apiaster",
+            "image": null,
+            "note": "Plumaje multicolor espectacular. Se puede ver cazando sobre el matorral al atardecer."
+          },
+          {
+            "common": "Encina, carrasca",
+            "scientific": "Quercus ilex sp ballota",
+            "image": null,
+            "note": "Perenne, hojas pequeñas y punzantes. Sus cenizas se usaban para hacer jabón y lejía."
+          }
+        ]
       }
     }
   },
@@ -71,16 +197,40 @@
     "id": "poi-boniches-05",
     "lat": 39.980792,
     "lon": -1.633914,
+    "mission": 5,
     "images": [],
     "audio": null,
     "languages": {
-      "en": {
-        "name": "Ethnobotany Stop",
-        "description": "The people of Boniches have long known how to read this landscape as a pharmacy. Thyme (Thymus vulgaris) and rosemary (Rosmarinus officinalis) were dried and used as antiseptics and digestive aids. Esparto grass was woven into baskets, mats, and rope — essential crafts in a village far from trade routes. The elder tree (Sambucus nigra) at the edge of the riverbank was used to make syrup for coughs and its hollow branches for pan pipes. Rub a sprig of thyme between your fingers and breathe in: this is the scent of centuries of practical knowledge about the plants underfoot."
-      },
       "es": {
-        "name": "Parada de etnobotánica",
-        "description": "Los habitantes de Boniches han sabido durante mucho tiempo leer este paisaje como una farmacia. El tomillo (Thymus vulgaris) y el romero (Rosmarinus officinalis) se secaban y usaban como antisépticos y digestivos. El esparto se tejía en cestas, esteras y cuerdas — artesanías esenciales en un pueblo alejado de las rutas comerciales. El saúco (Sambucus nigra) al borde de la ribera se usaba para elaborar jarabe contra la tos y sus ramas huecas servían como flautas de pan. Frota una ramita de tomillo entre los dedos y respira: este es el aroma de siglos de conocimiento práctico sobre las plantas que pisamos."
+        "name": "Misión 5 · El Enigma de las Serpientes",
+        "description": "En esta aventura os convertiréis en auténticos herpetólogos. La regla clave: cabeza triangular + pupilas verticales + escamas carenadas = víbora. Cabeza ovalada + pupilas redondas = culebra. En Boniches la única víbora es la Víbora hocicuda (Vipera latastei), reconocible por su hocico ligeramente elevado y patrón zigzagueante. Es una pieza clave del ecosistema: controla poblaciones de roedores. Ninguna serpiente se acercará a ti si te mueves sin gestos bruscos. Si te cruzas con una, espera con calma a que se aleje.",
+        "challenge": "¿Es víbora o culebra? Cabeza triangular + zigzag = aléjate con calma",
+        "species": [
+          {
+            "common": "Víbora hocicuda",
+            "scientific": "Vipera latastei",
+            "image": null,
+            "note": "La única víbora de Boniches. Hocico elevado, cuerpo compacto, patrón zigzagueante. Venenosa pero tranquila."
+          },
+          {
+            "common": "Culebra bastarda",
+            "scientific": "Malpolon monspessulanus",
+            "image": null,
+            "note": "Grande, rápida, pardo olivácea. Inofensiva para humanos. Su veneno sólo afecta a lagartijas."
+          },
+          {
+            "common": "Culebra viperina",
+            "scientific": "Natrix maura",
+            "image": null,
+            "note": "Imita a la víbora aplanando la cabeza y bufando, pero no cuela. Completamente inofensiva."
+          },
+          {
+            "common": "Culebra de herradura",
+            "scientific": "Hemorrhois hippocrepis",
+            "image": null,
+            "note": "Patrón de manchas en herradura en el dorso. Rápida y asustadiza."
+          }
+        ]
       }
     }
   },
@@ -88,67 +238,61 @@
     "id": "poi-boniches-06",
     "lat": 39.976433,
     "lon": -1.630722,
+    "mission": 6,
     "images": [],
     "audio": null,
     "languages": {
-      "en": {
-        "name": "Mission 5 · Herpetology",
-        "description": "This warm, rocky scrubland is prime habitat for reptiles. You may encounter two snake species here that are often confused: the Montpellier snake (Malpolon monspessulanus), which is large, fast, and olive-brown, is completely harmless to humans — its venom glands are at the back of its jaw and it uses them only on lizards and small mammals. The asp viper (Vipera aspis), smaller with a distinctive triangular head and zig-zag dorsal pattern, is venomous and should be given space. The rule: triangular head + zig-zag back = step away calmly. Neither snake will approach you if you move without sudden gestures."
-      },
       "es": {
-        "name": "Misión 5 · Herpetología",
-        "description": "Este matorral cálido y pedregoso es un hábitat preferente para los reptiles. Podrías encontrar aquí dos especies de serpiente que se confunden a menudo: la culebra bastarda (Malpolon monspessulanus), grande, rápida y de color pardo oliváceo, es completamente inofensiva para las personas — sus glándulas venenosas están en la parte posterior de la mandíbula y las usa sólo con lagartijas y pequeños mamíferos. La víbora áspid (Vipera aspis), más pequeña con una cabeza triangular característica y un dibujo dorsal en zigzag, es venenosa y hay que darle espacio. La regla: cabeza triangular + espalda en zigzag = alejarse con calma. Ninguna serpiente se acercará a ti si te mueves sin gestos bruscos."
+        "name": "Misión 6 · El Código de las Rocas",
+        "description": "Hace más de 240 millones de años, Boniches era parte de Pangea. España estaba casi en el ecuador, y los ríos tropicales traían sedimentos que se acumulaban en valles alargados. Cuando los ríos eran caudalosos y rápidos transportaban piedras grandes: conglomerados. Al perder fuerza sólo podían mover granos de arena: areniscas. El hierro oxidado les dio su color rojizo. Mirad a vuestro alrededor: al norte la Tabarreña, junto a la Peña del Cuervo. Al este la Peña de los Ramos. Al oeste la Cabeza del Carrascal. Cada risco cuenta una historia de millones de años.",
+        "challenge": "¿Puedes distinguir el conglomerado de la arenisca? Busca el moteado blanco en los cantos.",
+        "geology": [
+          {
+            "name": "Conglomerado triásico",
+            "age": "Triásico (~240 Ma)",
+            "note": "Formado por ríos muy caudalosos. Las piedras grandes quedan cementadas entre sí. Busca el moteado blanco en los puntos de contacto."
+          },
+          {
+            "name": "Arenisca roja (Tabarreña)",
+            "age": "Triásico (~230 Ma)",
+            "note": "Formada cuando los ríos perdieron fuerza. El hierro oxidado le da el color rojizo característico."
+          },
+          {
+            "name": "Rocas silúricas",
+            "age": "Silúrico (~420 Ma)",
+            "note": "Las rocas más antiguas de Boniches. Visibles en Las Trincheras de La Retuerta."
+          }
+        ]
       }
     }
   },
   {
     "id": "poi-boniches-07",
-    "lat": 39.974910,
-    "lon": -1.631553,
+    "lat": 39.974000,
+    "lon": -1.628000,
+    "mission": 7,
     "images": [],
     "audio": null,
     "languages": {
-      "en": {
-        "name": "Soil & Vegetation Transition",
-        "description": "Notice how the ground changes colour at your feet — from the pale beige of gypsum-rich soil to a darker reddish-brown. This is the boundary between two Triassic geological units: the upper Keuper evaporites (salt, gypsum, clay) give way to older Buntsandstein red sandstone. The plant community shifts with it: the gypsum-specialists (Gypsophila, Ononis) disappear and are replaced by cistus, kermes oak and pine. Geology drives ecology here with unusual directness. The red sandstone you're now standing on was deposited in a desert river delta roughly 230 million years ago."
-      },
       "es": {
-        "name": "Transición de suelo y vegetación",
-        "description": "Observa cómo cambia el color del suelo a tus pies — del beige pálido del suelo rico en yeso a un marrón rojizo más oscuro. Aquí está el límite entre dos unidades geológicas del Triásico: los evaporitas del Keuper superior (sal, yeso, arcilla) dan paso al más antiguo arenisco rojo del Buntsandstein. La comunidad vegetal cambia con él: los especialistas en yeso (Gypsophila, Ononis) desaparecen y son sustituidos por jaras, coscoja y pino. La geología impulsa la ecología aquí con una claridad poco habitual. La arenisca roja sobre la que ahora estás parado se depositó en un delta fluvial desértico hace aproximadamente 230 millones de años."
-      }
-    }
-  },
-  {
-    "id": "poi-boniches-08",
-    "lat": 39.981261,
-    "lon": -1.635432,
-    "images": [],
-    "audio": null,
-    "languages": {
-      "en": {
-        "name": "Start of the Time Journey",
-        "description": "You are about to walk through 230 million years of Earth history in less than a kilometre. The rocks ahead record three geological periods — Triassic, Jurassic, and Cretaceous — each deposited in a completely different environment: a continental desert, a shallow tropical sea, and a coastal lagoon. The Serranía de Cuenca sits on one of the most complete and accessible Mesozoic rock sequences in the Iberian Peninsula. Run your hand along the exposed rock faces as you walk: you are touching ancient seabeds, desert dunes, and reef debris compressed into stone."
-      },
-      "es": {
-        "name": "Inicio del viaje en el tiempo",
-        "description": "Estás a punto de caminar a través de 230 millones de años de historia de la Tierra en menos de un kilómetro. Las rocas que tienes delante registran tres períodos geológicos — Triásico, Jurásico y Cretácico — cada uno depositado en un entorno completamente diferente: un desierto continental, un mar tropical poco profundo y una laguna costera. La Serranía de Cuenca se asienta sobre una de las secuencias de rocas mesozoicas más completas y accesibles de la Península Ibérica. Pasa la mano por las caras de roca expuestas mientras caminas: estás tocando antiguos fondos marinos, dunas del desierto y restos de arrecife comprimidos en piedra."
-      }
-    }
-  },
-  {
-    "id": "poi-boniches-09",
-    "lat": 39.982886,
-    "lon": -1.640425,
-    "images": [],
-    "audio": null,
-    "languages": {
-      "en": {
-        "name": "Mission 6 · Geological Ages",
-        "description": "The exposed cliff face in front of you is an open page from the Triassic period, roughly 230 million years ago. The alternating red and grey layers record cycles of flooding and drying in an ancient inland basin near the equator — the supercontinent Pangaea was beginning to break apart. The reddish layers are oxidised terrestrial sediments deposited during dry seasons; the grey ones were laid down under water. Look for small fossil fragments of bivalves and fish scales in the grey bands — signs of life surviving in seasonal water bodies on what was then a very different Earth. These rocks pre-date the dinosaurs by tens of millions of years."
-      },
-      "es": {
-        "name": "Misión 6 · Eras geológicas",
-        "description": "La pared rocosa expuesta frente a ti es una página abierta del período Triásico, hace aproximadamente 230 millones de años. Las capas rojas y grises alternantes registran ciclos de inundación y desecación en una antigua cuenca interior cerca del ecuador — el supercontinente Pangea empezaba a fragmentarse. Las capas rojizas son sedimentos terrestres oxidados depositados durante las estaciones secas; las grises se formaron bajo el agua. Busca pequeños fragmentos fósiles de bivalvos y escamas de peces en las bandas grises — señales de vida sobreviviendo en masas de agua estacionales en lo que entonces era una Tierra muy diferente. Estas rocas son decenas de millones de años anteriores a los dinosaurios."
+        "name": "Misión 7 · Orientación y Navegación",
+        "description": "Última misión: aprender a orientarse con brújula y mapa. Coloca la brújula en una superficie plana y espera a que la aguja se estabilice apuntando al norte. Gira el mapa hasta que su norte coincida con el norte de la brújula. Ahora busca referencias en el paisaje —montañas, el río, el pueblo— y compáralas con el mapa para ubicar tu posición. Sin batería, sin señal: la brújula siempre funciona.",
+        "challenge": "Identifica tres puntos del paisaje (un risco, el río, el pueblo) y encuéntralos en el mapa",
+        "compass": {
+          "steps": [
+            "Coloca la brújula en una superficie plana, lejos de metales.",
+            "Espera a que la aguja roja se estabilice — apunta al norte magnético.",
+            "Gira el mapa hasta que su parte superior quede alineada con la aguja.",
+            "Busca referencias en el paisaje y compáralas con el mapa.",
+            "Ubica tu posición usando al menos dos referencias cruzadas."
+          ],
+          "landmarks": [
+            "La Tabarreña — al norte",
+            "Peña del Cuervo — norte, vigila Boniches",
+            "Peña de los Ramos — al este",
+            "Cabeza del Carrascal — al oeste"
+          ]
+        }
       }
     }
   }
