@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#f5ede0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Misión Boniches</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/leaflet.css">
+
+  <style>
+    :root {
+      --paper:       #f5ede0;
+      --paper-card:  #fffdf5;
+      --border:      #d4b896;
+      --ink:         #3a2010;
+      --leather:     #6b4226;
+      --leather-mid: #8b6244;
+      --stamp-green: #4a7a2a;
+      --stamp-red:   #c0392b;
+      --highlight:   #e8d5b0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100dvh;
+    }
+
+    /* ── PIN Gate ─────────────────────────────────────────────── */
+    #pin-gate {
+      position: fixed; inset: 0; z-index: 9000;
+      background: var(--paper);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90'%3E%3Cellipse cx='60' cy='45' rx='57' ry='42' fill='none' stroke='rgba(107,66,38,0.06)' stroke-width='1'/%3E%3Cellipse cx='60' cy='45' rx='40' ry='28' fill='none' stroke='rgba(107,66,38,0.05)' stroke-width='1'/%3E%3Cellipse cx='60' cy='45' rx='23' ry='16' fill='none' stroke='rgba(107,66,38,0.04)' stroke-width='1'/%3E%3C/svg%3E");
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 2rem;
+      gap: 1.5rem;
+    }
+
+    #pin-gate.hidden { display: none; }
+
+    .pin-logo {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      font-weight: 700;
+      color: var(--leather);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .pin-logo span {
+      display: block;
+      font-size: 0.55em;
+      font-weight: 400;
+      color: var(--leather-mid);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    .pin-subtitle {
+      font-size: 0.95rem;
+      color: var(--leather-mid);
+      text-align: center;
+      max-width: 280px;
+      line-height: 1.5;
+    }
+
+    .pin-input-row {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    #pin-input {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--leather);
+      background: var(--paper-card);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      width: 140px;
+      text-align: center;
+      letter-spacing: 0.3em;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    #pin-input:focus { border-color: var(--leather); }
+    #pin-input.error { border-color: var(--stamp-red); animation: shake 0.3s; }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    #pin-submit {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--paper-card);
+      background: var(--leather);
+      border: none;
+      border-radius: 8px;
+      padding: 0.65rem 1.4rem;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    #pin-submit:active { transform: scale(0.96); }
+    #pin-submit:hover { background: var(--ink); }
+
+    #pin-error {
+      font-size: 0.85rem;
+      color: var(--stamp-red);
+      text-align: center;
+      min-height: 1.2rem;
+    }
+
+    /* ── Expired Screen ───────────────────────────────────────── */
+    #expired-screen {
+      position: fixed; inset: 0; z-index: 9000;
+      background: var(--paper);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 2rem;
+      gap: 1.2rem;
+      text-align: center;
+    }
+
+    #expired-screen.hidden { display: none; }
+
+    .expired-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      font-weight: 700;
+      color: var(--leather);
+    }
+
+    .expired-body {
+      font-size: 0.95rem;
+      color: var(--leather-mid);
+      max-width: 300px;
+      line-height: 1.6;
+    }
+
+    .expired-contact {
+      background: var(--paper-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      font-size: 0.9rem;
+      color: var(--ink);
+      line-height: 1.8;
+    }
+
+    .expired-contact a { color: var(--leather); text-decoration: none; }
+
+    .expired-copy {
+      font-size: 0.75rem;
+      color: var(--leather-mid);
+      margin-top: 0.5rem;
+    }
+
+    /* ── App (hidden until unlocked) ──────────────────────────── */
+    #app {
+      display: none;
+      flex-direction: column;
+      height: 100dvh;
+    }
+
+    #app.visible { display: flex; }
+
+    /* ── Top Bar ──────────────────────────────────────────────── */
+    #topbar {
+      display: flex; align-items: center;
+      padding: 0 14px; height: 52px;
+      background: var(--paper-card);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0; gap: 10px; z-index: 1000;
+    }
+
+    #back-btn {
+      width: 32px; height: 32px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      color: var(--leather-mid);
+      cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      text-decoration: none; flex-shrink: 0;
+    }
+
+    #route-title {
+      flex: 1;
+      font-family: 'Fraunces', serif;
+      font-size: 1.05rem; font-weight: 600;
+      color: var(--leather);
+    }
+
+    #topbar-right { display: flex; gap: 8px; }
+
+    #gps-btn {
+      width: 32px; height: 32px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      color: var(--leather-mid);
+      cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+    }
+
+    #gps-btn.active { background: var(--stamp-green); color: #fff; border-color: var(--stamp-green); }
+
+    /* ── Map / Panel Layout ───────────────────────────────────── */
+    #map {
+      flex: 1;
+      z-index: 1;
+    }
+
+    #mission-panel {
+      background: var(--paper-card);
+      border-top: 1px solid var(--border);
+      overflow-y: auto;
+      flex-shrink: 0;
+      height: 180px;
+    }
+
+    @media (min-width: 768px) {
+      #app.visible {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      #topbar { width: 100%; }
+      #map { flex: 0 0 40%; height: calc(100dvh - 52px); }
+      #mission-panel {
+        flex: 0 0 60%;
+        height: calc(100dvh - 52px);
+        border-top: none;
+        border-left: 1px solid var(--border);
+      }
+    }
+
+    /* ── Mission List ─────────────────────────────────────────── */
+    #mission-list { padding: 0.75rem; display: flex; gap: 0.5rem; overflow-x: auto; }
+
+    @media (min-width: 768px) {
+      #mission-list { flex-direction: column; overflow-x: hidden; padding: 1rem; }
+    }
+
+    .mission-item {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s, border-color 0.15s;
+      min-width: 160px;
+    }
+
+    @media (min-width: 768px) { .mission-item { min-width: unset; } }
+
+    .mission-item:hover { background: var(--highlight); border-color: var(--leather-mid); }
+    .mission-item.active { background: var(--highlight); border-color: var(--leather); }
+
+    .mission-item-num {
+      font-size: 0.65rem; font-weight: 600;
+      color: var(--leather-mid);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+
+    .mission-item-name {
+      font-family: 'Fraunces', serif;
+      font-size: 0.9rem; color: var(--leather);
+      margin-top: 0.1rem;
+    }
+
+    /* ── Modal ────────────────────────────────────────────────── */
+    #modal-overlay {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(58, 32, 16, 0.4);
+      backdrop-filter: blur(2px);
+    }
+
+    #modal {
+      position: fixed; z-index: 2001;
+      background: var(--paper-card);
+      border: 1px solid var(--border);
+      border-radius: 14px 14px 0 0;
+      bottom: 0; left: 0; right: 0;
+      max-height: 82dvh;
+      overflow-y: auto;
+      padding: 1.25rem 1.25rem 2rem;
+      box-shadow: 0 -4px 24px rgba(58,32,16,0.18);
+    }
+
+    @media (min-width: 768px) {
+      #modal {
+        left: 40%; right: 0;
+        border-radius: 0;
+        max-height: calc(100dvh - 52px);
+        bottom: 0; top: 52px;
+        border-left: 2px solid var(--leather);
+        box-shadow: none;
+      }
+    }
+
+    #modal-overlay.hidden, #modal.hidden { display: none; }
+
+    #modal-close {
+      position: absolute; top: 1rem; right: 1rem;
+      width: 28px; height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: var(--paper);
+      color: var(--leather-mid);
+      cursor: pointer; font-size: 0.8rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Modal Tabs ───────────────────────────────────────────── */
+    #modal-tabs {
+      display: flex; gap: 0.4rem;
+      margin-bottom: 1rem; flex-wrap: wrap;
+      padding-top: 0.2rem;
+    }
+
+    .tab-btn {
+      font-size: 0.78rem; font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      color: var(--leather-mid);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .tab-btn.active {
+      background: var(--leather);
+      color: var(--paper-card);
+      border-color: var(--leather);
+    }
+
+    /* ── Modal Content ────────────────────────────────────────── */
+    .modal-mission-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem; font-weight: 700;
+      color: var(--leather);
+      margin-bottom: 0.75rem;
+      padding-right: 2rem;
+    }
+
+    .modal-description {
+      font-size: 0.9rem; color: var(--ink);
+      line-height: 1.7; margin-bottom: 1rem;
+    }
+
+    .mission-challenge {
+      background: var(--highlight);
+      border-left: 3px solid var(--leather);
+      border-radius: 0 8px 8px 0;
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem; color: var(--leather);
+      font-weight: 600; margin-bottom: 1rem;
+    }
+
+    /* ── Species Grid ─────────────────────────────────────────── */
+    .species-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .species-card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+    }
+
+    .species-card img {
+      width: 100%; aspect-ratio: 1;
+      object-fit: contain;
+      border-radius: 4px;
+      margin-bottom: 0.4rem;
+      background: var(--highlight);
+    }
+
+    .species-img-placeholder {
+      width: 100%; aspect-ratio: 1;
+      background: var(--highlight);
+      border-radius: 4px;
+      margin-bottom: 0.4rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .species-common {
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--leather); line-height: 1.3;
+    }
+
+    .species-scientific {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: 0.72rem; color: var(--leather-mid);
+      margin: 0.15rem 0;
+    }
+
+    .species-note {
+      font-size: 0.72rem; color: var(--ink);
+      line-height: 1.4; margin-top: 0.2rem;
+    }
+
+    /* ── Geology Cards ────────────────────────────────────────── */
+    .geology-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .geology-card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem 1rem;
+    }
+
+    .geology-name {
+      font-family: 'Fraunces', serif;
+      font-size: 0.95rem; font-weight: 600; color: var(--leather);
+    }
+
+    .geology-age {
+      font-size: 0.72rem; color: var(--leather-mid);
+      margin: 0.1rem 0 0.4rem;
+      font-weight: 600; letter-spacing: 0.04em;
+    }
+
+    .geology-note { font-size: 0.82rem; color: var(--ink); line-height: 1.5; }
+
+    /* ── Compass Tab ──────────────────────────────────────────── */
+    .compass-steps {
+      list-style: none; display: flex; flex-direction: column; gap: 0.6rem;
+      counter-reset: step;
+    }
+
+    .compass-steps li {
+      counter-increment: step;
+      display: flex; gap: 0.75rem; align-items: flex-start;
+      font-size: 0.88rem; color: var(--ink); line-height: 1.5;
+    }
+
+    .compass-steps li::before {
+      content: counter(step);
+      background: var(--leather);
+      color: var(--paper-card);
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    .landmark-list {
+      display: flex; flex-direction: column; gap: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    .landmark-item {
+      font-size: 0.85rem; color: var(--ink);
+      padding: 0.4rem 0.7rem;
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    /* ── Gallery ──────────────────────────────────────────────── */
+    .gallery-wrap { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .gallery-img {
+      width: 100%; border-radius: 8px;
+      border: 1px solid var(--border);
+      object-fit: cover;
+    }
+
+    /* ── Audio Player ─────────────────────────────────────────── */
+    .audio-player {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+
+    .audio-label {
+      font-family: 'Fraunces', serif;
+      font-size: 0.9rem; color: var(--leather); font-weight: 600;
+    }
+
+    .audio-controls { display: flex; align-items: center; gap: 0.75rem; }
+
+    .audio-play-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--leather);
+      border: none; color: var(--paper-card);
+      font-size: 1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .audio-progress {
+      flex: 1; height: 4px;
+      background: var(--border);
+      border-radius: 2px; cursor: pointer;
+      position: relative;
+    }
+
+    .audio-progress-fill {
+      height: 100%; background: var(--leather);
+      border-radius: 2px; width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .audio-time {
+      font-size: 0.75rem; color: var(--leather-mid);
+      font-variant-numeric: tabular-nums;
+      min-width: 36px; text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── PIN Gate ──────────────────────────────────────────────────────────── -->
+<div id="pin-gate">
+  <div class="pin-logo">
+    Cuaderno de Campo
+    <span>Misión Boniches · Cuenca</span>
+  </div>
+  <p class="pin-subtitle">Introduce el código de hoy para comenzar la aventura</p>
+  <div class="pin-input-row">
+    <input id="pin-input" type="number" inputmode="numeric" maxlength="4"
+           placeholder="····" autocomplete="off" aria-label="Código PIN">
+    <button id="pin-submit">→</button>
+  </div>
+  <p id="pin-error"></p>
+</div>
+
+<!-- ── Expired Screen ────────────────────────────────────────────────────── -->
+<div id="expired-screen" class="hidden">
+  <div class="expired-title">Esta guía ha caducado</div>
+  <p class="expired-body">Para organizar una nueva sesión o actividad en Boniches:</p>
+  <div class="expired-contact">
+    📧 <a href="mailto:noelia.ch9@gmail.com">noelia.ch9@gmail.com</a><br>
+    🌐 <a href="https://www.noeliachaparro.es">www.noeliachaparro.es</a>
+  </div>
+  <p class="expired-copy">© 2025 Noelia Chaparro Puente — Guía de la Naturaleza y Educadora Ambiental</p>
+</div>
+
+<!-- ── App ───────────────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <!-- ── Top Bar ────────────────────────────────────────────────────────── -->
+  <div id="topbar">
+    <a href="index.html" id="back-btn" aria-label="Volver">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <div id="route-title">Misión Boniches</div>
+    <div id="topbar-right">
+      <button id="gps-btn" aria-label="GPS">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Map ───────────────────────────────────────────────────────────── -->
+  <div id="map"></div>
+
+  <!-- ── Mission Panel ─────────────────────────────────────────────────── -->
+  <div id="mission-panel">
+    <div id="mission-list"></div>
+  </div>
+
+  <!-- ── Mission Modal ─────────────────────────────────────────────────── -->
+  <div id="modal-overlay" class="hidden"></div>
+  <div id="modal" class="hidden">
+    <button id="modal-close" aria-label="Cerrar">✕</button>
+    <div id="modal-tabs"></div>
+    <div id="modal-content"></div>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+// ── PIN logic ──────────────────────────────────────────────────────────────
+function todayPin() {
+  const now = new Date();
+  const d = now.getDate();
+  const m = now.getMonth() + 1;
+  return ((d * 37 + m * 13 + 7) % 9000) + 1000;
+}
+
+function todayKey() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+}
+
+function checkSession() {
+  try {
+    const stored = JSON.parse(sessionStorage.getItem('bonichesUnlocked') || 'null');
+    return stored && stored.date === todayKey();
+  } catch (_) { return false; }
+}
+
+function unlockApp() {
+  sessionStorage.setItem('bonichesUnlocked', JSON.stringify({ date: todayKey() }));
+  document.getElementById('pin-gate').classList.add('hidden');
+  document.getElementById('app').classList.add('visible');
+  document.dispatchEvent(new Event('appUnlocked'));
+}
+
+function showExpired() {
+  document.getElementById('pin-gate').classList.add('hidden');
+  document.getElementById('expired-screen').classList.remove('hidden');
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+(function init() {
+  if (checkSession()) { unlockApp(); return; }
+
+  let attempts = 0;
+
+  const input = document.getElementById('pin-input');
+  const errEl = document.getElementById('pin-error');
+
+  function tryPin() {
+    const entered = parseInt(input.value, 10);
+    if (entered === todayPin()) {
+      unlockApp();
+      return;
+    }
+    attempts++;
+    input.value = '';
+    input.classList.add('error');
+    setTimeout(() => input.classList.remove('error'), 400);
+
+    if (attempts >= 3) {
+      showExpired();
+    } else {
+      errEl.textContent = `Código incorrecto (${3 - attempts} intento${3 - attempts === 1 ? '' : 's'} restante${3 - attempts === 1 ? '' : 's'})`;
+    }
+  }
+
+  document.getElementById('pin-submit').addEventListener('click', tryPin);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryPin(); });
+  input.addEventListener('input', () => {
+    if (input.value.length > 4) input.value = input.value.slice(0, 4);
+  });
+
+  input.focus();
+})();
+</script>
+
+<script src="assets/leaflet.js"></script>
+<script src="assets/gpx.js"></script>
+<script>
+'use strict';
+
+// Only run after PIN unlocks the app
+document.addEventListener('appUnlocked', initApp);
+
+function initApp() {
+  fetch('routes/boniches/pois.json')
+    .then(r => r.json())
+    .then(pois => {
+      setupMap(pois);
+      setupMissionList(pois);
+    });
+}
+
+let map, userMarker;
+
+function setupMap(pois) {
+  map = L.map('map', { zoomControl: false, attributionControl: true });
+
+  L.tileLayer('https://tile.opentopomap.org/{z}/{x}/{y}.png', {
+    maxZoom: 17,
+    attribution: '© OpenTopoMap contributors'
+  }).addTo(map);
+
+  // GPX track
+  new L.GPX('routes/boniches/route.gpx', {
+    async: true,
+    polyline_options: { color: '#6b4226', weight: 3, opacity: 0.85 },
+    marker_options: { startIconUrl: null, endIconUrl: null, shadowUrl: null }
+  }).on('loaded', e => {
+    map.fitBounds(e.target.getBounds(), { padding: [20, 20] });
+  }).addTo(map);
+
+  // Mission markers
+  pois.forEach(poi => addMissionMarker(poi));
+}
+
+function missionIcon(poi) {
+  const num = poi.mission || '·';
+  return L.divIcon({
+    className: '',
+    html: `<div style="
+      width:32px;height:32px;border-radius:50% 50% 50% 0;
+      background:#6b4226;border:2px solid #fffdf5;
+      transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
+      box-shadow:0 2px 6px rgba(0,0,0,0.3)">
+      <span style="transform:rotate(45deg);color:#fffdf5;font-weight:700;font-size:0.7rem;font-family:sans-serif">${num}</span>
+    </div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -36]
+  });
+}
+
+function addMissionMarker(poi) {
+  const marker = L.marker([poi.lat, poi.lon], { icon: missionIcon(poi) });
+  marker.addTo(map);
+  marker.on('click', () => openModal(poi));
+}
+
+// ── GPS tracking ──────────────────────────────────────────────────────────
+let watchId = null;
+
+document.getElementById('gps-btn').addEventListener('click', () => {
+  if (watchId) {
+    navigator.geolocation.clearWatch(watchId);
+    watchId = null;
+    document.getElementById('gps-btn').classList.remove('active');
+    if (userMarker) { userMarker.remove(); userMarker = null; }
+    return;
+  }
+  document.getElementById('gps-btn').classList.add('active');
+  watchId = navigator.geolocation.watchPosition(pos => {
+    const ll = [pos.coords.latitude, pos.coords.longitude];
+    if (!userMarker) {
+      userMarker = L.circleMarker(ll, {
+        radius: 8, color: '#4a7a2a', fillColor: '#4a7a2a',
+        fillOpacity: 0.9, weight: 2
+      }).addTo(map);
+    } else {
+      userMarker.setLatLng(ll);
+    }
+  }, null, { enableHighAccuracy: true });
+});
+
+// ── Mission List ──────────────────────────────────────────────────────────
+function setupMissionList(pois) {
+  const list = document.getElementById('mission-list');
+  pois.forEach(poi => {
+    const item = document.createElement('div');
+    item.className = 'mission-item';
+    item.innerHTML = `
+      <div class="mission-item-num">Misión ${poi.mission}</div>
+      <div class="mission-item-name">${poi.languages.es.name.replace(/Misión \d+ · /, '')}</div>
+    `;
+    item.addEventListener('click', () => {
+      map.setView([poi.lat, poi.lon], 16);
+      openModal(poi);
+    });
+    list.appendChild(item);
+  });
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────
+let currentAudio = null;
+
+function openModal(poi) {
+  const lang    = poi.languages.es;
+  const overlay = document.getElementById('modal-overlay');
+  const modal   = document.getElementById('modal');
+  const tabs    = document.getElementById('modal-tabs');
+  const content = document.getElementById('modal-content');
+
+  overlay.classList.remove('hidden');
+  modal.classList.remove('hidden');
+
+  const tabDefs = buildTabs(poi, lang);
+  tabs.innerHTML = '';
+  tabDefs.forEach((tab, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = tab.label;
+    btn.addEventListener('click', () => {
+      tabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTabContent(tab, lang, content, poi);
+    });
+    tabs.appendChild(btn);
+  });
+
+  renderTabContent(tabDefs[0], lang, content, poi);
+}
+
+function buildTabs(poi, lang) {
+  const tabs = [];
+  tabs.push({ id: 'mision', label: '🧭 Misión' });
+  if (lang.species && lang.species.length > 0)  tabs.push({ id: 'especies', label: '🌿 Especies' });
+  if (lang.geology && lang.geology.length > 0)  tabs.push({ id: 'geologia', label: '🪨 Geología' });
+  if (lang.compass)                              tabs.push({ id: 'brujula',  label: '🧭 Brújula' });
+  if (poi.images && poi.images.length > 0)       tabs.push({ id: 'galeria',  label: '📷 Galería' });
+  if (poi.audio)                                 tabs.push({ id: 'audio',    label: '🎧 Audio' });
+  return tabs;
+}
+
+function renderTabContent(tab, lang, container, poi) {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+
+  switch (tab.id) {
+    case 'mision':
+      container.innerHTML = `
+        <div class="modal-mission-name">${lang.name}</div>
+        <p class="modal-description">${lang.description}</p>
+        ${lang.challenge ? `<div class="mission-challenge">🔍 ${lang.challenge}</div>` : ''}
+      `;
+      break;
+
+    case 'especies':
+      container.innerHTML = `<div class="species-grid">
+        ${lang.species.map(s => `
+          <div class="species-card">
+            ${s.image
+              ? `<img src="${s.image}" alt="${s.common}" loading="lazy">`
+              : `<div class="species-img-placeholder">🌿</div>`}
+            <div class="species-common">${s.common}</div>
+            <div class="species-scientific">${s.scientific}</div>
+            <div class="species-note">${s.note}</div>
+          </div>
+        `).join('')}
+      </div>`;
+      break;
+
+    case 'geologia':
+      container.innerHTML = `<div class="geology-list">
+        ${lang.geology.map(g => `
+          <div class="geology-card">
+            <div class="geology-name">${g.name}</div>
+            <div class="geology-age">${g.age}</div>
+            <div class="geology-note">${g.note}</div>
+          </div>
+        `).join('')}
+      </div>`;
+      break;
+
+    case 'brujula':
+      container.innerHTML = `
+        <ol class="compass-steps">
+          ${lang.compass.steps.map(s => `<li>${s}</li>`).join('')}
+        </ol>
+        <div class="landmark-list">
+          ${lang.compass.landmarks.map(l => `<div class="landmark-item">📍 ${l}</div>`).join('')}
+        </div>
+      `;
+      break;
+
+    case 'galeria':
+      container.innerHTML = `<div class="gallery-wrap">
+        ${(poi.images || []).map(src => `<img class="gallery-img" src="${src}" loading="lazy">`).join('')}
+      </div>`;
+      break;
+
+    case 'audio': {
+      const src = poi.audio || '';
+      container.innerHTML = `
+        <div class="audio-player">
+          <div class="audio-label">Narración de la misión</div>
+          <div class="audio-controls">
+            <button class="audio-play-btn" id="audio-play">▶</button>
+            <div class="audio-progress" id="audio-progress">
+              <div class="audio-progress-fill" id="audio-fill"></div>
+            </div>
+            <span class="audio-time" id="audio-time">0:00</span>
+          </div>
+        </div>
+      `;
+      const audio   = new Audio(src);
+      currentAudio  = audio;
+      const playBtn = document.getElementById('audio-play');
+      const fill    = document.getElementById('audio-fill');
+      const timeEl  = document.getElementById('audio-time');
+
+      playBtn.addEventListener('click', () => {
+        if (audio.paused) { audio.play(); playBtn.textContent = '⏸'; }
+        else              { audio.pause(); playBtn.textContent = '▶'; }
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        const pct = audio.duration ? (audio.currentTime / audio.duration * 100) : 0;
+        fill.style.width = pct + '%';
+        const m = Math.floor(audio.currentTime / 60);
+        const s = String(Math.floor(audio.currentTime % 60)).padStart(2, '0');
+        timeEl.textContent = `${m}:${s}`;
+      });
+
+      audio.addEventListener('ended', () => { playBtn.textContent = '▶'; });
+      break;
+    }
+  }
+}
+
+// ── Close modal ───────────────────────────────────────────────────────────
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', closeModal);
+
+function closeModal() {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  document.getElementById('modal').classList.add('hidden');
+  document.getElementById('modal-overlay').classList.add('hidden');
+}
+</script>
+
+</body>
+</html>
