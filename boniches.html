@@ -379,6 +379,15 @@
       font-weight: 600; margin-bottom: 1rem;
     }
 
+    .mission-wanted {
+      display: block; width: 120px; margin: 0 auto 0.8rem;
+      border-radius: 4px; box-shadow: 2px 3px 8px rgba(0,0,0,0.3);
+    }
+    .mission-habitat {
+      display: block; width: 100%; max-height: 160px; object-fit: cover;
+      border-radius: 8px; margin-bottom: 0.8rem;
+    }
+
     /* ── Species Grid ─────────────────────────────────────────── */
     .species-grid {
       display: grid;
@@ -395,10 +404,18 @@
 
     .species-card img {
       width: 100%; aspect-ratio: 1;
-      object-fit: contain;
+      object-fit: cover;
       border-radius: 4px;
       margin-bottom: 0.4rem;
       background: var(--highlight);
+    }
+    .species-img-strip {
+      display: flex; gap: 3px; margin-bottom: 0.4rem;
+      border-radius: 4px; overflow: hidden;
+    }
+    .species-img-strip img {
+      flex: 1; aspect-ratio: 1; margin-bottom: 0;
+      object-fit: cover; border-radius: 0;
     }
 
     .species-img-placeholder {
@@ -818,6 +835,7 @@ function buildTabs(poi, lang) {
   const tabs = [];
   tabs.push({ id: 'mision', label: '🧭 Misión' });
   if (lang.species && lang.species.length > 0)  tabs.push({ id: 'especies', label: '🌿 Especies' });
+  if (lang.fauna  && lang.fauna.length > 0)     tabs.push({ id: 'fauna',    label: '🦎 Fauna' });
   if (lang.geology && lang.geology.length > 0)  tabs.push({ id: 'geologia', label: '🪨 Geología' });
   if (lang.compass)                              tabs.push({ id: 'brujula',  label: '🧭 Brújula' });
   if (poi.images && poi.images.length > 0)       tabs.push({ id: 'galeria',  label: '📷 Galería' });
@@ -831,7 +849,9 @@ function renderTabContent(tab, lang, container, poi) {
   switch (tab.id) {
     case 'mision':
       container.innerHTML = `
+        ${lang.wanted ? `<img src="${lang.wanted}" alt="Wanted poster" class="mission-wanted">` : ''}
         <div class="modal-mission-name">${lang.name}</div>
+        ${lang.habitat ? `<img src="${lang.habitat}" alt="Hábitat" class="mission-habitat">` : ''}
         <p class="modal-description">${lang.description}</p>
         ${lang.challenge ? `<div class="mission-challenge">🔍 ${lang.challenge}</div>` : ''}
       `;
@@ -841,9 +861,26 @@ function renderTabContent(tab, lang, container, poi) {
       container.innerHTML = `<div class="species-grid">
         ${lang.species.map(s => `
           <div class="species-card">
+            ${s.images && s.images.length > 1
+              ? `<div class="species-img-strip">${s.images.map(u => `<img src="${u}" alt="${s.common}" loading="lazy">`).join('')}</div>`
+              : s.image
+                ? `<img src="${s.image}" alt="${s.common}" loading="lazy">`
+                : `<div class="species-img-placeholder">🌿</div>`}
+            <div class="species-common">${s.common}</div>
+            <div class="species-scientific">${s.scientific}</div>
+            <div class="species-note">${s.note}</div>
+          </div>
+        `).join('')}
+      </div>`;
+      break;
+
+    case 'fauna':
+      container.innerHTML = `<div class="species-grid">
+        ${lang.fauna.map(s => `
+          <div class="species-card">
             ${s.image
               ? `<img src="${s.image}" alt="${s.common}" loading="lazy">`
-              : `<div class="species-img-placeholder">🌿</div>`}
+              : `<div class="species-img-placeholder">🦎</div>`}
             <div class="species-common">${s.common}</div>
             <div class="species-scientific">${s.scientific}</div>
             <div class="species-note">${s.note}</div>

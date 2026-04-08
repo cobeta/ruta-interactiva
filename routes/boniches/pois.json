@@ -11,11 +11,19 @@
         "name": "Misión 1 · Salicornia",
         "description": "Bienvenidos al Reajo o Arroyo Valhondo. Este no es un lugar cualquiera; es un refugio natural que esconde especies únicas, algunas de ellas tan importantes que están protegidas. El arroyo arrastra algo inusual para una meseta interior: sal. Hace millones de años, Boniches era parte de un inmenso mar. Con el tiempo, este mar se fue retirando y dejó depósitos de sal en los huecos de las montañas. Los manantiales disuelven esos minerales y crean un miniecosistema salino a cientos de kilómetros del mar.",
         "challenge": "Busca una planta que encontrarías en la playa",
+        "wanted": "routes/boniches/images/mission-01/wanted-poster.png",
+        "habitat": "routes/boniches/images/mission-01/salinas-landscape.jpeg",
         "species": [
           {
             "common": "Salicornia, espárrago de mar",
             "scientific": "Salicornia europaea",
-            "image": null,
+            "image": "routes/boniches/images/mission-01/salicornia-red-habitat.jpeg",
+            "images": [
+              "routes/boniches/images/mission-01/salicornia-red-habitat.jpeg",
+              "routes/boniches/images/mission-01/salicornia-red-closeup.jpeg",
+              "routes/boniches/images/mission-01/salicornia-green-closeup.jpeg",
+              "routes/boniches/images/mission-01/salicornia-green-soil.jpeg"
+            ],
             "note": "Especie halófita protegida. Sus tallos suculentos se vuelven rojos en otoño y son comestibles."
           },
           {
@@ -23,24 +31,56 @@
             "scientific": "Juncus maritimus",
             "image": null,
             "note": "Compañero inseparable de la Salicornia. Si encuentras uno, el otro no está lejos."
-          },
+          }
+        ],
+        "fauna": [
           {
             "common": "Ánade azulón",
             "scientific": "Anas platyrhynchos",
-            "image": null,
+            "image": "routes/boniches/images/mission-01/anade-azulon-pareja.jpeg",
             "note": "El macho tiene la cabeza verde brillante. Busca su espejuelo azul violáceo en las alas."
+          },
+          {
+            "common": "Gineta",
+            "scientific": "Genetta genetta",
+            "image": "routes/boniches/images/mission-01/gineta.png",
+            "note": "Nocturna y escurridiza. Trepa árboles con agilidad felina. No es un gato."
+          },
+          {
+            "common": "Erizo europeo",
+            "scientific": "Erinaceus europaeus",
+            "image": "routes/boniches/images/mission-01/erizo.png",
+            "note": "Sus púas son pelos modificados. Se enrolla en bola como defensa. Muy útil: come insectos y babosas."
+          },
+          {
+            "common": "Marta",
+            "scientific": "Martes foina",
+            "image": "routes/boniches/images/mission-01/marta.png",
+            "note": "Pequeño mustélido ágil y curioso. Activo al amanecer y al atardecer."
           },
           {
             "common": "Sapo corredor",
             "scientific": "Epidalea calamita",
-            "image": null,
+            "image": "routes/boniches/images/mission-01/sapo-corredor.png",
             "note": "No escupe a los ojos. Lávate las manos después de tocarlo, nada más."
           },
           {
             "common": "Rana común",
             "scientific": "Pelophylax perezi",
-            "image": null,
+            "image": "routes/boniches/images/mission-01/rana-comun.png",
             "note": "Indicadora de agua limpia y ecosistemas acuáticos saludables."
+          },
+          {
+            "common": "Libélula emperadora",
+            "scientific": "Anax imperator",
+            "image": "routes/boniches/images/mission-01/libelula.png",
+            "note": "La libélula más grande de Europa. Caza otros insectos al vuelo con precisión milimétrica."
+          },
+          {
+            "common": "Caballito del diablo",
+            "scientific": "Calopteryx virgo",
+            "image": "routes/boniches/images/mission-01/caballito-del-diablo.png",
+            "note": "Alas metálicas azul-verdosas. Solo vive en ríos de agua muy limpia y oxigenada."
           }
         ]
       }
