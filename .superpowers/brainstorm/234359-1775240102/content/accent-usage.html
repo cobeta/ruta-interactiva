@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accent Usage</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f5ede0;
+    color: #3d2512;
+    font-family: 'Georgia', serif;
+    padding: 2rem;
+  }
+  h1 { font-size: 1.3rem; font-weight: normal; color: #6b4226; margin-bottom: 0.3rem; }
+  .subtitle { color: #9a8878; margin-bottom: 2rem; font-size: 0.85rem; }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+  }
+  .option-card {
+    border: 2px solid #d4c0a8;
+    border-radius: 2px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    background: #fdf7ef;
+  }
+  .option-card:hover { border-color: #52407a; }
+  .option-card.selected { border-color: #52407a; box-shadow: 0 2px 12px rgba(82,64,122,0.15); }
+  .option-card h3 { font-size: 0.95rem; color: #3d2512; margin-bottom: 0.4rem; }
+  .option-card p { font-size: 0.78rem; color: #6b5040; line-height: 1.5; margin-bottom: 0.8rem; }
+
+  .preview {
+    background: #ede0cc;
+    border-radius: 2px;
+    padding: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    min-height: 70px;
+  }
+
+  /* mock hex */
+  .mhex {
+    width: var(--ms, 48px);
+    aspect-ratio: 1.1547/1;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    background: var(--hc);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mhex-inner {
+    width: 90%; aspect-ratio: 1.1547/1;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    background: #eddfc8;
+  }
+
+  .mock-label {
+    display: inline-block;
+    padding: 0.2em 0.6em;
+    background: rgba(245,237,224,0.85);
+    font-size: 0.65rem;
+    font-family: 'Georgia', serif;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #3d2512;
+  }
+
+  .mock-title {
+    text-align: center;
+    line-height: 1.2;
+  }
+  .mock-title .solid {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6b4226;
+    display: block;
+  }
+  .mock-title .script {
+    font-size: 1.4rem;
+    font-style: italic;
+    color: #3d2512;
+    display: block;
+  }
+  .mock-title .script.plum { color: #52407a; }
+
+  .note { font-size: 0.7rem; color: #9a8878; margin-top: 0.5rem; font-style: italic; }
+  .multi-note { font-size: 0.78rem; color: #9a8878; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+
+<h1>Where should the plum accent live?</h1>
+<p class="subtitle">Accent: #52407a — dusty plum / aubergine. Select one or more that feel right.</p>
+
+<div class="options-grid">
+
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="a">
+    <h3>A — "Intangible" in the title</h3>
+    <p>The italic script word gets the plum color. Creates hierarchy between "Patrimonio" (warm brown) and "Intangible" (plum). Subtle but immediately visible.</p>
+    <div class="preview">
+      <div class="mock-title">
+        <span class="solid">Patrimonio</span>
+        <span class="script plum">Intangible</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="b">
+    <h3>B — "¿Quiénes somos?" label</h3>
+    <p>The standalone floating label (no hex) gets the plum border + text. Makes it stand out as a different kind of element — not a section, more like a signature.</p>
+    <div class="preview" style="flex-direction:column; gap:0.4rem">
+      <span class="mock-label" style="border: 2px solid #52407a; color: #52407a;">¿Quiénes somos?</span>
+      <span class="note">vs. other labels:</span>
+      <span class="mock-label" style="border: 2px solid #d4a090;">Creación de contenidos</span>
+    </div>
+  </div>
+
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="c">
+    <h3>C — Center hex border</h3>
+    <p>The big center hex gets a plum border instead of taupe. Makes it pop as the focal anchor of the composition without changing images.</p>
+    <div class="preview">
+      <div class="mhex" style="--ms:64px; --hc:#52407a"><div class="mhex-inner"></div></div>
+      <span style="font-size:0.7rem;color:#9a8878">vs taupe →</span>
+      <div class="mhex" style="--ms:64px; --hc:#b0998a"><div class="mhex-inner"></div></div>
+    </div>
+  </div>
+
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="d">
+    <h3>D — Label hover / active state</h3>
+    <p>When a label is hovered, the border and text shift to plum instead of just scaling + opacity. Adds a color cue to the interaction feedback.</p>
+    <div class="preview" style="flex-direction:column; gap:0.4rem">
+      <span class="note">at rest:</span>
+      <span class="mock-label" style="border: 2px solid #d4a090; opacity:0.7">Memoria del Territorio</span>
+      <span class="note">on hover:</span>
+      <span class="mock-label" style="border: 2px solid #52407a; background:rgba(245,237,224,0.93); color:#3a2858">Memoria del Territorio</span>
+    </div>
+  </div>
+
+</div>
+
+<p class="multi-note">You can select multiple — these aren't mutually exclusive. Let me know in terminal.</p>
+
+</body>
+</html>

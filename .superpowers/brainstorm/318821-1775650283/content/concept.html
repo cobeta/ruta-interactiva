@@ -1,0 +1,49 @@
+<h2>What kind of app should this be?</h2>
+<p class="subtitle">The source is a rich field guide ("cuaderno de campo") for young naturalists — 7 missions, species ID, geology, ethnobotany, orienteering. How faithful to that concept should the app be?</p>
+
+<div class="cards">
+  <div class="card" data-choice="trail-plus" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a2e1a;padding:1.5rem;font-family:monospace;font-size:0.85rem;color:#a0cc9c">
+      <div style="color:#c8874a;font-weight:bold;margin-bottom:0.5rem">🗺️ trail.html + Boniches content</div>
+      <div style="color:#f0e8d5;font-size:0.8rem">Same map UI as Hanover/Allue routes</div>
+      <div style="margin-top:0.5rem;font-size:0.75rem;color:#b0a890">• Map + GPS tracking</div>
+      <div style="font-size:0.75rem;color:#b0a890">• POI cards with species info</div>
+      <div style="font-size:0.75rem;color:#b0a890">• Image carousel at each stop</div>
+      <div style="font-size:0.75rem;color:#b0a890">• Same look as existing routes</div>
+    </div>
+    <div class="card-body">
+      <h3>A — Reuse trail.html</h3>
+      <p>Plug Boniches data into the existing map viewer. Fast, consistent with other routes. Loses the "field guide" feel but gains GPS, offline tiles, elevation profile.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="fieldguide" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#2a1a0a;padding:1.5rem;font-size:0.85rem;color:#f2ddc0">
+      <div style="color:#e0a86a;font-weight:bold;margin-bottom:0.5rem">📓 Cuaderno de campo digital</div>
+      <div style="color:#f0e8d5;font-size:0.8rem">New page styled like a field notebook</div>
+      <div style="margin-top:0.5rem;font-size:0.75rem;color:#c8b08a">• Mission-by-mission narrative</div>
+      <div style="font-size:0.75rem;color:#c8b08a">• Species cards with illustrations</div>
+      <div style="font-size:0.75rem;color:#c8b08a">• Mini map per mission (not full GPS)</div>
+      <div style="font-size:0.75rem;color:#c8b08a">• "Gamified" mission completion</div>
+    </div>
+    <div class="card-body">
+      <h3>B — Digital field guide</h3>
+      <p>A new bespoke page that captures the educational, adventure feel of the cuaderno. Scrollable missions, species ID panels, rich illustrations. Less GPS, more storytelling.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="hybrid" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f1a2a;padding:1.5rem;font-size:0.85rem;color:#d0e8f0">
+      <div style="color:#6ab0cc;font-weight:bold;margin-bottom:0.5rem">🧭 Map + Field Guide hybrid</div>
+      <div style="color:#f0e8d5;font-size:0.8rem">Full map with rich POI panels</div>
+      <div style="margin-top:0.5rem;font-size:0.75rem;color:#90b8c8">• Full Leaflet map + GPS</div>
+      <div style="font-size:0.75rem;color:#90b8c8">• POI modal = mini field-guide page</div>
+      <div style="font-size:0.75rem;color:#90b8c8">• Species grids, geology panels</div>
+      <div style="font-size:0.75rem;color:#90b8c8">• Mission-themed stop names</div>
+    </div>
+    <div class="card-body">
+      <h3>C — Hybrid: map + rich modals</h3>
+      <p>Use the existing map infrastructure but make POI modals much richer — tabbed sections for species, geology, ethnobotany. Best of both worlds but more complex to build.</p>
+    </div>
+  </div>
+</div>

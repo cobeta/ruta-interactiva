@@ -1,0 +1,67 @@
+<h2>How should the expiry work?</h2>
+<p class="subtitle">You want it to expire so people can't just share the HTML. "Not super safe, but enough that you need to be skillful to bypass."</p>
+
+<div class="cards">
+  <div class="card" data-choice="date-token" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a1a2e;padding:1.5rem;font-family:monospace;font-size:0.8rem;color:#a0c0f0">
+      <div style="color:#8888ff;font-weight:bold;margin-bottom:0.5rem">🔑 Date-encoded token in URL</div>
+      <div style="color:#c0c0ff;margin-bottom:0.5rem">?token=boniches-2026-04-15-x7k2</div>
+      <div style="font-size:0.75rem;color:#8090b0">• URL contains an expiry date, obfuscated</div>
+      <div style="font-size:0.75rem;color:#8090b0">• JS decodes it and checks against today</div>
+      <div style="font-size:0.75rem;color:#8090b0">• Expired = locked screen, no content</div>
+      <div style="font-size:0.75rem;color:#8090b0">• You share a new URL per event/group</div>
+      <div style="font-size:0.75rem;color:#8090b0">• Easy to bypass: change system clock or read JS</div>
+    </div>
+    <div class="card-body">
+      <h3>A — Token in URL</h3>
+      <p>Unique URL per session/group with encoded expiry. Share <code>boniches.html?t=abc123</code> for a specific date. No server needed.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="unlock-code" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a2a1a;padding:1.5rem;font-family:monospace;font-size:0.8rem;color:#a0f0a0">
+      <div style="color:#88cc88;font-weight:bold;margin-bottom:0.5rem">🔓 Daily unlock code</div>
+      <div style="color:#c0ffc0;margin-bottom:0.5rem">Enter today's code: [ _ _ _ _ ]</div>
+      <div style="font-size:0.75rem;color:#80a080">• App shows a PIN entry screen on open</div>
+      <div style="font-size:0.75rem;color:#80a080">• Code changes daily (derived from date)</div>
+      <div style="font-size:0.75rem;color:#80a080">• You tell participants the code at the start</div>
+      <div style="font-size:0.75rem;color:#80a080">• Works offline, no URL parameter needed</div>
+      <div style="font-size:0.75rem;color:#80a080">• Easy to bypass: reverse the JS to find formula</div>
+    </div>
+    <div class="card-body">
+      <h3>B — Daily PIN code</h3>
+      <p>App opens to a PIN screen. Code is date-derived (you can calculate it easily). Participants unlock it at the start of the activity. HTML can be shared freely — useless without today's code.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="combined" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#2a1a0a;padding:1.5rem;font-family:monospace;font-size:0.8rem;color:#f0d0a0">
+      <div style="color:#cc9944;font-weight:bold;margin-bottom:0.5rem">🔐 Token + hard expiry date</div>
+      <div style="color:#ffe0a0;margin-bottom:0.5rem">?t=x7k2 → valid Apr 10–15 only</div>
+      <div style="font-size:0.75rem;color:#a08060">• URL encodes a window (e.g. 3–7 days)</div>
+      <div style="font-size:0.75rem;color:#a08060">• After that window: locked, no content shown</div>
+      <div style="font-size:0.75rem;color:#a08060">• Content is also slightly obfuscated in HTML</div>
+      <div style="font-size:0.75rem;color:#a08060">• You generate a new token per event group</div>
+      <div style="font-size:0.75rem;color:#a08060">• Bypass requires JS knowledge + clock trick</div>
+    </div>
+    <div class="card-body">
+      <h3>C — Token + time window</h3>
+      <p>URL contains a short-lived token valid for a specific date range (e.g. the day of the activity ± 1 day). After that it's locked. Content slightly obfuscated. Strongest of the three.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:1.5rem">
+  <div class="label">What "locked" looks like</div>
+  <p>When expired, the page could show:</p>
+  <div class="options">
+    <div class="option" data-choice="locked-blank" onclick="toggleSelect(this)">
+      <div class="letter">X</div>
+      <div class="content"><h3>Blank / error screen</h3><p>Just a message: "This guide has expired."</p></div>
+    </div>
+    <div class="option" data-choice="locked-noelia" onclick="toggleSelect(this)">
+      <div class="letter">Y</div>
+      <div class="content"><h3>Branded expired screen</h3><p>"Esta guía ha caducado. Contacta con Noelia para una nueva sesión." — with her logo/contact.</p></div>
+    </div>
+  </div>
+</div>

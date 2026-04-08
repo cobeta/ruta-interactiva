@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animation Concepts</title>
+<style>
+  :root {
+    --col-rose: #d4a090;
+    --col-taupe: #b0998a;
+    --col-gold: #c8b86a;
+    --col-mauve: #c09898;
+    --col-slate: #9a8878;
+    --col-blush: #e0b8b0;
+    --brown: #6b4226;
+    --cream: #f5ede0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #2a1f14;
+    color: #e8d8c0;
+    font-family: 'Georgia', serif;
+    padding: 2rem;
+  }
+  h1 { font-size: 1.4rem; font-weight: normal; color: #c8b86a; margin-bottom: 0.4rem; }
+  .subtitle { color: #9a8878; margin-bottom: 2rem; font-size: 0.9rem; }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .option-card {
+    border: 2px solid #4a3520;
+    border-radius: 4px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    background: #1e1410;
+  }
+  .option-card:hover { border-color: #c8b86a; }
+  .option-card.selected { border-color: #c8b86a; background: #261c10; }
+  .option-card h3 { color: #c8b86a; font-size: 1rem; margin-bottom: 0.5rem; }
+  .option-card p { font-size: 0.82rem; color: #9a8878; line-height: 1.5; margin-bottom: 1rem; }
+
+  /* Demo stage */
+  .demo {
+    height: 180px;
+    position: relative;
+    background: var(--cream);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  /* Flat-top hexagon helper */
+  .hex {
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }
+  .hex-shell {
+    width: var(--sz);
+    aspect-ratio: 1.1547 / 1;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    background: var(--hc);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hex-body {
+    width: 90%;
+    aspect-ratio: 1.1547 / 1;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    background: var(--cream-hex, #eddfc8);
+  }
+
+  /* ── OPTION A: Slow breathe — all hexes breathe together, slightly different phase ── */
+  @keyframes breatheA {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.85; }
+    50%       { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+  }
+  .demo-a .hex { animation: breatheA ease-in-out infinite; }
+  .demo-a .hex-center { animation-duration: 7s; animation-delay: 0s; --sz: 68px; --hc: var(--col-taupe); left: 50%; top: 50%; }
+  .demo-a .hex-1 { animation-duration: 7s; animation-delay: 0.6s; --sz: 36px; --hc: var(--col-rose); left: 30%; top: 32%; }
+  .demo-a .hex-2 { animation-duration: 7s; animation-delay: 1.2s; --sz: 30px; --hc: var(--col-gold); left: 55%; top: 22%; }
+  .demo-a .hex-3 { animation-duration: 7s; animation-delay: 1.8s; --sz: 26px; --hc: var(--col-mauve); left: 73%; top: 36%; }
+  .demo-a .hex-4 { animation-duration: 7s; animation-delay: 2.4s; --sz: 24px; --hc: var(--col-slate); left: 30%; top: 70%; }
+  .demo-a .hex-5 { animation-duration: 7s; animation-delay: 3.0s; --sz: 28px; --hc: var(--col-blush); left: 72%; top: 68%; }
+
+  /* ── OPTION B: Ripple wave — expand + fade rings emanating outward ── */
+  @keyframes ripple {
+    0%   { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
+    70%  { transform: translate(-50%, -50%) scale(1.35); opacity: 0.3; }
+    100% { transform: translate(-50%, -50%) scale(1.35); opacity: 0; }
+  }
+  @keyframes rippleHex {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    40%      { transform: translate(-50%, -50%) scale(1.12); }
+  }
+  .demo-b .hex { position: absolute; }
+  .demo-b .hex-center { --sz: 68px; --hc: var(--col-taupe); left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  .demo-b .hex-center .hex-shell { animation: rippleHex 4s ease-in-out infinite; }
+  .demo-b .hex-1 { --sz: 36px; --hc: var(--col-rose); left: 30%; top: 32%; transform: translate(-50%,-50%); }
+  .demo-b .hex-1 .hex-shell { animation: rippleHex 4s ease-in-out infinite; animation-delay: 0.5s; }
+  .demo-b .hex-2 { --sz: 30px; --hc: var(--col-gold); left: 55%; top: 22%; transform: translate(-50%,-50%); }
+  .demo-b .hex-2 .hex-shell { animation: rippleHex 4s ease-in-out infinite; animation-delay: 1.0s; }
+  .demo-b .hex-3 { --sz: 26px; --hc: var(--col-mauve); left: 73%; top: 36%; transform: translate(-50%,-50%); }
+  .demo-b .hex-3 .hex-shell { animation: rippleHex 4s ease-in-out infinite; animation-delay: 1.5s; }
+  .demo-b .hex-4 { --sz: 24px; --hc: var(--col-slate); left: 30%; top: 70%; transform: translate(-50%,-50%); }
+  .demo-b .hex-4 .hex-shell { animation: rippleHex 4s ease-in-out infinite; animation-delay: 2.0s; }
+  .demo-b .hex-5 { --sz: 28px; --hc: var(--col-blush); left: 72%; top: 68%; transform: translate(-50%,-50%); }
+  .demo-b .hex-5 .hex-shell { animation: rippleHex 4s ease-in-out infinite; animation-delay: 2.5s; }
+
+  /* ── OPTION C: Drift — very slow float, each at own pace, like buoys ── */
+  @keyframes floatC1 {
+    0%, 100% { transform: translate(-50%, -50%) scale(1) translateY(0px); }
+    33%      { transform: translate(-50%, -50%) scale(1.05) translateY(-5px); }
+    66%      { transform: translate(-50%, -50%) scale(0.97) translateY(3px); }
+  }
+  @keyframes floatC2 {
+    0%, 100% { transform: translate(-50%, -50%) scale(1) translateY(0px); }
+    40%      { transform: translate(-50%, -50%) scale(1.07) translateY(4px); }
+    75%      { transform: translate(-50%, -50%) scale(0.96) translateY(-4px); }
+  }
+  .demo-c .hex-center { --sz: 68px; --hc: var(--col-taupe); left: 50%; top: 50%; animation: floatC1 9s ease-in-out infinite; }
+  .demo-c .hex-1 { --sz: 36px; --hc: var(--col-rose); left: 30%; top: 32%; animation: floatC2 11s ease-in-out infinite; animation-delay: 1s; }
+  .demo-c .hex-2 { --sz: 30px; --hc: var(--col-gold); left: 55%; top: 22%; animation: floatC1 8s ease-in-out infinite; animation-delay: 2s; }
+  .demo-c .hex-3 { --sz: 26px; --hc: var(--col-mauve); left: 73%; top: 36%; animation: floatC2 13s ease-in-out infinite; animation-delay: 3s; }
+  .demo-c .hex-4 { --sz: 24px; --hc: var(--col-slate); left: 30%; top: 70%; animation: floatC1 10s ease-in-out infinite; animation-delay: 4s; }
+  .demo-c .hex-5 { --sz: 28px; --hc: var(--col-blush); left: 72%; top: 68%; animation: floatC2 12s ease-in-out infinite; animation-delay: 2.5s; }
+
+  .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--col-slate); margin-bottom: 0.3rem; }
+  .pick-note { color: #9a8878; font-size: 0.82rem; margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<h1>Animation Direction — Hex Pulse</h1>
+<p class="subtitle">Three approaches for ambient idle animation. Click a card to select it.</p>
+
+<div class="options-grid">
+
+  <!-- OPTION A -->
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="a">
+    <div class="label">Option A</div>
+    <h3>Synchronized Breathe</h3>
+    <p>All hexes inhale/exhale together at slightly staggered offsets — center first, satellites follow. Slow, organic, like breathing.</p>
+    <div class="demo demo-a">
+      <div class="hex hex-center"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-1"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-2"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-3"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-4"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-5"><div class="hex-shell"><div class="hex-body"></div></div></div>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="b">
+    <div class="label">Option B</div>
+    <h3>Radial Wave</h3>
+    <p>A pulse starts at center and ripples outward — each satellite expands in sequence by distance from center. Like dropping a stone in water.</p>
+    <div class="demo demo-b">
+      <div class="hex hex-center"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-1"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-2"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-3"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-4"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-5"><div class="hex-shell"><div class="hex-body"></div></div></div>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="c">
+    <div class="label">Option C</div>
+    <h3>Independent Float</h3>
+    <p>Each hex drifts on its own slow rhythm — slight scale and vertical drift, all at different speeds. Feels like they're alive and independent.</p>
+    <div class="demo demo-c">
+      <div class="hex hex-center"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-1"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-2"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-3"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-4"><div class="hex-shell"><div class="hex-body"></div></div></div>
+      <div class="hex hex-5"><div class="hex-shell"><div class="hex-body"></div></div></div>
+    </div>
+  </div>
+
+</div>
+
+<p class="pick-note">You can also combine: e.g. "B for hexes + keep the existing label pulse". Let me know in terminal.</p>
+
+</body>
+</html>

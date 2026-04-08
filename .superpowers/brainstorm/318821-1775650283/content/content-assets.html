@@ -1,0 +1,57 @@
+<h2>What content can we get from the Google Site?</h2>
+<p class="subtitle">The page is dynamically rendered — we can't scrape it automatically. Here's what we need from you.</p>
+
+<div class="section">
+  <div class="label">What the codebase already has (boniches route)</div>
+  <ul>
+    <li>✅ <strong>GPX track file</strong> — <code>routes/boniches/route.gpx</code></li>
+    <li>✅ <strong>9 POIs with bilingual text</strong> (ES + EN) — already written in <code>routes/boniches/pois.json</code></li>
+    <li>✅ <strong>Leaflet map</strong>, offline caching, GPS tracking — all infrastructure is reusable</li>
+  </ul>
+</div>
+
+<div class="section">
+  <div class="label">What we need you to gather from the Google Site</div>
+  <ul>
+    <li>🖼️ <strong>POI images</strong> — photos at each stop. Open the Google Site, find each mission stop, screenshot or save the images. We need roughly 1–3 images per POI (9 stops = ~15–25 photos)</li>
+    <li>📝 <strong>Actual stop descriptions</strong> — are the 9 POIs in our JSON the right ones, or does the Google Site have different stops with different content?</li>
+    <li>🗺️ <strong>Route overview image</strong> — a header/banner image for the route card (shown on the landing page)</li>
+    <li>🎵 <strong>Audio files</strong> — does the Google Site have any audio at the stops? (bird calls, narration, ambient sounds?)</li>
+    <li>📄 <strong>Route metadata</strong> — distance, elevation gain, difficulty, estimated duration</li>
+  </ul>
+</div>
+
+<div class="section">
+  <div class="label">Can you confirm these from the Google Site?</div>
+  <div class="options">
+    <div class="option" data-choice="has-images" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>Yes, there are photos at each stop</h3>
+        <p>The site has photos we can download and use for POI images</p>
+      </div>
+    </div>
+    <div class="option" data-choice="has-audio" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h3>Yes, there are audio files</h3>
+        <p>Narration or sound recordings embedded in the stops</p>
+      </div>
+    </div>
+    <div class="option" data-choice="text-only" onclick="toggleSelect(this)">
+      <div class="letter">C</div>
+      <div class="content">
+        <h3>Mostly text + images, no audio</h3>
+        <p>The Google Site has written content and photos but no audio media</p>
+      </div>
+    </div>
+    <div class="option" data-choice="different-stops" onclick="toggleSelect(this)">
+      <div class="letter">D</div>
+      <div class="content">
+        <h3>The stops are different from our JSON</h3>
+        <p>The actual Google Site has different POI content than what's in pois.json</p>
+      </div>
+    </div>
+  </div>
+  <p class="subtitle" style="margin-top:1rem">You can select multiple — these aren't mutually exclusive.</p>
+</div>

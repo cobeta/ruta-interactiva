@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accent Color Options</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f5ede0;
+    color: #3d2512;
+    font-family: 'Georgia', serif;
+    padding: 2rem;
+  }
+  h1 { font-size: 1.3rem; font-weight: normal; color: #6b4226; margin-bottom: 0.3rem; }
+  .subtitle { color: #9a8878; margin-bottom: 2rem; font-size: 0.85rem; }
+
+  .palette-row {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .swatch {
+    width: 36px; height: 36px;
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .palette-label { font-size: 0.75rem; color: #9a8878; margin-left: 0.5rem; }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .option-card {
+    border: 2px solid #d4c0a8;
+    border-radius: 2px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fdf7ef;
+  }
+  .option-card:hover { border-color: #6b4226; }
+  .option-card.selected { border-color: #6b4226; box-shadow: 0 2px 12px rgba(107,66,38,0.2); }
+
+  .accent-preview {
+    height: 60px;
+    border-radius: 2px;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .accent-dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+  }
+  .option-card h3 { font-size: 0.95rem; color: #3d2512; margin-bottom: 0.4rem; }
+  .option-card p { font-size: 0.78rem; color: #6b5040; line-height: 1.5; }
+
+  .use-case {
+    font-size: 0.72rem;
+    color: #9a8878;
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+
+  /* simulate label with accent border */
+  .mock-label {
+    display: inline-block;
+    padding: 0.2em 0.6em;
+    background: rgba(245,237,224,0.85);
+    font-size: 0.7rem;
+    font-family: 'Georgia', serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #3d2512;
+  }
+</style>
+</head>
+<body>
+
+<h1>Accent Color — What breaks the warm haze?</h1>
+<p class="subtitle">Current palette: all warm neutrals. One accent color creates hierarchy and catches the eye.</p>
+
+<div class="palette-row">
+  <div class="swatch" style="background:#d4a090"></div>
+  <div class="swatch" style="background:#b0998a"></div>
+  <div class="swatch" style="background:#c8b86a"></div>
+  <div class="swatch" style="background:#c09898"></div>
+  <div class="swatch" style="background:#9a8878"></div>
+  <div class="swatch" style="background:#e0b8b0"></div>
+  <span class="palette-label">← existing palette (all warm)</span>
+</div>
+
+<div class="options-grid">
+
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="a">
+    <div class="accent-preview" style="background: linear-gradient(135deg, #f5ede0 60%, #2d5a4a22)">
+      <div class="accent-dot" style="background:#2d5a4a"></div>
+      <div class="accent-dot" style="background:#3d7a62"></div>
+      <div class="accent-dot" style="background:#4e9a7c"></div>
+    </div>
+    <h3>A — Deep Forest Green</h3>
+    <p>Cool, earthy contrast. Feels like moss or old ink. Strong without being jarring against the warm tones.</p>
+    <p class="use-case">Could accent: title text, ¿Quiénes somos? label, hover states, or a thin rule</p>
+    <br>
+    <span class="mock-label" style="border: 2px solid #2d5a4a;">Quiénes somos</span>
+  </div>
+
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="b">
+    <div class="accent-preview" style="background: linear-gradient(135deg, #f5ede0 60%, #1a3a5522)">
+      <div class="accent-dot" style="background:#1a3a55"></div>
+      <div class="accent-dot" style="background:#24537a"></div>
+      <div class="accent-dot" style="background:#2e6a9e"></div>
+    </div>
+    <h3>B — Ink Blue</h3>
+    <p>Cool, scholarly contrast. Like old maps or indigo dye. Creates a heritage / archival feel against the warm creams.</p>
+    <p class="use-case">Could accent: title, one special hex border, or "¿Quiénes somos?" as a standalone element</p>
+    <br>
+    <span class="mock-label" style="border: 2px solid #1a3a55;">Quiénes somos</span>
+  </div>
+
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="c">
+    <div class="accent-preview" style="background: linear-gradient(135deg, #f5ede0 60%, #5a1a1a22)">
+      <div class="accent-dot" style="background:#5a1a1a"></div>
+      <div class="accent-dot" style="background:#7a2525"></div>
+      <div class="accent-dot" style="background:#9a3030"></div>
+    </div>
+    <h3>C — Deep Terracotta Red</h3>
+    <p>Warm but dramatically deeper than the current palette. Like fired clay or old leather bindings. Stays in family but creates real hierarchy.</p>
+    <p class="use-case">Could accent: the center hex border, main title, or call-to-action label</p>
+    <br>
+    <span class="mock-label" style="border: 2px solid #7a2525;">Quiénes somos</span>
+  </div>
+
+  <div class="option-card" onclick="this.classList.toggle('selected')" data-choice="d">
+    <div class="accent-preview" style="background: linear-gradient(135deg, #f5ede0 60%, #3a2a5022)">
+      <div class="accent-dot" style="background:#3a2a50"></div>
+      <div class="accent-dot" style="background:#52407a"></div>
+      <div class="accent-dot" style="background:#7060a0"></div>
+    </div>
+    <h3>D — Dusty Plum / Aubergine</h3>
+    <p>Not quite warm, not quite cool — sits between the two. Feels ceremonial or ancient. Less contrast than blue/green but still breaks the palette.</p>
+    <p class="use-case">Could accent: labels on hover, the title script word "Intangible", or quienes somos</p>
+    <br>
+    <span class="mock-label" style="border: 2px solid #52407a;">Quiénes somos</span>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -7,7 +7,25 @@
       "Bash(cp \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(1\\).png\" /home/cobeta/code/ruta-interactiva/assets/images/patrimonio/hex-1.png)",
       "Bash(cp \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(2\\).png\" /home/cobeta/code/ruta-interactiva/assets/images/patrimonio/hex-2.png)",
       "Bash(cp \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(3\\).png\" /home/cobeta/code/ruta-interactiva/assets/images/patrimonio/hex-3.png)",
-      "Bash(cp \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(4\\).png\" /home/cobeta/code/ruta-interactiva/assets/images/patrimonio/hex-4.png)"
+      "Bash(cp \"/mnt/c/Users/Belen/Downloads/image-removebg-preview \\(4\\).png\" /home/cobeta/code/ruta-interactiva/assets/images/patrimonio/hex-4.png)",
+      "Read(//home/bcobe/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/brainstorming/**)",
+      "Read(//home/bcobe/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/scripts/**)",
+      "Read(//home/bcobe/.claude/plugins/**)",
+      "Bash(bash scripts/start-server.sh --project-dir /home/bcobe/code/ruta-interactiva)",
+      "Bash(/home/bcobe/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/brainstorming/scripts/start-server.sh --project-dir /home/bcobe/code/ruta-interactiva)",
+      "Bash(wc -l /home/bcobe/code/ruta-interactiva/assets/*.js)",
+      "Bash(ls -lh /home/bcobe/code/ruta-interactiva/assets/*.js)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f'Total POIs: {len\\(d\\)}'\\); [print\\(f'  {p[\\\\\"id\\\\\"]}: {p[\\\\\"languages\\\\\"][\\\\\"es\\\\\"][\\\\\"name\\\\\"]} | images: {len\\(p[\\\\\"images\\\\\"]\\)} | audio: {p[\\\\\"audio\\\\\"]}'\\) for p in d]\")",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:pymupdf.readthedocs.io)",
+      "Bash(sort -k5 -rn)",
+      "Bash(python3 -c ':*)",
+      "Bash(identify /home/bcobe/code/ruta-interactiva/extracted/images/page02_img016.png /home/bcobe/code/ruta-interactiva/extracted/images/page01_img010.jpeg /home/bcobe/code/ruta-interactiva/extracted/images/page04_img036.png)",
+      "Bash(python3 scripts/triage-images.py)"
+    ],
+    "additionalDirectories": [
+      "/mnt/c/Users/bcobe/Downloads",
+      "/home/bcobe/code/ruta-interactiva/docs/superpowers"
     ]
   }
 }
