@@ -21,7 +21,8 @@
       "Bash(sort -k5 -rn)",
       "Bash(python3 -c ':*)",
       "Bash(identify /home/bcobe/code/ruta-interactiva/extracted/images/page02_img016.png /home/bcobe/code/ruta-interactiva/extracted/images/page01_img010.jpeg /home/bcobe/code/ruta-interactiva/extracted/images/page04_img036.png)",
-      "Bash(python3 scripts/triage-images.py)"
+      "Bash(python3 scripts/triage-images.py)",
+      "Read(//extracted/pages/**)"
     ],
     "additionalDirectories": [
       "/mnt/c/Users/bcobe/Downloads",
