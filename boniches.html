@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#f5ede0">
+  <meta name="theme-color" content="#3a2010">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -26,15 +26,27 @@
       --stamp-green: #4a7a2a;
       --stamp-red:   #c0392b;
       --highlight:   #e8d5b0;
+      --gold:        #c9a96e;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
+    html, body {
+      height: 100%; overflow: hidden;
       font-family: 'DM Sans', -apple-system, sans-serif;
       background: var(--paper);
       color: var(--ink);
-      min-height: 100dvh;
+    }
+
+    /* ── Shared ───────────────────────────────────────────────── */
+    .hidden { display: none !important; }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* ── PIN Gate ─────────────────────────────────────────────── */
@@ -43,11 +55,8 @@
       background: var(--paper);
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90'%3E%3Cellipse cx='60' cy='45' rx='57' ry='42' fill='none' stroke='rgba(107,66,38,0.06)' stroke-width='1'/%3E%3Cellipse cx='60' cy='45' rx='40' ry='28' fill='none' stroke='rgba(107,66,38,0.05)' stroke-width='1'/%3E%3Cellipse cx='60' cy='45' rx='23' ry='16' fill='none' stroke='rgba(107,66,38,0.04)' stroke-width='1'/%3E%3C/svg%3E");
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 2rem;
-      gap: 1.5rem;
+      padding: 2rem; gap: 1.5rem;
     }
-
-    #pin-gate.hidden { display: none; }
 
     .pin-logo {
       font-family: 'Fraunces', serif;
@@ -57,7 +66,6 @@
       text-align: center;
       line-height: 1.2;
     }
-
     .pin-logo span {
       display: block;
       font-size: 0.55em;
@@ -67,7 +75,6 @@
       text-transform: uppercase;
       margin-top: 0.3rem;
     }
-
     .pin-subtitle {
       font-size: 0.95rem;
       color: var(--leather-mid);
@@ -75,735 +82,727 @@
       max-width: 280px;
       line-height: 1.5;
     }
-
     .pin-input-row {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
+      display: flex; gap: 0.75rem; align-items: center;
     }
-
     #pin-input {
       font-family: 'Fraunces', serif;
-      font-size: 2rem;
-      font-weight: 600;
+      font-size: 2rem; font-weight: 600;
       color: var(--leather);
       background: var(--paper-card);
       border: 2px solid var(--border);
       border-radius: 8px;
       padding: 0.5rem 1rem;
-      width: 140px;
-      text-align: center;
+      width: 140px; text-align: center;
       letter-spacing: 0.3em;
-      outline: none;
-      transition: border-color 0.2s;
+      outline: none; transition: border-color 0.2s;
       -webkit-appearance: none;
     }
-
     #pin-input:focus { border-color: var(--leather); }
     #pin-input.error { border-color: var(--stamp-red); animation: shake 0.3s; }
-
     @keyframes shake {
       0%,100% { transform: translateX(0); }
       25% { transform: translateX(-6px); }
       75% { transform: translateX(6px); }
     }
-
     #pin-submit {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 1rem; font-weight: 600;
       color: var(--paper-card);
       background: var(--leather);
-      border: none;
       border-radius: 8px;
       padding: 0.65rem 1.4rem;
-      cursor: pointer;
       transition: background 0.15s, transform 0.1s;
     }
-
     #pin-submit:active { transform: scale(0.96); }
     #pin-submit:hover { background: var(--ink); }
-
     #pin-error {
-      font-size: 0.85rem;
-      color: var(--stamp-red);
-      text-align: center;
-      min-height: 1.2rem;
+      font-size: 0.85rem; color: var(--stamp-red);
+      text-align: center; min-height: 1.2rem;
     }
+    #pin-skip {
+      font-size: 0.78rem;
+      color: var(--leather-mid);
+      text-decoration: underline;
+      opacity: 0.6;
+      margin-top: -0.5rem;
+    }
+    #pin-skip:hover { opacity: 1; }
 
     /* ── Expired Screen ───────────────────────────────────────── */
     #expired-screen {
       position: fixed; inset: 0; z-index: 9000;
       background: var(--paper);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 2rem;
-      gap: 1.2rem;
-      text-align: center;
+      padding: 2rem; gap: 1.2rem; text-align: center;
     }
-
-    #expired-screen.hidden { display: none; }
-
     .expired-title {
       font-family: 'Fraunces', serif;
       font-size: clamp(1.4rem, 4vw, 1.8rem);
-      font-weight: 700;
-      color: var(--leather);
+      font-weight: 700; color: var(--leather);
     }
-
     .expired-body {
-      font-size: 0.95rem;
-      color: var(--leather-mid);
-      max-width: 300px;
-      line-height: 1.6;
+      font-size: 0.95rem; color: var(--leather-mid);
+      max-width: 300px; line-height: 1.6;
     }
-
     .expired-contact {
       background: var(--paper-card);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem 1.5rem;
-      font-size: 0.9rem;
-      color: var(--ink);
-      line-height: 1.8;
+      border-radius: 10px; padding: 1rem 1.5rem;
+      font-size: 0.9rem; color: var(--ink); line-height: 1.8;
     }
-
     .expired-contact a { color: var(--leather); text-decoration: none; }
 
-    .expired-copy {
-      font-size: 0.75rem;
-      color: var(--leather-mid);
-      margin-top: 0.5rem;
-    }
-
-    /* ── App (hidden until unlocked) ──────────────────────────── */
+    /* ── App Shell ────────────────────────────────────────────── */
     #app {
-      display: none;
-      flex-direction: column;
-      height: 100dvh;
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
     }
 
-    #app.visible { display: flex; }
-
-    /* ── Top Bar ──────────────────────────────────────────────── */
     #topbar {
       display: flex; align-items: center;
       padding: 0 14px; height: 52px;
       background: var(--paper-card);
       border-bottom: 1px solid var(--border);
-      flex-shrink: 0; gap: 10px; z-index: 1000;
+      flex-shrink: 0; gap: 10px; z-index: 10;
     }
-
-    #back-btn {
-      width: 32px; height: 32px;
-      border-radius: 7px;
-      border: 1px solid var(--border);
-      background: var(--paper);
-      color: var(--leather-mid);
-      cursor: pointer; display: flex;
-      align-items: center; justify-content: center;
-      text-decoration: none; flex-shrink: 0;
-    }
-
     #route-title {
       flex: 1;
       font-family: 'Fraunces', serif;
       font-size: 1.05rem; font-weight: 600;
       color: var(--leather);
     }
-
-    #topbar-right { display: flex; gap: 8px; }
-
     #gps-btn {
       width: 32px; height: 32px;
-      border-radius: 7px;
-      border: 1px solid var(--border);
-      background: var(--paper);
-      color: var(--leather-mid);
-      cursor: pointer; display: flex;
-      align-items: center; justify-content: center;
+      border-radius: 7px; border: 1px solid var(--border);
+      background: var(--paper); color: var(--leather-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
     }
-
     #gps-btn.active { background: var(--stamp-green); color: #fff; border-color: var(--stamp-green); }
 
-    /* ── Map / Panel Layout ───────────────────────────────────── */
-    #map {
-      flex: 1;
-      z-index: 1;
-    }
-
-    #mission-panel {
+    /* ── Tab Bar ──────────────────────────────────────────────── */
+    #tab-bar {
+      display: flex; flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
       background: var(--paper-card);
-      border-top: 1px solid var(--border);
-      overflow-y: auto;
-      flex-shrink: 0;
-      height: 180px;
     }
-
-    @media (min-width: 768px) {
-      #app.visible {
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-      #topbar { width: 100%; }
-      #map { flex: 0 0 40%; height: calc(100dvh - 52px); }
-      #mission-panel {
-        flex: 0 0 60%;
-        height: calc(100dvh - 52px);
-        border-top: none;
-        border-left: 1px solid var(--border);
-      }
-    }
-
-    /* ── Mission List ─────────────────────────────────────────── */
-    #mission-list { padding: 0.75rem; display: flex; gap: 0.5rem; overflow-x: auto; }
-
-    @media (min-width: 768px) {
-      #mission-list { flex-direction: column; overflow-x: hidden; padding: 1rem; }
-    }
-
-    .mission-item {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.6rem 0.9rem;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: background 0.15s, border-color 0.15s;
-      min-width: 160px;
-    }
-
-    @media (min-width: 768px) { .mission-item { min-width: unset; } }
-
-    .mission-item:hover { background: var(--highlight); border-color: var(--leather-mid); }
-    .mission-item.active { background: var(--highlight); border-color: var(--leather); }
-
-    .mission-item-num {
-      font-size: 0.65rem; font-weight: 600;
-      color: var(--leather-mid);
-      text-transform: uppercase; letter-spacing: 0.08em;
-    }
-
-    .mission-item-name {
-      font-family: 'Fraunces', serif;
-      font-size: 0.9rem; color: var(--leather);
-      margin-top: 0.1rem;
-    }
-
-    /* ── Modal ────────────────────────────────────────────────── */
-    #modal-overlay {
-      position: fixed; inset: 0; z-index: 2000;
-      background: rgba(58, 32, 16, 0.4);
-      backdrop-filter: blur(2px);
-    }
-
-    #modal {
-      position: fixed; z-index: 2001;
-      background: var(--paper-card);
-      border: 1px solid var(--border);
-      border-radius: 14px 14px 0 0;
-      bottom: 0; left: 0; right: 0;
-      max-height: 82dvh;
-      overflow-y: auto;
-      padding: 1.25rem 1.25rem 2rem;
-      box-shadow: 0 -4px 24px rgba(58,32,16,0.18);
-    }
-
-    @media (min-width: 768px) {
-      #modal {
-        left: 40%; right: 0;
-        border-radius: 0;
-        max-height: calc(100dvh - 52px);
-        bottom: 0; top: 52px;
-        border-left: 2px solid var(--leather);
-        box-shadow: none;
-      }
-    }
-
-    #modal-overlay.hidden, #modal.hidden { display: none; }
-
-    #modal-close {
-      position: absolute; top: 1rem; right: 1rem;
-      width: 28px; height: 28px;
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      background: var(--paper);
-      color: var(--leather-mid);
-      cursor: pointer; font-size: 0.8rem;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    /* ── Modal Tabs ───────────────────────────────────────────── */
-    #modal-tabs {
-      display: flex; gap: 0.4rem;
-      margin-bottom: 1rem; flex-wrap: wrap;
-      padding-top: 0.2rem;
-    }
-
     .tab-btn {
-      font-size: 0.78rem; font-weight: 600;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--paper);
+      flex: 1;
+      padding: 10px 0;
+      font-size: 0.9rem; font-weight: 500;
       color: var(--leather-mid);
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
     }
-
     .tab-btn.active {
-      background: var(--leather);
-      color: var(--paper-card);
-      border-color: var(--leather);
-    }
-
-    /* ── Modal Content ────────────────────────────────────────── */
-    .modal-mission-name {
-      font-family: 'Fraunces', serif;
-      font-size: 1.3rem; font-weight: 700;
       color: var(--leather);
-      margin-bottom: 0.75rem;
-      padding-right: 2rem;
+      border-bottom-color: var(--leather);
+      font-weight: 600;
     }
 
-    .modal-description {
-      font-size: 0.9rem; color: var(--ink);
-      line-height: 1.7; margin-bottom: 1rem;
+    /* ── Screens ──────────────────────────────────────────────── */
+    .screen {
+      flex: 1; overflow: hidden;
+      display: flex; flex-direction: column;
+      min-height: 0;
     }
+    .screen.hidden { display: none !important; }
 
-    .mission-challenge {
-      background: var(--highlight);
-      border-left: 3px solid var(--leather);
-      border-radius: 0 8px 8px 0;
-      padding: 0.7rem 1rem;
-      font-size: 0.85rem; color: var(--leather);
-      font-weight: 600; margin-bottom: 1rem;
-    }
+    #map { flex: 1; z-index: 1; }
 
-    .mission-wanted {
-      display: block; width: 120px; margin: 0 auto 0.8rem;
-      border-radius: 4px; box-shadow: 2px 3px 8px rgba(0,0,0,0.3);
-    }
-    .mission-habitat {
-      display: block; width: 100%; max-height: 160px; object-fit: cover;
-      border-radius: 8px; margin-bottom: 0.8rem;
-    }
+    /* ── Mission List Screen ──────────────────────────────────── */
+    #screen-missions { overflow-y: auto; }
 
-    /* ── Species Grid ─────────────────────────────────────────── */
-    .species-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 0.75rem;
+    .mission-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      background: var(--paper-card);
+      transition: background 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
+    .mission-row:hover, .mission-row:active { background: var(--highlight); }
 
-    .species-card {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.75rem;
-    }
-
-    .species-card img {
-      width: 100%; aspect-ratio: 1;
-      object-fit: cover;
-      border-radius: 4px;
-      margin-bottom: 0.4rem;
-      background: var(--highlight);
-    }
-    .species-img-strip {
-      display: flex; gap: 3px; margin-bottom: 0.4rem;
-      border-radius: 4px; overflow: hidden;
-    }
-    .species-img-strip img {
-      flex: 1; aspect-ratio: 1; margin-bottom: 0;
-      object-fit: cover; border-radius: 0;
-    }
-
-    .species-img-placeholder {
-      width: 100%; aspect-ratio: 1;
-      background: var(--highlight);
-      border-radius: 4px;
-      margin-bottom: 0.4rem;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.8rem;
-    }
-
-    .species-common {
-      font-size: 0.8rem; font-weight: 600;
-      color: var(--leather); line-height: 1.3;
-    }
-
-    .species-scientific {
-      font-family: 'IM Fell English', serif;
-      font-style: italic;
-      font-size: 0.72rem; color: var(--leather-mid);
-      margin: 0.15rem 0;
-    }
-
-    .species-note {
-      font-size: 0.72rem; color: var(--ink);
-      line-height: 1.4; margin-top: 0.2rem;
-    }
-
-    /* ── Geology Cards ────────────────────────────────────────── */
-    .geology-list { display: flex; flex-direction: column; gap: 0.75rem; }
-
-    .geology-card {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      border-radius: 8px; padding: 0.75rem 1rem;
-    }
-
-    .geology-name {
-      font-family: 'Fraunces', serif;
-      font-size: 0.95rem; font-weight: 600; color: var(--leather);
-    }
-
-    .geology-age {
-      font-size: 0.72rem; color: var(--leather-mid);
-      margin: 0.1rem 0 0.4rem;
-      font-weight: 600; letter-spacing: 0.04em;
-    }
-
-    .geology-note { font-size: 0.82rem; color: var(--ink); line-height: 1.5; }
-
-    /* ── Compass Tab ──────────────────────────────────────────── */
-    .compass-steps {
-      list-style: none; display: flex; flex-direction: column; gap: 0.6rem;
-      counter-reset: step;
-    }
-
-    .compass-steps li {
-      counter-increment: step;
-      display: flex; gap: 0.75rem; align-items: flex-start;
-      font-size: 0.88rem; color: var(--ink); line-height: 1.5;
-    }
-
-    .compass-steps li::before {
-      content: counter(step);
+    .mission-badge {
+      width: 40px; height: 40px; flex-shrink: 0;
+      border-radius: 10px;
       background: var(--leather);
       color: var(--paper-card);
-      width: 22px; height: 22px;
-      border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.72rem; font-weight: 700;
-      flex-shrink: 0; margin-top: 1px;
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem; font-weight: 700;
+      position: relative;
+    }
+    .mission-badge.done {
+      background: var(--stamp-green);
+    }
+    .mission-badge.done::after {
+      content: '✓';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; color: white;
+    }
+    .mission-badge.done > span { display: none; }
+
+    .mission-text { flex: 1; min-width: 0; }
+    .mission-name {
+      font-weight: 600; font-size: 0.95rem;
+      color: var(--ink);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .mission-desc {
+      font-size: 0.78rem; color: var(--leather-mid);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .mission-chevron {
+      font-size: 1.1rem; color: var(--border); flex-shrink: 0;
     }
 
-    .landmark-list {
-      display: flex; flex-direction: column; gap: 0.4rem;
-      margin-top: 1rem;
+    /* Thumbnail strip for mission list */
+    .mission-thumb {
+      width: 44px; height: 44px; flex-shrink: 0;
+      border-radius: 8px;
+      background: var(--highlight);
+      overflow: hidden;
+    }
+    .mission-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .mission-thumb-emoji {
+      width: 44px; height: 44px; flex-shrink: 0;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--highlight), var(--border));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
     }
 
-    .landmark-item {
-      font-size: 0.85rem; color: var(--ink);
-      padding: 0.4rem 0.7rem;
+    /* ── Story Screen ─────────────────────────────────────────── */
+    #story-screen {
+      position: fixed; inset: 0; z-index: 200;
+      overflow: hidden;
+      background: #0a0a1a;
+    }
+
+    #story-bg {
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: opacity 0.4s;
+    }
+    #story-bg.kb {
+      animation: ken-burns 14s ease-in-out infinite alternate;
+    }
+    @keyframes ken-burns {
+      from { transform: scale(1); }
+      to   { transform: scale(1.07); }
+    }
+
+    #story-vignette {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.45) 0%,
+        rgba(0,0,0,0.1) 35%,
+        rgba(0,0,0,0.1) 55%,
+        rgba(0,0,0,0.7) 100%
+      );
+      pointer-events: none;
+    }
+
+    #story-topbar {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 52px;
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 14px;
+      z-index: 10;
+    }
+    #story-close {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.35);
+      color: rgba(255,255,255,0.9);
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    #story-mission-label {
+      flex: 1;
+      font-size: 0.85rem; font-weight: 600;
+      color: rgba(255,255,255,0.8);
+      letter-spacing: 0.03em;
+    }
+    #story-frame-counter {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      flex-shrink: 0;
+    }
+
+    #story-progress {
+      position: absolute; top: 52px; left: 0; right: 0;
+      height: 2px; background: rgba(255,255,255,0.15); z-index: 10;
+    }
+    #story-progress-fill {
+      height: 100%;
+      background: var(--gold);
+      transition: width 0.4s ease;
+    }
+
+    /* Tap zones */
+    #story-tap-left, #story-tap-right {
+      position: absolute; top: 54px; bottom: 70px; z-index: 5;
+      width: 40%;
+    }
+    #story-tap-left  { left: 0; }
+    #story-tap-right { right: 0; }
+
+    /* Story content area */
+    #story-content {
+      position: absolute;
+      top: 54px; left: 0; right: 0; bottom: 70px;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      padding: 20px 24px 12px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .sr-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.4rem, 5vw, 1.9rem);
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      line-height: 1.2;
+    }
+    .sr-subtitle {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .sr-media {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 0;
+      margin: 8px 0;
+    }
+    .sr-image-card {
+      max-height: 100%;
+      max-width: min(200px, 60vw);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.25);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .sr-image-card img {
+      display: block;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      max-height: 160px;
+    }
+    .sr-icon {
+      font-size: clamp(3rem, 10vw, 4.5rem);
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.6));
+    }
+    .sr-chips {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 6px; margin: 4px 0;
+    }
+    .sr-chip {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.9);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+    }
+    .sr-narration {
+      font-family: 'IM Fell English', serif;
+      font-size: clamp(0.82rem, 2.5vw, 0.95rem);
+      line-height: 1.65;
+      color: rgba(255,255,255,0.88);
+      max-width: 340px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+      margin-top: 6px;
+    }
+
+    /* Layered reveal animation */
+    .story-reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .story-reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Story bottom nav */
+    #story-nav {
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 70px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px 8px;
+      z-index: 10;
+    }
+    .sn-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+      font-size: 1.4rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+      backdrop-filter: blur(4px);
+    }
+    .sn-btn:hover { background: rgba(255,255,255,0.22); }
+    .sn-btn.ghost { opacity: 0; pointer-events: none; }
+    .sn-dots {
+      display: flex; gap: 6px; align-items: center;
+    }
+    .sn-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transition: all 0.25s;
+    }
+    .sn-dot.active {
+      background: var(--gold);
+      width: 18px; border-radius: 3px;
+    }
+    .sn-field-btn {
+      background: var(--gold);
+      color: #1a0a00;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 10px 16px;
+      border-radius: 24px;
+      display: flex; align-items: center; gap: 6px;
+      transition: transform 0.1s, background 0.15s;
+    }
+    .sn-field-btn:active { transform: scale(0.96); }
+
+    /* ── Field Card Screen ────────────────────────────────────── */
+    #field-card-screen {
+      position: fixed; inset: 0; z-index: 300;
       background: var(--paper);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+
+    #fc-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 14px; height: 52px;
+      background: var(--paper-card);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    #fc-back {
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--leather);
+      display: flex; align-items: center; gap: 4px;
+    }
+    #fc-title-block {
+      flex: 1; min-width: 0; text-align: center;
+    }
+    #fc-mission-num {
+      font-size: 0.7rem; font-weight: 600;
+      color: var(--leather-mid);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    #fc-name {
+      font-family: 'Fraunces', serif;
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--leather);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    #fc-replay {
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--leather-mid);
+      display: flex; align-items: center; gap: 3px;
+      padding: 6px 10px;
       border: 1px solid var(--border);
       border-radius: 6px;
     }
 
-    /* ── Gallery ──────────────────────────────────────────────── */
-    .gallery-wrap { display: flex; flex-direction: column; gap: 0.75rem; }
-
-    .gallery-img {
-      width: 100%; border-radius: 8px;
-      border: 1px solid var(--border);
+    #fc-hero {
+      height: 120px; flex-shrink: 0;
+      position: relative; overflow: hidden;
+    }
+    #fc-hero-img {
+      width: 100%; height: 100%;
       object-fit: cover;
     }
-
-    /* ── Audio Player ─────────────────────────────────────────── */
-    .audio-player {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      border-radius: 10px; padding: 1rem;
-      display: flex; flex-direction: column; gap: 0.6rem;
+    #fc-hero-gradient {
+      width: 100%; height: 100%;
     }
-
-    .audio-label {
-      font-family: 'Fraunces', serif;
-      font-size: 0.9rem; color: var(--leather); font-weight: 600;
+    .fc-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.4) 100%);
     }
-
-    .audio-controls { display: flex; align-items: center; gap: 0.75rem; }
-
-    .audio-play-btn {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: var(--leather);
-      border: none; color: var(--paper-card);
-      font-size: 1rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+    #fc-challenge {
       flex-shrink: 0;
+      margin: 12px 16px 0;
+      padding: 10px 14px;
+      background: var(--highlight);
+      border-left: 3px solid var(--leather);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.85rem;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    #fc-challenge-label {
+      font-weight: 700; color: var(--leather);
+      font-size: 0.78rem; text-transform: uppercase;
+      letter-spacing: 0.06em; margin-bottom: 3px;
     }
 
-    .audio-progress {
-      flex: 1; height: 4px;
-      background: var(--border);
-      border-radius: 2px; cursor: pointer;
-      position: relative;
+    #fc-body {
+      flex: 1; overflow-y: auto;
+      padding: 12px 16px 24px;
     }
 
-    .audio-progress-fill {
-      height: 100%; background: var(--leather);
-      border-radius: 2px; width: 0%;
-      transition: width 0.1s linear;
+    .fc-section {
+      margin-bottom: 16px;
+    }
+    .fc-section-title {
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--leather);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
     }
 
-    .audio-time {
-      font-size: 0.75rem; color: var(--leather-mid);
-      font-variant-numeric: tabular-nums;
-      min-width: 36px; text-align: right;
+    .fc-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(212,184,150,0.4);
     }
+    .fc-item:last-child { border-bottom: none; }
 
-    /* ── Story Overlay ────────────────────────────────────────── */
-    #story {
-      position: fixed; inset: 0; z-index: 3000;
-      background: #1a0f07;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      cursor: pointer;
-      user-select: none;
-    }
-    #story.hidden { display: none; }
-
-    #story-scene {
-      position: relative;
-      width: 100%; flex: 1;
+    .fc-check {
+      width: 22px; height: 22px; flex-shrink: 0;
+      border-radius: 5px; border: 2px solid var(--border);
       display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
-      padding: 1rem;
+      cursor: pointer; transition: all 0.2s;
+      background: var(--paper-card);
+    }
+    .fc-check.checked {
+      background: var(--stamp-green);
+      border-color: var(--stamp-green);
+    }
+    .fc-check.checked::after {
+      content: '✓';
+      font-size: 0.75rem; color: white; font-weight: 700;
     }
 
-    /* Scene types */
-    .scene-wanted {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      animation: storyZoomIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+    .fc-thumb {
+      width: 48px; height: 48px; flex-shrink: 0;
+      border-radius: 8px; overflow: hidden;
+      background: var(--highlight);
     }
-    .scene-wanted img {
-      max-width: min(340px, 80vw);
-      max-height: 70vh;
-      object-fit: contain;
-      filter: drop-shadow(0 8px 32px rgba(0,0,0,0.7));
+    .fc-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
     }
-
-    .scene-text {
-      max-width: min(560px, 92vw);
-      animation: storyFadeUp 0.5s ease both;
-    }
-    .scene-text .story-label {
-      font-family: 'Georgia', serif;
-      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
-      color: #a07040; margin-bottom: 0.5rem;
-    }
-    .scene-text .story-title {
-      font-family: 'Georgia', serif;
-      font-size: clamp(1.2rem, 4vw, 1.8rem);
-      color: #f5ede0; font-weight: bold;
-      margin-bottom: 0.75rem; line-height: 1.3;
-    }
-    .scene-text .story-body {
-      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
-      color: #d4b896; line-height: 1.65;
-    }
-    .scene-text .story-stamp {
-      display: inline-block;
-      border: 2px solid #4a7a2a; border-radius: 4px;
-      color: #4a7a2a; font-size: 0.75rem; letter-spacing: 0.1em;
-      text-transform: uppercase; padding: 0.2rem 0.6rem;
-      margin-bottom: 0.75rem;
-      opacity: 0.85;
+    .fc-thumb-emoji {
+      width: 48px; height: 48px; flex-shrink: 0;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
     }
 
-    /* Animations */
-    @keyframes storyZoomIn {
-      from { opacity: 0; transform: scale(0.1); }
-      to   { opacity: 1; transform: scale(1); }
+    .fc-item-text { flex: 1; min-width: 0; }
+    .fc-item-name {
+      font-weight: 600; font-size: 0.9rem;
+      color: var(--ink);
+      transition: color 0.2s;
     }
-    @keyframes storyFadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .fc-item-name.done {
+      text-decoration: line-through;
+      color: var(--leather-mid);
+    }
+    .fc-item-scientific {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: 0.78rem; color: var(--leather-mid);
+      margin-top: 1px;
+    }
+    .fc-item-note {
+      font-size: 0.78rem; color: var(--leather-mid);
+      line-height: 1.4; margin-top: 2px;
     }
 
-    /* Progress dots */
-    #story-progress {
-      display: flex; gap: 6px;
-      padding: 0.5rem 0 0.25rem;
+    /* Geology / Landmark items (no image) */
+    .fc-item-geo .fc-item-name {
+      font-size: 0.88rem;
     }
-    .story-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #4a4030; transition: background 0.3s;
+    .fc-item-geo .fc-item-note {
+      font-size: 0.77rem;
     }
-    .story-dot.active { background: #c8943a; }
-    .story-dot.done   { background: #6b4226; }
 
-    /* Controls */
-    #story-controls {
-      display: flex; gap: 1rem; align-items: center;
-      padding: 0.5rem 0;
+    /* Completion stamp */
+    #fc-complete-banner {
+      display: none;
+      margin: 12px 16px 0;
+      padding: 12px 16px;
+      background: var(--stamp-green);
+      border-radius: 8px;
+      text-align: center;
     }
-    #story-controls button {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 50%; color: #f5ede0;
-      width: 40px; height: 40px; font-size: 1.1rem;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
+    #fc-complete-banner.show { display: block; }
+    .fc-complete-text {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem; font-weight: 700;
+      color: white;
     }
-    #story-controls button:hover { background: rgba(255,255,255,0.16); }
-    #story-play.playing::after { content: '⏸'; }
-    #story-play:not(.playing)::after { content: '▶'; }
-    #story-play { font-size: 0; } /* hide ▶ text, use ::after */
+    .fc-complete-sub {
+      font-size: 0.8rem; color: rgba(255,255,255,0.8);
+      margin-top: 2px;
+    }
 
-    /* Corner buttons */
-    #story-close, #story-skip {
-      position: absolute;
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 20px; color: #d4b896;
-      cursor: pointer; font-size: 0.8rem; padding: 0.3rem 0.8rem;
-    }
-    #story-close { top: 1rem; left: 1rem; width: 32px; height: 32px;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      padding: 0; font-size: 0.9rem; }
-    #story-skip  { top: 1rem; right: 1rem; }
+    /* Scrollbar styling */
+    #fc-body::-webkit-scrollbar { width: 4px; }
+    #fc-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
   </style>
 </head>
 <body>
 
-<!-- ── PIN Gate ──────────────────────────────────────────────────────────── -->
+<!-- ── PIN Gate ──────────────────────────────────────────────────────── -->
 <div id="pin-gate">
   <div class="pin-logo">
-    Cuaderno de Campo
-    <span>Misión Boniches · Cuenca</span>
+    Misión Boniches
+    <span>Ruta Interactiva · Cuenca</span>
   </div>
-  <p class="pin-subtitle">Introduce el código de hoy para comenzar la aventura</p>
+  <p class="pin-subtitle">Introduce el código de hoy para comenzar la aventura.</p>
   <div class="pin-input-row">
-    <input id="pin-input" type="number" inputmode="numeric" maxlength="4"
-           placeholder="····" autocomplete="off" aria-label="Código PIN">
-    <button id="pin-submit">→</button>
+    <input id="pin-input" type="number" inputmode="numeric" placeholder="····" maxlength="4" autocomplete="off">
+    <button id="pin-submit">Entrar</button>
   </div>
   <p id="pin-error"></p>
+  <button id="pin-skip">Saltar (solo desarrollo)</button>
 </div>
 
-<!-- ── Expired Screen ────────────────────────────────────────────────────── -->
+<!-- ── Expired Screen ────────────────────────────────────────────────── -->
 <div id="expired-screen" class="hidden">
-  <div class="expired-title">Esta guía ha caducado</div>
-  <p class="expired-body">Para organizar una nueva sesión o actividad en Boniches:</p>
+  <p class="expired-title">Acceso bloqueado</p>
+  <p class="expired-body">Has superado el número de intentos. Solicita el código de hoy a tu guía.</p>
   <div class="expired-contact">
-    📧 <a href="mailto:noelia.ch9@gmail.com">noelia.ch9@gmail.com</a><br>
-    🌐 <a href="https://www.noeliachaparro.es">www.noeliachaparro.es</a>
+    <strong>Guías de Boniches</strong><br>
+    <a href="tel:+34000000000">+34 000 000 000</a>
   </div>
-  <p class="expired-copy">© 2025 Noelia Chaparro Puente — Guía de la Naturaleza y Educadora Ambiental</p>
 </div>
 
-<!-- ── App ───────────────────────────────────────────────────────────────── -->
+<!-- ── Main App ───────────────────────────────────────────────────────── -->
 <div id="app">
-
-  <!-- ── Top Bar ────────────────────────────────────────────────────────── -->
   <div id="topbar">
-    <a href="index.html" id="back-btn" aria-label="Volver">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <div id="route-title">Boniches · Reajo del Valhondo</div>
+    <button id="gps-btn" title="Mi posición">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/>
       </svg>
-    </a>
-    <div id="route-title">Misión Boniches</div>
-    <div id="topbar-right">
-      <button id="gps-btn" aria-label="GPS">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-          <path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </button>
-    </div>
+    </button>
   </div>
 
-  <!-- ── Map ───────────────────────────────────────────────────────────── -->
-  <div id="map"></div>
+  <div id="tab-bar">
+    <button class="tab-btn active" data-tab="map">🗺️ Mapa</button>
+    <button class="tab-btn" data-tab="missions">🎯 Misiones</button>
+  </div>
 
-  <!-- ── Mission Panel ─────────────────────────────────────────────────── -->
-  <div id="mission-panel">
+  <div id="screen-map" class="screen">
+    <div id="map"></div>
+  </div>
+
+  <div id="screen-missions" class="screen hidden">
     <div id="mission-list"></div>
   </div>
-
-  <!-- ── Mission Modal ─────────────────────────────────────────────────── -->
-  <div id="modal-overlay" class="hidden"></div>
-  <div id="modal" class="hidden">
-    <button id="modal-close" aria-label="Cerrar">✕</button>
-    <div id="modal-tabs"></div>
-    <div id="modal-content"></div>
-  </div>
-
-  <!-- ── Story Overlay ──────────────────────────────────────────────────── -->
-  <div id="story" class="hidden">
-    <div id="story-scene"></div>
-    <div id="story-controls">
-      <button id="story-prev" aria-label="Anterior">‹</button>
-      <button id="story-play" aria-label="Autoplay">▶</button>
-      <button id="story-next" aria-label="Siguiente">›</button>
-    </div>
-    <div id="story-progress"></div>
-    <button id="story-close" aria-label="Cerrar historia">✕</button>
-    <button id="story-skip" aria-label="Ver ficha">Ver ficha →</button>
-  </div>
-
 </div>
 
+<!-- ── Story Screen ───────────────────────────────────────────────────── -->
+<div id="story-screen" class="hidden">
+  <div id="story-bg"></div>
+  <div id="story-vignette"></div>
+
+  <div id="story-topbar">
+    <button id="story-close">✕</button>
+    <div id="story-mission-label"></div>
+    <div id="story-frame-counter"></div>
+  </div>
+
+  <div id="story-progress">
+    <div id="story-progress-fill"></div>
+  </div>
+
+  <div id="story-content"></div>
+
+  <div id="story-tap-left"></div>
+  <div id="story-tap-right"></div>
+
+  <div id="story-nav"></div>
+</div>
+
+<!-- ── Field Card Screen ──────────────────────────────────────────────── -->
+<div id="field-card-screen" class="hidden">
+  <div id="fc-header">
+    <button id="fc-back">← Mapa</button>
+    <div id="fc-title-block">
+      <div id="fc-mission-num"></div>
+      <div id="fc-name"></div>
+    </div>
+    <button id="fc-replay">↺ Historia</button>
+  </div>
+
+  <div id="fc-hero"></div>
+  <div id="fc-complete-banner">
+    <div class="fc-complete-text">🏅 ¡Misión completada!</div>
+    <div class="fc-complete-sub">Has encontrado todo. ¡Bien hecho!</div>
+  </div>
+  <div id="fc-challenge"></div>
+  <div id="fc-body"></div>
+</div>
+
+<!-- ── PIN Script (immediate) ─────────────────────────────────────────── -->
 <script>
 'use strict';
+(function () {
+  const SESSION_KEY = 'boniches-unlocked';
 
-// ── PIN logic ──────────────────────────────────────────────────────────────
-function todayPin() {
-  const now = new Date();
-  const d = now.getDate();
-  const m = now.getMonth() + 1;
-  return ((d * 37 + m * 13 + 7) % 9000) + 1000;
-}
+  function dailyPin() {
+    const d = new Date();
+    return ((d.getDate() * 37 + (d.getMonth() + 1) * 13 + 7) % 9000) + 1000;
+  }
 
-function todayKey() {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-}
+  function unlock() {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('pin-gate').classList.add('hidden');
+    document.getElementById('app').style.display = 'flex';
+    document.dispatchEvent(new Event('appUnlocked'));
+  }
 
-function checkSession() {
-  try {
-    const stored = JSON.parse(sessionStorage.getItem('bonichesUnlocked') || 'null');
-    return stored && stored.date === todayKey();
-  } catch (_) { return false; }
-}
+  function showExpired() {
+    document.getElementById('pin-gate').classList.add('hidden');
+    document.getElementById('expired-screen').classList.remove('hidden');
+  }
 
-function unlockApp() {
-  sessionStorage.setItem('bonichesUnlocked', JSON.stringify({ date: todayKey() }));
-  document.getElementById('pin-gate').classList.add('hidden');
-  document.getElementById('app').classList.add('visible');
-  document.dispatchEvent(new Event('appUnlocked'));
-}
-
-function showExpired() {
-  document.getElementById('pin-gate').classList.add('hidden');
-  document.getElementById('expired-screen').classList.remove('hidden');
-}
-
-// ── Init ───────────────────────────────────────────────────────────────────
-(function init() {
-  if (checkSession()) { unlockApp(); return; }
+  // Already unlocked this session
+  if (sessionStorage.getItem(SESSION_KEY) === '1') { unlock(); return; }
 
   let attempts = 0;
-
-  const input = document.getElementById('pin-input');
-  const errEl = document.getElementById('pin-error');
+  const input  = document.getElementById('pin-input');
+  const errEl  = document.getElementById('pin-error');
 
   function tryPin() {
-    const entered = parseInt(input.value, 10);
-    if (entered === todayPin()) {
-      unlockApp();
-      return;
-    }
+    const val = parseInt(input.value, 10);
+    if (val === dailyPin()) { unlock(); return; }
     attempts++;
     input.value = '';
     input.classList.add('error');
     setTimeout(() => input.classList.remove('error'), 400);
-
     if (attempts >= 3) {
       showExpired();
     } else {
@@ -813,80 +812,104 @@ function showExpired() {
 
   document.getElementById('pin-submit').addEventListener('click', tryPin);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') tryPin(); });
-  input.addEventListener('input', () => {
-    if (input.value.length > 4) input.value = input.value.slice(0, 4);
-  });
+  input.addEventListener('input', () => { if (input.value.length > 4) input.value = input.value.slice(0, 4); });
+  document.getElementById('pin-skip').addEventListener('click', unlock);
 
   input.focus();
 })();
 </script>
 
+<!-- ── Leaflet ─────────────────────────────────────────────────────────── -->
 <script src="assets/leaflet.js"></script>
 <script src="assets/gpx.js"></script>
+
+<!-- ── App Script ─────────────────────────────────────────────────────── -->
 <script>
 'use strict';
 
-// Only run after PIN unlocks the app
+let allPois  = [];
+let allStory = {};
+let currentPoi       = null;
+let currentFrameIdx  = 0;
+let storyAudio       = null;
+let leafletMap       = null;
+let userMarker       = null;
+let watchId          = null;
+let mapMarkers       = {};
+
 document.addEventListener('appUnlocked', initApp);
 
-function initApp() {
-  fetch('routes/boniches/pois.json')
-    .then(r => r.json())
-    .then(pois => {
-      setupMap(pois);
-      setupMissionList(pois);
-    });
+async function initApp() {
+  const [pois, story] = await Promise.all([
+    fetch('routes/boniches/pois.json').then(r => r.json()),
+    fetch('routes/boniches/story.json').then(r => r.json())
+  ]);
+  allPois  = pois;
+  allStory = story;
+  setupTabBar();
+  setupMap();
+  setupMissionList();
 }
 
-let map, userMarker;
+// ── Tabs ──────────────────────────────────────────────────────────────────
+function setupTabBar() {
+  document.querySelectorAll('#tab-bar .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('#tab-bar .tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+      document.getElementById('screen-map').classList.toggle('hidden', tab !== 'map');
+      document.getElementById('screen-missions').classList.toggle('hidden', tab !== 'missions');
+      if (tab === 'map' && leafletMap) leafletMap.invalidateSize();
+    });
+  });
+}
 
-function setupMap(pois) {
-  map = L.map('map', { zoomControl: false, attributionControl: true });
+// ── Map ───────────────────────────────────────────────────────────────────
+function setupMap() {
+  leafletMap = L.map('map', { zoomControl: false, attributionControl: true });
 
   L.tileLayer('https://tile.opentopomap.org/{z}/{x}/{y}.png', {
     maxZoom: 17,
     attribution: '© OpenTopoMap contributors'
-  }).addTo(map);
+  }).addTo(leafletMap);
 
-  // GPX track
   new L.GPX('routes/boniches/route.gpx', {
     async: true,
     polyline_options: { color: '#6b4226', weight: 3, opacity: 0.85 },
     marker_options: { startIconUrl: null, endIconUrl: null, shadowUrl: null }
   }).on('loaded', e => {
-    map.fitBounds(e.target.getBounds(), { padding: [20, 20] });
-  }).addTo(map);
+    leafletMap.fitBounds(e.target.getBounds(), { padding: [20, 20] });
+  }).addTo(leafletMap);
 
-  // Mission markers
-  pois.forEach(poi => addMissionMarker(poi));
+  allPois.forEach(poi => addMapMarker(poi));
 }
 
-function missionIcon(poi) {
-  const num = poi.mission || '·';
+function markerIcon(poi) {
+  const done = isPoiCompleted(poi);
+  const num  = poi.mission;
+  const bg   = done ? '#4a7a2a' : '#6b4226';
   return L.divIcon({
     className: '',
-    html: `<div style="
-      width:32px;height:32px;border-radius:50% 50% 50% 0;
-      background:#6b4226;border:2px solid #fffdf5;
-      transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
-      box-shadow:0 2px 6px rgba(0,0,0,0.3)">
-      <span style="transform:rotate(45deg);color:#fffdf5;font-weight:700;font-size:0.7rem;font-family:sans-serif">${num}</span>
-    </div>`,
+    html: `<div style="width:32px;height:32px;border-radius:50% 50% 50% 0;background:${bg};border:2px solid #fffdf5;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3)"><span style="transform:rotate(45deg);color:#fffdf5;font-weight:700;font-size:0.7rem;font-family:sans-serif">${done ? '✓' : num}</span></div>`,
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -36]
   });
 }
 
-function addMissionMarker(poi) {
-  const marker = L.marker([poi.lat, poi.lon], { icon: missionIcon(poi) });
-  marker.addTo(map);
-  marker.on('click', () => STORIES[poi.id] ? openStory(poi) : openModal(poi));
+function addMapMarker(poi) {
+  const marker = L.marker([poi.lat, poi.lon], { icon: markerIcon(poi) });
+  marker.addTo(leafletMap);
+  marker.on('click', () => openStory(poi));
+  mapMarkers[poi.id] = marker;
 }
 
-// ── GPS tracking ──────────────────────────────────────────────────────────
-let watchId = null;
+function refreshMapMarker(poi) {
+  const m = mapMarkers[poi.id];
+  if (m) m.setIcon(markerIcon(poi));
+}
 
+// GPS
 document.getElementById('gps-btn').addEventListener('click', () => {
   if (watchId) {
     navigator.geolocation.clearWatch(watchId);
@@ -900,9 +923,8 @@ document.getElementById('gps-btn').addEventListener('click', () => {
     const ll = [pos.coords.latitude, pos.coords.longitude];
     if (!userMarker) {
       userMarker = L.circleMarker(ll, {
-        radius: 8, color: '#4a7a2a', fillColor: '#4a7a2a',
-        fillOpacity: 0.9, weight: 2
-      }).addTo(map);
+        radius: 8, color: '#4a7a2a', fillColor: '#4a7a2a', fillOpacity: 0.9, weight: 2
+      }).addTo(leafletMap);
     } else {
       userMarker.setLatLng(ll);
     }
@@ -910,315 +932,364 @@ document.getElementById('gps-btn').addEventListener('click', () => {
 });
 
 // ── Mission List ──────────────────────────────────────────────────────────
-function setupMissionList(pois) {
+function setupMissionList() {
   const list = document.getElementById('mission-list');
-  pois.forEach(poi => {
-    const item = document.createElement('div');
-    item.className = 'mission-item';
-    item.innerHTML = `
-      <div class="mission-item-num">Misión ${poi.mission}</div>
-      <div class="mission-item-name">${poi.languages.es.name.replace(/Misión \d+ · /, '')}</div>
+  list.innerHTML = '';
+  allPois.forEach(poi => {
+    const lang  = poi.languages.es;
+    const done  = isPoiCompleted(poi);
+    const thumb = getMissionThumb(poi);
+    const shortName = lang.name.replace(/Misión \d+ · /, '');
+
+    const row = document.createElement('div');
+    row.className = 'mission-row';
+    row.dataset.id = poi.id;
+    row.innerHTML = `
+      <div class="mission-badge ${done ? 'done' : ''}"><span>${poi.mission}</span></div>
+      ${thumb
+        ? `<div class="mission-thumb"><img src="${thumb}" alt="" loading="lazy"></div>`
+        : `<div class="mission-thumb-emoji">${getMissionEmoji(poi)}</div>`}
+      <div class="mission-text">
+        <div class="mission-name">${shortName}</div>
+        <div class="mission-desc">${lang.challenge || ''}</div>
+      </div>
+      <div class="mission-chevron">›</div>
     `;
-    item.addEventListener('click', () => {
-      map.setView([poi.lat, poi.lon], 16);
-      STORIES[poi.id] ? openStory(poi) : openModal(poi);
-    });
-    list.appendChild(item);
+    row.addEventListener('click', () => openStory(poi));
+    list.appendChild(row);
   });
 }
 
-// ── Modal ─────────────────────────────────────────────────────────────────
-let currentAudio = null;
-
-function openModal(poi) {
-  const lang    = poi.languages.es;
-  const overlay = document.getElementById('modal-overlay');
-  const modal   = document.getElementById('modal');
-  const tabs    = document.getElementById('modal-tabs');
-  const content = document.getElementById('modal-content');
-
-  overlay.classList.remove('hidden');
-  modal.classList.remove('hidden');
-
-  const tabDefs = buildTabs(poi, lang);
-  tabs.innerHTML = '';
-  tabDefs.forEach((tab, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
-    btn.textContent = tab.label;
-    btn.addEventListener('click', () => {
-      tabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderTabContent(tab, lang, content, poi);
-    });
-    tabs.appendChild(btn);
-  });
-
-  renderTabContent(tabDefs[0], lang, content, poi);
+function refreshMissionRow(poi) {
+  const row = document.querySelector(`.mission-row[data-id="${poi.id}"]`);
+  if (!row) return;
+  const badge = row.querySelector('.mission-badge');
+  if (badge) badge.className = `mission-badge ${isPoiCompleted(poi) ? 'done' : ''}`;
 }
 
-function buildTabs(poi, lang) {
-  const tabs = [];
-  tabs.push({ id: 'mision', label: '🧭 Misión' });
-  if (lang.species && lang.species.length > 0)  tabs.push({ id: 'especies', label: '🌿 Especies' });
-  if (lang.fauna  && lang.fauna.length > 0)     tabs.push({ id: 'fauna',    label: '🦎 Fauna' });
-  if (lang.geology && lang.geology.length > 0)  tabs.push({ id: 'geologia', label: '🪨 Geología' });
-  if (lang.compass)                              tabs.push({ id: 'brujula',  label: '🧭 Brújula' });
-  if (poi.images && poi.images.length > 0)       tabs.push({ id: 'galeria',  label: '📷 Galería' });
-  if (poi.audio)                                 tabs.push({ id: 'audio',    label: '🎧 Audio' });
-  return tabs;
+function getMissionThumb(poi) {
+  const lang = poi.languages.es;
+  if (lang.wanted)  return lang.wanted;
+  if (lang.habitat) return lang.habitat;
+  if (lang.species) { const s = lang.species.find(x => x.image); if (s) return s.image; }
+  if (lang.fauna)   { const f = lang.fauna.find(x => x.image);   if (f) return f.image; }
+  return null;
 }
 
-function renderTabContent(tab, lang, container, poi) {
-  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-
-  switch (tab.id) {
-    case 'mision':
-      container.innerHTML = `
-        ${lang.wanted ? `<img src="${lang.wanted}" alt="Wanted poster" class="mission-wanted">` : ''}
-        <div class="modal-mission-name">${lang.name}</div>
-        ${lang.habitat ? `<img src="${lang.habitat}" alt="Hábitat" class="mission-habitat">` : ''}
-        <p class="modal-description">${lang.description}</p>
-        ${lang.challenge ? `<div class="mission-challenge">🔍 ${lang.challenge}</div>` : ''}
-      `;
-      break;
-
-    case 'especies':
-      container.innerHTML = `<div class="species-grid">
-        ${lang.species.map(s => `
-          <div class="species-card">
-            ${s.images && s.images.length > 1
-              ? `<div class="species-img-strip">${s.images.map(u => `<img src="${u}" alt="${s.common}" loading="lazy">`).join('')}</div>`
-              : s.image
-                ? `<img src="${s.image}" alt="${s.common}" loading="lazy">`
-                : `<div class="species-img-placeholder">🌿</div>`}
-            <div class="species-common">${s.common}</div>
-            <div class="species-scientific">${s.scientific}</div>
-            <div class="species-note">${s.note}</div>
-          </div>
-        `).join('')}
-      </div>`;
-      break;
-
-    case 'fauna':
-      container.innerHTML = `<div class="species-grid">
-        ${lang.fauna.map(s => `
-          <div class="species-card">
-            ${s.image
-              ? `<img src="${s.image}" alt="${s.common}" loading="lazy">`
-              : `<div class="species-img-placeholder">🦎</div>`}
-            <div class="species-common">${s.common}</div>
-            <div class="species-scientific">${s.scientific}</div>
-            <div class="species-note">${s.note}</div>
-          </div>
-        `).join('')}
-      </div>`;
-      break;
-
-    case 'geologia':
-      container.innerHTML = `<div class="geology-list">
-        ${lang.geology.map(g => `
-          <div class="geology-card">
-            <div class="geology-name">${g.name}</div>
-            <div class="geology-age">${g.age}</div>
-            <div class="geology-note">${g.note}</div>
-          </div>
-        `).join('')}
-      </div>`;
-      break;
-
-    case 'brujula':
-      container.innerHTML = `
-        <ol class="compass-steps">
-          ${lang.compass.steps.map(s => `<li>${s}</li>`).join('')}
-        </ol>
-        <div class="landmark-list">
-          ${lang.compass.landmarks.map(l => `<div class="landmark-item">📍 ${l}</div>`).join('')}
-        </div>
-      `;
-      break;
-
-    case 'galeria':
-      container.innerHTML = `<div class="gallery-wrap">
-        ${(poi.images || []).map(src => `<img class="gallery-img" src="${src}" loading="lazy">`).join('')}
-      </div>`;
-      break;
-
-    case 'audio': {
-      const src = poi.audio || '';
-      container.innerHTML = `
-        <div class="audio-player">
-          <div class="audio-label">Narración de la misión</div>
-          <div class="audio-controls">
-            <button class="audio-play-btn" id="audio-play">▶</button>
-            <div class="audio-progress" id="audio-progress">
-              <div class="audio-progress-fill" id="audio-fill"></div>
-            </div>
-            <span class="audio-time" id="audio-time">0:00</span>
-          </div>
-        </div>
-      `;
-      const audio   = new Audio(src);
-      currentAudio  = audio;
-      const playBtn = document.getElementById('audio-play');
-      const fill    = document.getElementById('audio-fill');
-      const timeEl  = document.getElementById('audio-time');
-
-      playBtn.addEventListener('click', () => {
-        if (audio.paused) { audio.play(); playBtn.textContent = '⏸'; }
-        else              { audio.pause(); playBtn.textContent = '▶'; }
-      });
-
-      audio.addEventListener('timeupdate', () => {
-        const pct = audio.duration ? (audio.currentTime / audio.duration * 100) : 0;
-        fill.style.width = pct + '%';
-        const m = Math.floor(audio.currentTime / 60);
-        const s = String(Math.floor(audio.currentTime % 60)).padStart(2, '0');
-        timeEl.textContent = `${m}:${s}`;
-      });
-
-      audio.addEventListener('ended', () => { playBtn.textContent = '▶'; });
-      break;
-    }
-  }
+const MISSION_EMOJIS = { 1:'🌿', 2:'🌲', 3:'💧', 4:'🦦', 5:'🐍', 6:'🪨', 7:'🧭' };
+function getMissionEmoji(poi) {
+  return MISSION_EMOJIS[poi.mission] || '🎯';
 }
 
-// ── Close modal ───────────────────────────────────────────────────────────
-document.getElementById('modal-close').addEventListener('click', closeModal);
-document.getElementById('modal-overlay').addEventListener('click', closeModal);
+// ── Completion tracking ───────────────────────────────────────────────────
+function ckKey(poiId, section, idx) { return `chk-${poiId}-${section}-${idx}`; }
 
-function closeModal() {
-  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-  document.getElementById('modal').classList.add('hidden');
-  document.getElementById('modal-overlay').classList.add('hidden');
+function isChecked(poiId, section, idx) {
+  return localStorage.getItem(ckKey(poiId, section, idx)) === '1';
 }
 
-// ── Story Mode ────────────────────────────────────────────────────────────
-const STORIES = {
-  'poi-boniches-01': [
-    {
-      type: 'wanted',
-      img: 'routes/boniches/images/mission-01/wanted-poster.png',
-      sound: null
-    },
-    {
-      type: 'text',
-      label: 'Misión 1 · Salicornia',
-      stamp: '📍 Destino: Reajo / Arroyo Valhondo, Boniches',
-      title: '¡Prepárate, intrépido explorador!',
-      body: 'Vas a convertirte en nuestro agente de campo en tu primera misión.',
-      sound: null
-    }
-  ]
-};
+function setChecked(poiId, section, idx, val) {
+  localStorage.setItem(ckKey(poiId, section, idx), val ? '1' : '0');
+}
 
-let storyPoi   = null;
-let storyIndex = 0;
-let storyTimer = null;
-const AUTOPLAY_MS = 3500;
+function getPoiItems(poi) {
+  const lang  = poi.languages.es;
+  const items = [];
+  if (lang.species)  lang.species.forEach((s, i) => items.push({ section: 'species',  idx: i, data: s }));
+  if (lang.fauna)    lang.fauna.forEach((f, i)    => items.push({ section: 'fauna',    idx: i, data: f }));
+  if (lang.geology)  lang.geology.forEach((g, i)  => items.push({ section: 'geology',  idx: i, data: g }));
+  if (lang.compass)  lang.compass.landmarks.forEach((l, i) => items.push({ section: 'landmark', idx: i, data: { common: l, note: '' } }));
+  return items;
+}
 
+function isPoiCompleted(poi) {
+  const items = getPoiItems(poi);
+  if (!items.length) return false;
+  return items.every(item => isChecked(poi.id, item.section, item.idx));
+}
+
+// ── Story Screen ──────────────────────────────────────────────────────────
 function openStory(poi) {
-  const scenes = STORIES[poi.id];
-  if (!scenes) { openModal(poi); return; }
-  storyPoi   = poi;
-  storyIndex = 0;
-  buildProgressDots(scenes.length);
-  renderStoryScene(scenes, storyIndex);
-  document.getElementById('story').classList.remove('hidden');
+  currentPoi      = poi;
+  currentFrameIdx = 0;
+
+  const frames = allStory[poi.id];
+  const lang   = poi.languages.es;
+
+  document.getElementById('story-mission-label').textContent = lang.name;
+  document.getElementById('story-screen').classList.remove('hidden');
+
+  showFrame(0);
 }
 
-function buildProgressDots(n) {
-  const bar = document.getElementById('story-progress');
-  bar.innerHTML = '';
-  for (let i = 0; i < n; i++) {
-    const d = document.createElement('div');
-    d.className = 'story-dot';
-    bar.appendChild(d);
-  }
-}
-
-function updateDots(index, total) {
-  document.querySelectorAll('.story-dot').forEach((d, i) => {
-    d.className = 'story-dot' + (i < index ? ' done' : i === index ? ' active' : '');
-  });
-}
-
-function renderStoryScene(scenes, index) {
-  const scene = scenes[index];
-  const el    = document.getElementById('story-scene');
-
-  // Force re-animation by replacing the child
-  el.innerHTML = '';
-  const wrap = document.createElement('div');
-
-  if (scene.type === 'wanted') {
-    wrap.className = 'scene-wanted';
-    wrap.innerHTML = `<img src="${scene.img}" alt="Wanted">`;
-  } else if (scene.type === 'text') {
-    wrap.className = 'scene-text';
-    wrap.innerHTML = `
-      ${scene.stamp  ? `<div class="story-stamp">${scene.stamp}</div>` : ''}
-      ${scene.label  ? `<div class="story-label">${scene.label}</div>` : ''}
-      ${scene.title  ? `<div class="story-title">${scene.title}</div>` : ''}
-      ${scene.body   ? `<div class="story-body">${scene.body}</div>`   : ''}
-    `;
-  }
-
-  el.appendChild(wrap);
-  updateDots(index, scenes.length);
-
-  if (scene.sound) {
-    new Audio(scene.sound).play().catch(() => {});
-  }
-}
-
-function storyAdvance(dir) {
-  const scenes = STORIES[storyPoi.id];
-  storyIndex = Math.max(0, Math.min(scenes.length - 1, storyIndex + dir));
-  renderStoryScene(scenes, storyIndex);
-  // If autoplay is running, reset timer
-  if (storyTimer) { clearInterval(storyTimer); startAutoplay(); }
-}
-
-function startAutoplay() {
-  const scenes = STORIES[storyPoi.id];
-  storyTimer = setInterval(() => {
-    if (storyIndex < scenes.length - 1) {
-      storyIndex++;
-      renderStoryScene(scenes, storyIndex);
-    } else {
-      stopAutoplay();
-    }
-  }, AUTOPLAY_MS);
-  document.getElementById('story-play').classList.add('playing');
-}
-
-function stopAutoplay() {
-  clearInterval(storyTimer);
-  storyTimer = null;
-  document.getElementById('story-play').classList.remove('playing');
-}
+// Tap zones and swipe — wired once
+(function () {
+  document.getElementById('story-tap-left').onclick  = goPrev;
+  document.getElementById('story-tap-right').onclick = goNext;
+  let tx = 0;
+  const ss = document.getElementById('story-screen');
+  ss.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  ss.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) { dx < 0 ? goNext() : goPrev(); }
+  }, { passive: true });
+})();
 
 function closeStory() {
-  stopAutoplay();
-  document.getElementById('story').classList.add('hidden');
+  stopAudio();
+  document.getElementById('story-screen').classList.add('hidden');
+  // Switch to map tab
+  document.querySelectorAll('#tab-bar .tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === 'map'));
+  document.getElementById('screen-map').classList.remove('hidden');
+  document.getElementById('screen-missions').classList.add('hidden');
+  if (leafletMap) leafletMap.invalidateSize();
 }
 
-// Tap anywhere on the scene to advance
-document.getElementById('story-scene').addEventListener('click', () => storyAdvance(1));
-document.getElementById('story-next').addEventListener('click', e => { e.stopPropagation(); storyAdvance(1); });
-document.getElementById('story-prev').addEventListener('click', e => { e.stopPropagation(); storyAdvance(-1); });
-document.getElementById('story-play').addEventListener('click', e => {
-  e.stopPropagation();
-  storyTimer ? stopAutoplay() : startAutoplay();
-});
-document.getElementById('story-close').addEventListener('click', e => { e.stopPropagation(); closeStory(); });
-document.getElementById('story-skip').addEventListener('click', e => {
-  e.stopPropagation();
+function showFrame(idx) {
+  stopAudio();
+
+  const frames = allStory[currentPoi.id];
+  if (!frames || idx < 0 || idx >= frames.length) return;
+  currentFrameIdx = idx;
+
+  const frame  = frames[idx];
+  const isLast = idx === frames.length - 1;
+
+  // Update progress
+  const pct = frames.length > 1 ? (idx / (frames.length - 1)) * 100 : 100;
+  document.getElementById('story-progress-fill').style.width = pct + '%';
+  document.getElementById('story-frame-counter').textContent = `${idx + 1} / ${frames.length}`;
+
+  // Background
+  const bgEl = document.getElementById('story-bg');
+  bgEl.classList.remove('kb');
+  if (frame.bg) {
+    bgEl.style.background = '';
+    bgEl.style.backgroundImage = `url('${frame.bg}')`;
+    bgEl.style.backgroundSize  = 'cover';
+    bgEl.style.backgroundPosition = 'center';
+    requestAnimationFrame(() => bgEl.classList.add('kb'));
+  } else {
+    bgEl.style.backgroundImage = 'none';
+    bgEl.style.background = frame.bgGradient || '#0a0a1a';
+  }
+
+  // Content
+  const mediaHtml = frame.image
+    ? `<div class="sr-media story-reveal" style="transition-delay:0.7s">
+         <div class="sr-image-card"><img src="${frame.image}" alt="${frame.title}" loading="lazy"></div>
+       </div>`
+    : frame.icon
+      ? `<div class="sr-media story-reveal" style="transition-delay:0.7s">
+           <div class="sr-icon">${frame.icon}</div>
+         </div>`
+      : '';
+
+  document.getElementById('story-content').innerHTML = `
+    <div class="sr-title story-reveal" style="transition-delay:0.3s">${frame.title}</div>
+    <div class="sr-subtitle story-reveal" style="transition-delay:0.5s">${frame.subtitle}</div>
+    ${mediaHtml}
+    <div class="sr-chips story-reveal" style="transition-delay:0.9s">
+      ${(frame.chips || []).map(c => `<span class="sr-chip">${c}</span>`).join('')}
+    </div>
+    <div class="sr-narration story-reveal" style="transition-delay:1.2s">${frame.narration}</div>
+  `;
+
+  // Nav
+  document.getElementById('story-nav').innerHTML = `
+    <button class="sn-btn${idx === 0 ? ' ghost' : ''}" onclick="goPrev()">‹</button>
+    <div class="sn-dots story-reveal" style="transition-delay:1.5s">
+      ${frames.map((_, i) => `<span class="sn-dot${i === idx ? ' active' : ''}"></span>`).join('')}
+    </div>
+    ${isLast
+      ? `<button class="sn-field-btn story-reveal" style="transition-delay:1.5s" onclick="openFieldCard(currentPoi)">📋 Ver campo</button>`
+      : `<button class="sn-btn" onclick="goNext()">›</button>`}
+  `;
+
+  // Trigger reveal
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('#story-content .story-reveal, #story-nav .story-reveal').forEach(el => el.classList.add('show'));
+    });
+  });
+
+  // Audio
+  if (frame.audio) {
+    storyAudio = new Audio(frame.audio);
+    storyAudio.play().catch(() => {});
+  }
+}
+
+function goNext() {
+  const frames = allStory[currentPoi.id];
+  if (currentFrameIdx < frames.length - 1) showFrame(currentFrameIdx + 1);
+}
+
+function goPrev() {
+  if (currentFrameIdx > 0) showFrame(currentFrameIdx - 1);
+}
+
+function stopAudio() {
+  if (storyAudio) { storyAudio.pause(); storyAudio = null; }
+}
+
+document.getElementById('story-close').addEventListener('click', closeStory);
+
+// ── Field Card Screen ─────────────────────────────────────────────────────
+function openFieldCard(poi) {
+  currentPoi = poi;
+  const lang = poi.languages.es;
+  const shortName = lang.name.replace(/Misión \d+ · /, '');
+
+  document.getElementById('fc-mission-num').textContent = `Misión ${poi.mission}`;
+  document.getElementById('fc-name').textContent        = shortName;
+
+  // Hero
+  const heroEl = document.getElementById('fc-hero');
+  const heroImg  = lang.habitat || getMissionThumb(poi);
+  if (heroImg) {
+    heroEl.innerHTML = `<img id="fc-hero-img" src="${heroImg}" alt=""><div class="fc-hero-overlay"></div>`;
+  } else {
+    const storyFrames = allStory[poi.id];
+    const grad = storyFrames && storyFrames[0] && storyFrames[0].bgGradient
+      ? storyFrames[0].bgGradient
+      : `linear-gradient(135deg, var(--highlight), var(--border))`;
+    heroEl.innerHTML = `<div id="fc-hero-gradient" style="background:${grad};display:flex;align-items:center;justify-content:center;font-size:3rem;">${getMissionEmoji(poi)}</div>`;
+  }
+
+  // Challenge
+  const chalEl = document.getElementById('fc-challenge');
+  if (lang.challenge) {
+    chalEl.innerHTML = `<div id="fc-challenge-label">🔍 Reto del día</div>${lang.challenge}`;
+    chalEl.style.display = '';
+  } else {
+    chalEl.style.display = 'none';
+  }
+
+  // Body
+  renderFieldBody(poi);
+
+  // Completion banner
+  checkCompletionBanner(poi);
+
+  // Show
+  document.getElementById('field-card-screen').classList.remove('hidden');
+}
+
+function renderFieldBody(poi) {
+  const lang = poi.languages.es;
+  const body = document.getElementById('fc-body');
+  let html = '';
+
+  if (lang.species && lang.species.length) {
+    html += buildSection('🌿 Flora', lang.species.map((s, i) => buildItem(poi, 'species', i, s, s.image, s.scientific)));
+  }
+  if (lang.fauna && lang.fauna.length) {
+    html += buildSection('🦎 Fauna', lang.fauna.map((f, i) => buildItem(poi, 'fauna', i, f, f.image, f.scientific)));
+  }
+  if (lang.geology && lang.geology.length) {
+    html += buildSection('🪨 Geología', lang.geology.map((g, i) => buildGeoItem(poi, i, g)));
+  }
+  if (lang.compass) {
+    html += buildSection('🧭 Referencias', lang.compass.landmarks.map((l, i) => buildLandmarkItem(poi, i, l)));
+    if (lang.compass.steps && lang.compass.steps.length) {
+      html += `<div class="fc-section">
+        <div class="fc-section-title">📍 Pasos para orientarse</div>
+        <ol style="padding-left:1.2rem;font-size:0.85rem;line-height:1.8;color:var(--leather-mid)">
+          ${lang.compass.steps.map(s => `<li>${s}</li>`).join('')}
+        </ol>
+      </div>`;
+    }
+  }
+
+  body.innerHTML = html;
+
+  // Wire checkboxes
+  body.querySelectorAll('.fc-check').forEach(el => {
+    el.addEventListener('click', () => toggleCheck(el));
+  });
+}
+
+function buildSection(title, itemsHtml) {
+  return `<div class="fc-section">
+    <div class="fc-section-title">${title}</div>
+    ${itemsHtml.join('')}
+  </div>`;
+}
+
+function buildItem(poi, section, idx, item, imgSrc, scientific) {
+  const checked = isChecked(poi.id, section, idx);
+  const thumbBg = section === 'fauna' ? '#f0ead8' : '#e8f5e0';
+  const thumbEmoji = section === 'fauna' ? '🦎' : '🌿';
+  return `<div class="fc-item">
+    <div class="fc-check${checked ? ' checked' : ''}" data-poi="${poi.id}" data-section="${section}" data-idx="${idx}"></div>
+    ${imgSrc
+      ? `<div class="fc-thumb"><img src="${imgSrc}" alt="${item.common}" loading="lazy"></div>`
+      : `<div class="fc-thumb-emoji" style="background:${thumbBg}">${thumbEmoji}</div>`}
+    <div class="fc-item-text">
+      <div class="fc-item-name${checked ? ' done' : ''}">${item.common}</div>
+      ${scientific ? `<div class="fc-item-scientific">${scientific}</div>` : ''}
+      ${item.note ? `<div class="fc-item-note">${item.note}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function buildGeoItem(poi, idx, geo) {
+  const checked = isChecked(poi.id, 'geology', idx);
+  return `<div class="fc-item fc-item-geo">
+    <div class="fc-check${checked ? ' checked' : ''}" data-poi="${poi.id}" data-section="geology" data-idx="${idx}"></div>
+    <div class="fc-thumb-emoji" style="background:#e8e0d0">🪨</div>
+    <div class="fc-item-text">
+      <div class="fc-item-name${checked ? ' done' : ''}">${geo.name}</div>
+      <div class="fc-item-scientific">${geo.age}</div>
+      ${geo.note ? `<div class="fc-item-note">${geo.note}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function buildLandmarkItem(poi, idx, landmark) {
+  const checked = isChecked(poi.id, 'landmark', idx);
+  return `<div class="fc-item fc-item-geo">
+    <div class="fc-check${checked ? ' checked' : ''}" data-poi="${poi.id}" data-section="landmark" data-idx="${idx}"></div>
+    <div class="fc-thumb-emoji" style="background:#e0eaf5">📍</div>
+    <div class="fc-item-text">
+      <div class="fc-item-name${checked ? ' done' : ''}">${landmark}</div>
+    </div>
+  </div>`;
+}
+
+function toggleCheck(el) {
+  const { poi: poiId, section, idx } = el.dataset;
+  const nowChecked = !el.classList.contains('checked');
+  setChecked(poiId, section, parseInt(idx), nowChecked);
+
+  el.classList.toggle('checked', nowChecked);
+  const nameEl = el.closest('.fc-item').querySelector('.fc-item-name');
+  if (nameEl) nameEl.classList.toggle('done', nowChecked);
+
+  const poi = allPois.find(p => p.id === poiId);
+  if (poi) {
+    checkCompletionBanner(poi);
+    refreshMapMarker(poi);
+    refreshMissionRow(poi);
+  }
+}
+
+function checkCompletionBanner(poi) {
+  const banner = document.getElementById('fc-complete-banner');
+  banner.classList.toggle('show', isPoiCompleted(poi));
+}
+
+function closeFieldCard() {
+  document.getElementById('field-card-screen').classList.add('hidden');
   closeStory();
-  openModal(storyPoi);
+}
+
+document.getElementById('fc-back').addEventListener('click', closeFieldCard);
+document.getElementById('fc-replay').addEventListener('click', () => {
+  document.getElementById('field-card-screen').classList.add('hidden');
+  openStory(currentPoi);
 });
 </script>
-
 </body>
 </html>

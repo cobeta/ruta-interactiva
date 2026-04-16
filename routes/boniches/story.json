@@ -1,0 +1,234 @@
+{
+  "poi-boniches-01": [
+    {
+      "bg": "routes/boniches/images/mission-01/salinas-landscape.jpeg",
+      "audio": null,
+      "title": "Arroyo Valhondo",
+      "subtitle": "Misión 1 · Salicornia",
+      "icon": null,
+      "chips": ["🌊 Agua salada", "⛰️ Lejos del mar", "🔬 Especie protegida"],
+      "narration": "Bienvenidos al Reajo. Este arroyo arrastra algo imposible en plena meseta: sal. A cientos de kilómetros del mar."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a1a2a 0%, #1a2a4a 50%, #0a0a2a 100%)",
+      "audio": null,
+      "title": "Hace 200 millones de años",
+      "subtitle": "El mar que fue",
+      "image": "routes/boniches/images/mission-01/maquina-del-tiempo.png",
+      "chips": ["🌍 Era de Pangea", "🌊 Mar tropical", "⏳ Sal atrapada"],
+      "narration": "Boniches era parte de un mar inmenso. Se retiró lentamente y dejó sus minerales atrapados entre las montañas."
+    },
+    {
+      "bg": "routes/boniches/images/mission-01/salicornia-red-habitat.jpeg",
+      "audio": null,
+      "title": "Salicornia europaea",
+      "subtitle": "Espárrago de mar",
+      "image": "routes/boniches/images/mission-01/salicornia-red-closeup.jpeg",
+      "chips": ["🧂 Halófita", "🍂 Roja en otoño", "🍽️ Comestible"],
+      "narration": "Sus tallos suculentos almacenan sal. Una planta de playa, atrapada en la montaña hace millones de años."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a1a0a 0%, #1a3a2a 50%, #0a1a1a 100%)",
+      "audio": null,
+      "title": "Fauna del arroyo",
+      "subtitle": "¿Quién vive aquí?",
+      "image": "routes/boniches/images/mission-01/anade-azulon-pareja.jpeg",
+      "chips": ["💚 Cabeza verde brillante", "💙 Espejuelo azul en las alas", "🦎 Gineta nocturna"],
+      "narration": "El ánade azulón descansa en los remansos. De noche, la gineta patrulla las orillas. Ni la ves ni la escuchas."
+    }
+  ],
+  "poi-boniches-02": [
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #1a2a0a 0%, #2a4a1a 50%, #1a3a0a 100%)",
+      "audio": null,
+      "title": "El ecotono",
+      "subtitle": "Misión 2 · Detectives del Camino",
+      "icon": "🔍",
+      "chips": ["🌵 Suelo seco y ácido", "💧 Suelo fresco y húmedo", "🌿 Dos mundos, un metro"],
+      "narration": "Este camino es una frontera invisible. A la izquierda suelo seco y ácido. A la derecha, suelo fresco. Mundos distintos a un paso."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #2a1a0a 0%, #4a3a1a 50%, #3a2a0a 100%)",
+      "audio": null,
+      "title": "Lado seco",
+      "subtitle": "Areniscas y rocas silíceas",
+      "icon": "🌵",
+      "chips": ["🌲 Pino salgareño", "🌸 Jara pringosa", "🫙 Enebro — frutos para ginebra"],
+      "narration": "Sobreviven los resistentes: la jara resinosa, el enebro aromático. Sus frutos azulados se usan para hacer ginebra."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a1a1a 0%, #1a3a2a 50%, #0a2a1a 100%)",
+      "audio": null,
+      "title": "Lado húmedo",
+      "subtitle": "Suelo fresco y rico",
+      "icon": "🌿",
+      "chips": ["💜 Cantueso", "⚠️ Tejo — casi todo venenoso", "🌲 Pino resinero"],
+      "narration": "El tejo es eterno: sagrado para los celtas. Casi todo en él es venenoso. Sus bayas rojas: solo la carne, no el hueso."
+    }
+  ],
+  "poi-boniches-03": [
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a1a2a 0%, #1a2a3a 60%, #0a1a1a 100%)",
+      "audio": null,
+      "title": "La Fuente del Canal",
+      "subtitle": "Misión 3 · La Fuente Milagrosa",
+      "icon": "💧",
+      "chips": ["💧 Nunca se seca", "🧂 Agua salina", "🏥 Propiedades curativas"],
+      "narration": "Esta fuente lleva siglos sin secarse. Ni en las sequías más duras. La tradición local le atribuía poderes curativos."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #1a1000 0%, #3a2a0a 50%, #2a1800 100%)",
+      "audio": null,
+      "title": "Sabiduría del lugar",
+      "subtitle": "Las mujeres del pueblo",
+      "icon": "🥖",
+      "chips": ["🥖 Pan con agua salina", "🫒 Macerar aceitunas", "🧪 Ciencia sin laboratorio"],
+      "narration": "Con esta agua amasaban pan y maceraban aceitunas. Conocían sus propiedades sin necesitar laboratorio. Eran científicas."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a1a0a 0%, #1a3a1a 50%, #0a2a0a 100%)",
+      "audio": null,
+      "title": "El bosque galería",
+      "subtitle": "Nogal, Fresno, Martín pescador",
+      "icon": "🌳",
+      "chips": ["🌰 Nogal — frutos sabrosos", "✨ Fresno — sagrado celta", "🐦 Martín — indica agua limpia"],
+      "narration": "El martín pescador solo vive donde el agua es muy limpia. Si lo ves, el río está sano. Es un indicador viviente."
+    }
+  ],
+  "poi-boniches-04": [
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a1a2a 0%, #1a3a4a 50%, #0a2a2a 100%)",
+      "audio": null,
+      "title": "La playa fluvial",
+      "subtitle": "Misión 4 · Exploradores",
+      "icon": "🏖️",
+      "chips": ["🦦 Nutria — 5 dedos con membrana", "🦢 Garza — 3 dedos largos", "⚠️ Visón americano — invasor"],
+      "narration": "Antes de entrar, mira el barro. Las huellas cuentan historias. La nutria tiene cinco dedos con membrana. ¿Cuántas ves?"
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #1a0a0a 0%, #3a1a0a 50%, #2a1a0a 100%)",
+      "audio": null,
+      "title": "La farmacia del camino",
+      "subtitle": "Plantas medicinales",
+      "icon": "🌿",
+      "chips": ["🌿 Tomillo — antiséptico", "🌿 Romero — cicatrizante", "🌾 Esparto — cestas y cuerdas"],
+      "narration": "Las abuelas conocían cada planta. El tomillo curaba heridas, el esparto tejía cestas. Eran las científicas de su época."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a1a0a 0%, #1a4a2a 50%, #0a2a1a 100%)",
+      "audio": null,
+      "title": "La nutria ha vuelto",
+      "subtitle": "Una victoria ecológica",
+      "icon": "🦦",
+      "chips": ["🦅 Abejaruco — multicolor", "🌳 Encina — jabón y lejía", "🦦 Nutria — señal de agua limpia"],
+      "narration": "La nutria desapareció décadas. Ahora ha vuelto porque el agua es más limpia. Su presencia es una victoria ecológica."
+    }
+  ],
+  "poi-boniches-05": [
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #1a0a00 0%, #3a1a00 50%, #2a0800 100%)",
+      "audio": null,
+      "title": "Herpetólogos por un día",
+      "subtitle": "Misión 5 · El Enigma de las Serpientes",
+      "icon": "🐍",
+      "chips": ["▲ Cabeza triangular = víbora", "⭕ Cabeza ovalada = culebra", "👁 Pupilas verticales = víbora"],
+      "narration": "Una sola regla: cabeza triangular + pupilas verticales + escamas carenadas = víbora. Todo lo demás, culebra inofensiva."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #100800 0%, #2a1500 50%, #180a00 100%)",
+      "audio": null,
+      "title": "Víbora hocicuda",
+      "subtitle": "Vipera latastei",
+      "icon": "⚠️",
+      "chips": ["🔺 Hocico ligeramente elevado", "〰️ Patrón zigzagueante", "☮️ Tranquila si no la molestas"],
+      "narration": "La única víbora de Boniches. Venenosa pero tranquila. Si te cruzas con una, espera. Ella se alejará primero. Siempre."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a1a00 0%, #1a3a00 50%, #0a2000 100%)",
+      "audio": null,
+      "title": "Las culebras",
+      "subtitle": "Inofensivas y útiles",
+      "icon": "🌿",
+      "chips": ["🎭 Culebra viperina — imita a la víbora", "💨 Culebra bastarda — muy rápida", "⚡ Culebra herradura — asustadiza"],
+      "narration": "La culebra viperina aplana la cabeza y bufa para parecer víbora. Un farol evolutivo perfecto. Inofensiva para humanos."
+    }
+  ],
+  "poi-boniches-06": [
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #1a0800 0%, #3a1500 50%, #2a0a00 100%)",
+      "audio": null,
+      "title": "Hace 240 millones de años",
+      "subtitle": "Misión 6 · El Código de las Rocas",
+      "icon": "🌍",
+      "chips": ["🌍 Pangea — un solo continente", "☀️ España en el ecuador", "🌊 Ríos torrenciales tropicales"],
+      "narration": "España estaba casi en el ecuador. Los ríos tropicales arrastraban sedimentos durante millones de años. Hoy puedes tocarlos."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #1a0a00 0%, #4a2000 50%, #3a1500 100%)",
+      "audio": null,
+      "title": "El código de las rocas",
+      "subtitle": "Conglomerado vs Arenisca",
+      "icon": "🪨",
+      "chips": ["🪨 Conglomerado — río muy caudaloso", "🏜️ Arenisca roja — río lento", "🔴 Hierro oxidado — color rojizo"],
+      "narration": "Piedras grandes cementadas = el río era fuerte. Arena fina = perdió fuerza. Las rocas son el diario del pasado."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a2a 100%)",
+      "audio": null,
+      "title": "El paisaje en el tiempo",
+      "subtitle": "420 millones de años",
+      "icon": "🔭",
+      "chips": ["⛰️ La Tabarreña — al norte", "🦅 Peña del Cuervo", "🌄 Cabeza del Carrascal — oeste"],
+      "narration": "Las rocas silúricas son las más antiguas de Boniches: 420 millones de años. Más viejas que los dinosaurios."
+    }
+  ],
+  "poi-boniches-07": [
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a1a2a 100%)",
+      "audio": null,
+      "title": "La brújula nunca falla",
+      "subtitle": "Misión 7 · Orientación y Navegación",
+      "icon": "🧭",
+      "chips": ["🔋 Sin batería", "📡 Sin señal", "✅ Siempre funciona"],
+      "narration": "GPS, batería, señal — todo puede fallar. La brújula y el mapa, nunca. Esta es la habilidad más antigua del explorador."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #001a1a 0%, #003a3a 50%, #001a2a 100%)",
+      "audio": null,
+      "title": "Cómo usar la brújula",
+      "subtitle": "Paso a paso",
+      "icon": "📍",
+      "chips": ["1️⃣ Superficie plana, lejos de metales", "2️⃣ Aguja roja apunta al norte", "3️⃣ Gira el mapa al norte magnético"],
+      "narration": "Espera que la aguja se estabilice. Gira el mapa. Busca referencias en el paisaje. Ubica tu posición con dos cruces."
+    },
+    {
+      "bg": null,
+      "bgGradient": "linear-gradient(135deg, #0a1a0a 0%, #1a3a1a 50%, #0a2a0a 100%)",
+      "audio": null,
+      "title": "Referencias del paisaje",
+      "subtitle": "Boniches visto desde aquí",
+      "icon": "🏔️",
+      "chips": ["⛰️ La Tabarreña — norte", "🦅 Peña del Cuervo — norte", "🌄 Peña de los Ramos — este"],
+      "narration": "Identifica tres puntos: un risco, el río, el pueblo. Encuéntralos en el mapa. Ya sabes exactamente dónde estás."
+    }
+  ]
+}
